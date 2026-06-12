@@ -1,0 +1,89 @@
+<view class="safe-page detail-page" wx:if="{{match}}">
+  <view class="detail-hero">
+    <text class="meta">{{match.dateText}} · {{match.group}}</text>
+    <view class="scoreline">
+      <view class="side">
+        <image class="big-flag" src="{{match.home.flag}}" mode="aspectFit"></image>
+        <text class="side-cn">{{match.home.cn}}</text>
+        <text class="side-en">{{match.home.en}}</text>
+      </view>
+      <view class="score-core">
+        <text class="score">{{match.pick.score}}</text>
+        <text class="label">主比分倾向</text>
+      </view>
+      <view class="side">
+        <image class="big-flag" src="{{match.away.flag}}" mode="aspectFit"></image>
+        <text class="side-cn">{{match.away.cn}}</text>
+        <text class="side-en">{{match.away.en}}</text>
+      </view>
+    </view>
+    <view class="venue-row">
+      <text>{{match.venue}}</text>
+      <text>{{match.pick.result}}</text>
+    </view>
+  </view>
+
+  <view class="conclusion glass">
+    <text class="block-title">My conclusion</text>
+    <text class="conclusion-text">{{match.analysis.conclusion}}</text>
+  </view>
+
+  <view class="market-grid">
+    <view class="market-card glass">
+      <text class="market-label">1X2</text>
+      <text class="market-value">{{match.analysis.market.oneXtwo}}</text>
+    </view>
+    <view class="market-card glass">
+      <text class="market-label">亚洲盘</text>
+      <text class="market-value">{{match.analysis.market.handicap}}</text>
+    </view>
+    <view class="market-card glass">
+      <text class="market-label">大小球</text>
+      <text class="market-value">{{match.analysis.market.total}}</text>
+    </view>
+  </view>
+
+  <view class="analysis-card glass">
+    <text class="block-title">球队状态</text>
+    <text class="body-line">{{match.home.cn}}：{{match.analysis.form.home}}</text>
+    <text class="body-line">{{match.away.cn}}：{{match.analysis.form.away}}</text>
+  </view>
+
+  <view class="analysis-card glass">
+    <text class="block-title">伤停与预计阵容</text>
+    <text class="body-line">{{match.home.cn}}：{{match.analysis.news.home}}</text>
+    <text class="body-line">{{match.away.cn}}：{{match.analysis.news.away}}</text>
+  </view>
+
+  <view class="analysis-card glass">
+    <text class="block-title">战术与比赛环境</text>
+    <text class="body-line">{{match.analysis.tactics}}</text>
+  </view>
+
+  <view class="analysis-card glass">
+    <text class="block-title">交锋参考</text>
+    <text class="body-line">{{match.analysis.h2h}}</text>
+  </view>
+
+  <view class="final-card">
+    <text class="block-title dark">Final lean</text>
+    <view class="lean-row"><text>结果</text><text>{{match.pick.result}}</text></view>
+    <view class="lean-row"><text>比分</text><text>{{match.pick.score}}</text></view>
+    <view class="lean-row"><text>备用比分</text><text>{{match.pick.backup}}</text></view>
+    <view class="lean-row"><text>总进球</text><text>{{match.pick.total}}</text></view>
+    <view class="lean-row"><text>市场顺序</text><text>{{match.analysis.order}}</text></view>
+    <view class="risk">
+      <text>风险点：{{match.analysis.risk}}</text>
+    </view>
+  </view>
+
+  <view class="reward glass">
+    <text class="reward-title">喜欢这份赛前播报吗？</text>
+    <text class="reward-copy">给我一点打赏，让我有动力继续追数据、看阵容、熬夜做下一场分析。不强制，心意到了就很燃。</text>
+    <button class="reward-button" bindtap="showReward">打赏支持</button>
+  </view>
+
+  <view class="sources">
+    <text>Sources：FIFA World Cup 26 match schedule；公开赛程与球队资料；赛前市场如未实时开放则不虚构赔率。</text>
+  </view>
+</view>

@@ -1,0 +1,80 @@
+<view class="safe-page home-page">
+  <view class="hero">
+    <view class="hero-mark">
+      <image class="hero-logo" src="/assets/brand/worldcup26-official.avif" mode="aspectFit"></image>
+    </view>
+    <view class="hero-copy">
+      <text class="hero-title">世界杯赛前播报</text>
+      <text class="hero-subtitle">近 7 天赛程、国旗队名、赛前判断和比分倾向，一键看完整分析。</text>
+    </view>
+  </view>
+
+  <view class="ticker glass">
+    <text class="ticker-hot">今日焦点</text>
+    <text class="ticker-text">{{featured.home.cn}} vs {{featured.away.cn}} · {{featured.pick.result}} · 主推 {{featured.pick.score}}</text>
+  </view>
+
+  <view class="review-panel glass">
+    <view class="review-head" bindtap="toggleReview">
+      <view>
+        <text class="review-title">已结束比赛复盘</text>
+        <text class="review-subtitle">预测准确程度 · {{reviewSummary}}</text>
+      </view>
+      <text class="review-arrow">{{reviewOpen ? '收起' : '展开'}}</text>
+    </view>
+    <view class="review-list" wx:if="{{reviewOpen}}">
+      <block wx:for="{{finishedMatches}}" wx:key="id">
+        <view class="review-item">
+          <view class="review-match">
+            <text>{{item.home}} {{item.score}} {{item.away}}</text>
+            <text class="review-pick">预测：{{item.pick}}</text>
+          </view>
+          <view class="review-rate {{item.levelClass}}">
+            <text>{{item.accuracy}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="section-title">
+    <text>近 7 天比赛</text>
+    <text class="pill">{{matches.length}} 场</text>
+  </view>
+
+  <block wx:for="{{matches}}" wx:key="id">
+    <navigator class="match-card glass" url="/pages/detail/detail?id={{item.id}}" hover-class="match-card-hover">
+      <view class="match-top">
+        <view>
+          <text class="date">{{item.dateText}}</text>
+          <text class="venue">{{item.group}} · {{item.venue}}</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+      <view class="teams">
+        <view class="team">
+          <image class="flag-img" src="{{item.home.flag}}" mode="aspectFit"></image>
+          <view class="team-name">
+            <text class="cn">{{item.home.cn}}</text>
+            <text class="en">{{item.home.en}}</text>
+          </view>
+        </view>
+        <view class="vs">
+          <text>VS</text>
+        </view>
+        <view class="team right">
+          <view class="team-name">
+            <text class="cn">{{item.away.cn}}</text>
+            <text class="en">{{item.away.en}}</text>
+          </view>
+          <image class="flag-img" src="{{item.away.flag}}" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="prediction-strip">
+        <text>倾向：{{item.pick.result}}</text>
+        <text>比分：{{item.pick.score}}</text>
+        <text>进球：{{item.pick.total}}</text>
+      </view>
+    </navigator>
+  </block>
+</view>
