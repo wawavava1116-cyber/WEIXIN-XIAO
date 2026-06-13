@@ -1,5 +1,6 @@
 {
   "description": "世界杯赛前播报微信小程序",
+  "cloudfunctionRoot": "cloudfunctions/",
   "packOptions": {
     "ignore": [],
     "include": []

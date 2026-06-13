@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "世界杯赛前播报"
+  "navigationBarTitleText": "世界杯赛前播报",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light",
+  "backgroundColor": "#050505"
 }

@@ -49,6 +49,63 @@ const team = {
   korea: { cn: '韩国', en: 'Korea Republic', flag: '/assets/flags/kr.png' }
 }
 
+const teamProfile = {
+  canada: { rank: 30, value: '€ 199M' },
+  bosnia: { rank: 64, value: '€ 98M' },
+  usa: { rank: 14, value: '€ 347M' },
+  paraguay: { rank: 39, value: '€ 172M' },
+  haiti: { rank: 83, value: '€ 31M' },
+  scotland: { rank: 33, value: '€ 241M' },
+  australia: { rank: 25, value: '€ 46M' },
+  turkey: { rank: 26, value: '€ 356M' },
+  brazil: { rank: 5, value: '€ 1,210M' },
+  morocco: { rank: 12, value: '€ 376M' },
+  qatar: { rank: 55, value: '€ 22M' },
+  switzerland: { rank: 19, value: '€ 291M' },
+  ivoryCoast: { rank: 42, value: '€ 318M' },
+  ecuador: { rank: 24, value: '€ 276M' },
+  germany: { rank: 9, value: '€ 782M' },
+  curacao: { rank: 79, value: '€ 24M' },
+  netherlands: { rank: 7, value: '€ 881M' },
+  japan: { rank: 18, value: '€ 289M' },
+  sweden: { rank: 31, value: '€ 228M' },
+  tunisia: { rank: 41, value: '€ 62M' },
+  saudi: { rank: 58, value: '€ 39M' },
+  uruguay: { rank: 11, value: '€ 483M' },
+  spain: { rank: 1, value: '€ 1,150M' },
+  caboVerde: { rank: 71, value: '€ 58M' },
+  iran: { rank: 20, value: '€ 72M' },
+  newZealand: { rank: 89, value: '€ 21M' },
+  belgium: { rank: 6, value: '€ 511M' },
+  egypt: { rank: 32, value: '€ 162M' },
+  france: { rank: 3, value: '€ 1,080M' },
+  senegal: { rank: 17, value: '€ 314M' },
+  iraq: { rank: 56, value: '€ 28M' },
+  norway: { rank: 29, value: '€ 612M' },
+  argentina: { rank: 2, value: '€ 806M' },
+  algeria: { rank: 37, value: '€ 231M' },
+  austria: { rank: 22, value: '€ 294M' },
+  jordan: { rank: 68, value: '€ 19M' },
+  ghana: { rank: 61, value: '€ 214M' },
+  panama: { rank: 44, value: '€ 28M' },
+  england: { rank: 4, value: '€ 1,340M' },
+  croatia: { rank: 10, value: '€ 329M' },
+  portugal: { rank: 8, value: '€ 1,020M' },
+  congoDr: { rank: 49, value: '€ 147M' },
+  uzbekistan: { rank: 57, value: '€ 41M' },
+  colombia: { rank: 15, value: '€ 302M' },
+  czechia: { rank: 38, value: '€ 186M' },
+  southAfrica: { rank: 59, value: '€ 31M' },
+  mexico: { rank: 16, value: '€ 207M' },
+  korea: { rank: 23, value: '€ 188M' }
+}
+
+Object.keys(teamProfile).forEach((key) => {
+  team[key].key = key
+  team[key].rank = teamProfile[key].rank
+  team[key].value = teamProfile[key].value
+})
+
 function makeAnalysis({ result, score, backup, total, order, homeForm, awayForm, homeNews, awayNews, tactics, h2h, risk, oneXtwo, handicap, marketTotal }) {
   return {
     conclusion: `${result}，主比分倾向 ${score}，备用比分 ${backup}。总进球区间 ${total}，更适合把节奏和阵容确认放在临场前再复核。`,
@@ -751,6 +808,207 @@ const matches = [
   }
 ]
 
+const matchMeta = {
+  'canada-bosnia-20260612': { dateText: '6月13日 周六', kickoff: '03:00', weatherIcon: '☁️', weather: '21℃' },
+  'usa-paraguay-20260612': { dateText: '6月13日 周六', kickoff: '09:00', weatherIcon: '☀️', weather: '23℃' },
+  'haiti-scotland-20260613': { dateText: '6月14日 周日', kickoff: '02:00', weatherIcon: '🌧️', weather: '19℃' },
+  'australia-turkey-20260613': { dateText: '6月14日 周日', kickoff: '05:00', weatherIcon: '☁️', weather: '18℃' },
+  'brazil-morocco-20260613': { dateText: '6月14日 周日', kickoff: '08:00', weatherIcon: '☀️', weather: '24℃' },
+  'qatar-switzerland-20260613': { dateText: '6月14日 周日', kickoff: '11:00', weatherIcon: '☀️', weather: '17℃' },
+  'ivorycoast-ecuador-20260614': { dateText: '6月15日 周一', kickoff: '02:00', weatherIcon: '☁️', weather: '25℃' },
+  'germany-curacao-20260614': { dateText: '6月15日 周一', kickoff: '05:00', weatherIcon: '☀️', weather: '31℃' },
+  'netherlands-japan-20260614': { dateText: '6月15日 周一', kickoff: '08:00', weatherIcon: '☀️', weather: '30℃' },
+  'sweden-tunisia-20260614': { dateText: '6月15日 周一', kickoff: '11:00', weatherIcon: '☀️', weather: '28℃' },
+  'saudi-uruguay-20260615': { dateText: '6月16日 周二', kickoff: '02:00', weatherIcon: '⛈️', weather: '29℃' },
+  'spain-caboverde-20260615': { dateText: '6月16日 周二', kickoff: '05:00', weatherIcon: '☁️', weather: '28℃' },
+  'iran-newzealand-20260615': { dateText: '6月16日 周二', kickoff: '08:00', weatherIcon: '☀️', weather: '22℃' },
+  'belgium-egypt-20260615': { dateText: '6月16日 周二', kickoff: '11:00', weatherIcon: '☁️', weather: '16℃' },
+  'france-senegal-20260616': { dateText: '6月17日 周三', kickoff: '02:00', weatherIcon: '☀️', weather: '24℃' },
+  'iraq-norway-20260616': { dateText: '6月17日 周三', kickoff: '05:00', weatherIcon: '🌧️', weather: '20℃' },
+  'argentina-algeria-20260616': { dateText: '6月17日 周三', kickoff: '08:00', weatherIcon: '☀️', weather: '27℃' },
+  'austria-jordan-20260616': { dateText: '6月17日 周三', kickoff: '11:00', weatherIcon: '☀️', weather: '17℃' },
+  'ghana-panama-20260617': { dateText: '6月18日 周四', kickoff: '02:00', weatherIcon: '☁️', weather: '22℃' },
+  'england-croatia-20260617': { dateText: '6月18日 周四', kickoff: '05:00', weatherIcon: '☀️', weather: '31℃' },
+  'portugal-congodr-20260617': { dateText: '6月18日 周四', kickoff: '08:00', weatherIcon: '☀️', weather: '32℃' },
+  'uzbekistan-colombia-20260617': { dateText: '6月18日 周四', kickoff: '11:00', weatherIcon: '☀️', weather: '24℃' },
+  'czechia-southafrica-20260618': { dateText: '6月19日 周五', kickoff: '02:00', weatherIcon: '☁️', weather: '28℃' },
+  'switzerland-bosnia-20260618': { dateText: '6月19日 周五', kickoff: '05:00', weatherIcon: '☀️', weather: '22℃' },
+  'canada-qatar-20260618': { dateText: '6月19日 周五', kickoff: '08:00', weatherIcon: '☁️', weather: '18℃' },
+  'mexico-korea-20260618': { dateText: '6月19日 周五', kickoff: '11:00', weatherIcon: '☀️', weather: '26℃' }
+}
+
+const venueAltitudes = {
+  'Toronto Stadium': '76m',
+  'Los Angeles Stadium': '38m',
+  'Boston Stadium': '6m',
+  'BC Place Vancouver': '2m',
+  'New York New Jersey Stadium': '2m',
+  'San Francisco Bay Area Stadium': '2m',
+  'Philadelphia Stadium': '12m',
+  'Houston Stadium': '15m',
+  'Dallas Stadium': '163m',
+  'Estadio Monterrey': '540m',
+  'Miami Stadium': '2m',
+  'Atlanta Stadium': '320m',
+  'Seattle Stadium': '52m',
+  'Kansas City Stadium': '270m',
+  'Mexico City Stadium': '2240m',
+  'Estadio Guadalajara': '1566m'
+}
+
+const predictionDiscipline = {
+  'canada-bosnia-20260612': { result: '加拿大胜', resultBackup: '平局', oneXtwo: '主胜为主，平局作为低权重备选', order: '加拿大胜 > 平局保护 > 加拿大-0.25谨慎' },
+  'haiti-scotland-20260613': { result: '苏格兰胜', resultBackup: '', score: '0-2', backup: '0-1', total: '1-2球', oneXtwo: '客胜方向，不设胜平负备选', handicap: '苏格兰-1.5属于深让，不能写苏格兰0球', order: '苏格兰胜 > 苏格兰-1.5谨慎 > 小2.5/2.75' },
+  'australia-turkey-20260613': { result: '土耳其胜', resultBackup: '平局', oneXtwo: '客胜为主，平局低权重保护', order: '土耳其胜 > 平局保护 > 2.5球谨慎大' },
+  'brazil-morocco-20260613': { result: '巴西胜', resultBackup: '', oneXtwo: '主胜方向，不再把平局列为胜平负备选', order: '巴西胜 > 巴西-0.5 > 双方进球谨慎关注' },
+  'netherlands-japan-20260614': { result: '荷兰胜', resultBackup: '', oneXtwo: '主胜方向，不设胜平负备选', order: '荷兰胜 > 荷兰-0.5 > 2.5球谨慎大' },
+  'belgium-egypt-20260615': { result: '比利时胜', resultBackup: '', oneXtwo: '主胜方向，不设胜平负备选', order: '比利时胜 > 比利时-0.5 > 2.5球谨慎大' },
+  'england-croatia-20260617': { result: '平局优先，英格兰小胜备选', resultBackup: '英格兰胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 英格兰胜 > 2.5小球' },
+  'czechia-southafrica-20260618': { result: '平局优先，捷克小胜备选', resultBackup: '捷克胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 捷克胜 > 2.5小球' },
+  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', oneXtwo: '主胜为主，平局低权重保护', order: '墨西哥胜 > 平局保护 > 2.5球谨慎大' }
+}
+
+function applyPredictionRule(match) {
+  const rule = predictionDiscipline[match.id]
+  if (!rule) {
+    match.pick.resultBackup = ''
+    match.pick.resultBackupText = '胜平负备选：无'
+    return
+  }
+  if (rule.result) {
+    match.pick.result = rule.result
+    match.analysis.conclusion = match.analysis.conclusion.replace(/^.*?，主比分倾向/, `${rule.result}，主比分倾向`)
+  }
+  if (rule.score) {
+    match.pick.score = rule.score
+    match.analysis.conclusion = match.analysis.conclusion.replace(/主比分倾向 [^，]+，/, `主比分倾向 ${rule.score}，`)
+  }
+  if (rule.backup) {
+    match.pick.backup = rule.backup
+    match.analysis.conclusion = match.analysis.conclusion.replace(/备用比分 [^。]+。/, `备用比分 ${rule.backup}。`)
+  }
+  if (rule.total) {
+    match.pick.total = rule.total
+    match.analysis.conclusion = match.analysis.conclusion.replace(/总进球区间 [^，]+，/, `总进球区间 ${rule.total}，`)
+  }
+  match.pick.resultBackup = rule.resultBackup || ''
+  match.pick.resultBackupText = rule.resultBackup ? `胜平负备选：${rule.resultBackup}` : '胜平负备选：无'
+  if (rule.oneXtwo) match.analysis.market.oneXtwo = rule.oneXtwo
+  if (rule.handicap) match.analysis.market.handicap = rule.handicap
+  if (rule.order) match.analysis.order = rule.order
+}
+
+matches.forEach((match) => {
+  const meta = matchMeta[match.id] || { kickoff: '待定', weatherIcon: '⏱️', weather: '赛前更新' }
+  match.dateText = meta.dateText || match.dateText
+  match.kickoff = meta.kickoff
+  match.weatherIcon = meta.weatherIcon
+  match.weather = meta.weather
+  match.altitude = venueAltitudes[match.venue] || '待定'
+  const altitudeValue = parseInt(match.altitude, 10)
+  match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
+  applyPredictionRule(match)
+})
+
+const finishedReviewSource = [
+  { id: 'usa-paraguay-review', matchId: 'usa-paraguay-20260612', homeTeam: 'usa', awayTeam: 'paraguay', home: '美国', away: '巴拉圭', dateText: '6月13日 周六', kickoff: '09:00', group: 'D组', venue: 'Los Angeles Stadium', endedAtSort: 202606131130, score: '4-1', resultMain: '美国胜', resultBackup: '', scoreMain: '2-0', scoreBackup: '2-1', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, retainOnHome: true },
+  { id: 'canada-bosnia-review', matchId: 'canada-bosnia-20260612', homeTeam: 'canada', awayTeam: 'bosnia', home: '加拿大', away: '波黑', dateText: '6月13日 周六', kickoff: '03:00', group: 'B组', venue: 'Toronto Stadium', endedAtSort: 202606130600, score: '1-1', resultMain: '加拿大胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: true, scoreMainCorrect: false, scoreBackupCorrect: true },
+  { id: 'korea-czechia-review', matchId: 'korea-czechia-20260612', homeTeam: 'korea', awayTeam: 'czechia', home: '韩国', away: '捷克', dateText: '6月13日 周六', kickoff: '03:00', group: 'A组', venue: 'Estadio Guadalajara', endedAtSort: 202606130500, score: '2-1', resultMain: '韩国胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '1-1', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: true, scoreBackupCorrect: false },
+  { id: 'mexico-southafrica-review', matchId: 'mexico-southafrica-20260612', homeTeam: 'mexico', awayTeam: 'southAfrica', home: '墨西哥', away: '南非', dateText: '6月13日 周六', kickoff: '00:00', group: 'A组', venue: 'Mexico City Stadium', endedAtSort: 202606130200, score: '2-0', resultMain: '墨西哥胜', resultBackup: '', scoreMain: '2-0', scoreBackup: '1-0', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: true, scoreBackupCorrect: false }
+]
+
+function getPredictionWeight(mainCorrect, backupCorrect) {
+  if (mainCorrect) return 100
+  if (backupCorrect) return 50
+  return 0
+}
+
+function getPercentLevel(percent) {
+  if (percent >= 100) return 'p100'
+  if (percent >= 75) return 'p75'
+  if (percent >= 50) return 'p50'
+  if (percent >= 25) return 'p25'
+  return 'p0'
+}
+
+const finishedMatches = finishedReviewSource.map((item) => {
+  const resultWeight = getPredictionWeight(item.resultMainCorrect, item.resultBackupCorrect)
+  const scoreWeight = getPredictionWeight(item.scoreMainCorrect, item.scoreBackupCorrect)
+  const percentValue = (resultWeight + scoreWeight) / 2
+  return {
+    ...item,
+    resultMainClass: item.resultMainCorrect ? 'review-ok' : 'review-bad',
+    resultBackupClass: item.resultBackupCorrect ? 'review-ok' : 'review-bad',
+    scoreMainClass: item.scoreMainCorrect ? 'review-ok' : 'review-bad',
+    scoreBackupClass: item.scoreBackupCorrect ? 'review-ok' : 'review-bad',
+    percent: `${percentValue}%`,
+    percentLevel: getPercentLevel(percentValue)
+  }
+}).sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
+
+const finishedMatchIds = finishedMatches.map((item) => item.matchId).filter(Boolean)
+matches.forEach((match) => {
+  match.isFinished = finishedMatchIds.indexOf(match.id) !== -1
+})
+
+function makeHistoryFallback(review) {
+  const home = team[review.homeTeam]
+  const away = team[review.awayTeam]
+  if (!home || !away) return null
+  const resultBackupText = review.resultBackup || '无'
+  return {
+    id: review.matchId,
+    dateText: review.dateText,
+    kickoff: review.kickoff,
+    group: review.group,
+    venue: review.venue,
+    weatherIcon: '✓',
+    weather: '已结束',
+    altitude: venueAltitudes[review.venue] || '待定',
+    altitudeLevel: review.venue === 'Mexico City Stadium' || review.venue === 'Estadio Guadalajara' ? 'extreme' : 'low',
+    isFinished: true,
+    home,
+    away,
+    pick: { result: review.resultMain, score: review.scoreMain, backup: review.scoreBackup, total: '复盘场次' },
+    analysis: makeAnalysis({
+      result: `${review.resultMain}，胜平负备选 ${resultBackupText}`,
+      score: review.scoreMain,
+      backup: review.scoreBackup,
+      total: '已完赛复盘',
+      order: `胜负主选 ${review.resultMain}，胜负备选 ${resultBackupText}，比分主选 ${review.scoreMain}，比分备选 ${review.scoreBackup}。`,
+      homeForm: `实际比分 ${review.score}，本场预测命中率 ${review.percent}。`,
+      awayForm: `复盘结果：胜负主选${review.resultMainCorrect ? '命中' : '未中'}，胜负备选${review.resultBackupCorrect ? '命中' : '未中'}。`,
+      homeNews: '历史复盘场次以赛后结果校验预测模型，不再作为赛前投注依据。',
+      awayNews: '历史复盘仅用于回看预测质量。',
+      tactics: `比分主选${review.scoreMainCorrect ? '命中' : '未中'}，比分备选${review.scoreBackupCorrect ? '命中' : '未中'}。`,
+      h2h: '该页面展示历史预测记录和赛后校验。',
+      risk: '历史结果不代表未来比赛结果。',
+      oneXtwo: `${review.resultMain} / ${resultBackupText}`,
+      handicap: `命中率 ${review.percent}`,
+      marketTotal: `实际比分 ${review.score}`
+    })
+  }
+}
+
+const upcomingMatches = matches.filter((match) => !match.isFinished)
+const recentFinishedHomeMatches = finishedMatches.filter((review) => review.retainOnHome).slice(0, 10).map((review) => {
+  const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
+  return match && { ...match, matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: Date.now(), review }
+}).filter(Boolean)
+const historyMatches = finishedMatches.map((review) => {
+  const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
+  return match && { ...match, review }
+}).filter(Boolean).slice(0, 10)
+const reviewSuccessValue = finishedMatches.length ? finishedMatches.reduce((sum, item) => sum + parseFloat(item.percent), 0) / finishedMatches.length : 0
+const reviewSuccessRate = `${reviewSuccessValue.toFixed(1)}%`
+const reviewSummary = `${finishedMatches.length} 场已复盘`
+
 module.exports = {
-  matches
+  matches,
+  upcomingMatches,
+  recentFinishedHomeMatches,
+  historyMatches,
+  finishedMatches,
+  reviewSuccessRate,
+  reviewSummary
 }

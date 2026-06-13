@@ -1,24 +1,35 @@
 <view class="safe-page home-page">
+  <view class="warning-marquee">
+    <text class="warning-track">⚠️ 理性观赛，远离违法赌博。本小程序内容仅供赛前信息参考，不提供任何投注服务。严禁利用预测内容参与任何形式的非法博彩。 ⚠️ 理性观赛，远离违法赌博。</text>
+  </view>
+
+  <view class="sync-bar" wx:if="{{isRefreshing}}">
+    <view class="sync-spinner"></view>
+    <text>{{syncText}}</text>
+  </view>
+
   <view class="hero">
     <view class="hero-mark">
-      <image class="hero-logo" src="/assets/brand/worldcup26-official.avif" mode="aspectFit"></image>
+      <image class="hero-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
     </view>
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
-      <text class="hero-subtitle">近 7 天赛程、国旗队名、赛前判断和比分倾向，一键看完整分析。</text>
+      <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键看完整分析。</text>
+      <text class="hero-version">数据库更新：6/13 09:24 · 版本 1.0.1</text>
+      <text class="hero-model">预测模型：GPT5.5</text>
     </view>
   </view>
 
   <view class="ticker glass">
     <text class="ticker-hot">今日焦点</text>
-    <text class="ticker-text">{{featured.home.cn}} vs {{featured.away.cn}} · {{featured.pick.result}} · 主推 {{featured.pick.score}}</text>
+    <text class="ticker-text">{{featured.home.cn}} vs {{featured.away.cn}} · {{featured.pick.result}} · 比分预测 {{featured.pick.score}}</text>
   </view>
 
   <view class="review-panel glass">
     <view class="review-head" bindtap="toggleReview">
       <view>
         <text class="review-title">已结束比赛复盘</text>
-        <text class="review-subtitle">预测准确程度 · {{reviewSummary}}</text>
+        <text class="review-subtitle">综合成功率 · {{reviewSuccessRate}} · {{reviewSummary}}</text>
       </view>
       <text class="review-arrow">{{reviewOpen ? '收起' : '展开'}}</text>
     </view>
@@ -26,11 +37,16 @@
       <block wx:for="{{finishedMatches}}" wx:key="id">
         <view class="review-item">
           <view class="review-match">
-            <text>{{item.home}} {{item.score}} {{item.away}}</text>
-            <text class="review-pick">预测：{{item.pick}}</text>
-          </view>
-          <view class="review-rate {{item.levelClass}}">
-            <text>{{item.accuracy}}</text>
+            <view class="review-topline">
+              <text>{{item.home}} {{item.score}} {{item.away}}</text>
+              <text class="review-percent percent-{{item.percentLevel}}">{{item.percent}}</text>
+            </view>
+            <view class="review-lines">
+              <text class="review-line {{item.resultMainClass}}">胜负主选：{{item.resultMain}}</text>
+              <text class="review-line {{item.resultBackupClass}}" wx:if="{{item.resultBackup}}">胜负备选：{{item.resultBackup}}</text>
+              <text class="review-line {{item.scoreMainClass}}">比分主选：{{item.scoreMain}}</text>
+              <text class="review-line {{item.scoreBackupClass}}">比分备选：{{item.scoreBackup}}</text>
+            </view>
           </view>
         </view>
       </block>
@@ -39,14 +55,20 @@
 
   <view class="section-title">
     <text>近 7 天比赛</text>
-    <text class="pill">{{matches.length}} 场</text>
+    <view class="section-actions">
+      <text class="pill">{{matches.length}} 场</text>
+      <navigator class="pill history-entry" url="/pages/history/history" hover-class="history-entry-hover">历史场次</navigator>
+    </view>
   </view>
 
   <block wx:for="{{matches}}" wx:key="id">
     <navigator class="match-card glass" url="/pages/detail/detail?id={{item.id}}" hover-class="match-card-hover">
       <view class="match-top">
         <view>
-          <text class="date">{{item.dateText}}</text>
+          <view class="date-line">
+            <text>{{item.dateText}} · {{item.kickoff}} · {{item.weatherIcon}} {{item.weather}}</text>
+            <text class="altitude-tag altitude-{{item.altitudeLevel}}">⛰️ {{item.altitude}}</text>
+          </view>
           <text class="venue">{{item.group}} · {{item.venue}}</text>
         </view>
         <text class="arrow">›</text>
@@ -55,17 +77,25 @@
         <view class="team">
           <image class="flag-img" src="{{item.home.flag}}" mode="aspectFit"></image>
           <view class="team-name">
-            <text class="cn">{{item.home.cn}}</text>
-            <text class="en">{{item.home.en}}</text>
+            <view class="team-title-line">
+              <text class="cn">{{item.home.cn}}</text>
+              <text class="en">{{item.home.en}}</text>
+            </view>
+            <text class="team-profile">FIFA {{item.home.rank}} · {{item.home.value}}</text>
           </view>
         </view>
-        <view class="vs">
-          <text>VS</text>
+        <view class="vs match-status status-{{item.matchStatus || 'not_started'}}">
+          <text>{{item.matchStatus === 'live' ? (item.matchClock || item.phaseText || item.liveMinute || '进行中') : (item.statusText || 'VS')}}</text>
+          <text class="live-score" wx:if="{{item.matchStatus !== 'not_started' && item.liveScore}}">{{item.liveScore}}</text>
+          <text class="live-minute" wx:if="{{item.matchStatus !== 'not_started' && (item.phaseText || item.liveMinute)}}">{{item.phaseText || item.liveMinute}}</text>
         </view>
         <view class="team right">
           <view class="team-name">
-            <text class="cn">{{item.away.cn}}</text>
-            <text class="en">{{item.away.en}}</text>
+            <view class="team-title-line">
+              <text class="cn">{{item.away.cn}}</text>
+              <text class="en">{{item.away.en}}</text>
+            </view>
+            <text class="team-profile">FIFA {{item.away.rank}} · {{item.away.value}}</text>
           </view>
           <image class="flag-img" src="{{item.away.flag}}" mode="aspectFit"></image>
         </view>

@@ -1,45 +1,231 @@
-const { matches } = require('../../utils/matches')
+const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require('../../utils/matches')
+const { refreshTeamStats } = require('../../utils/liveTeamStats')
+const { refreshLiveScores } = require('../../utils/liveMatchScores')
+
+const FINISHED_KEEP_MS = 60 * 60 * 1000
+const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
+const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
+
+function getMatchTimeValue(match) {
+  const dateMatch = String(match.dateText || '').match(/(\d+)月(\d+)日/)
+  const timeMatch = String(match.kickoff || '').match(/(\d{1,2}):(\d{2})/)
+  const month = dateMatch ? Number(dateMatch[1]) : 12
+  const day = dateMatch ? Number(dateMatch[2]) : 31
+  const hour = timeMatch ? Number(timeMatch[1]) : 23
+  const minute = timeMatch ? Number(timeMatch[2]) : 59
+  return month * 1000000 + day * 10000 + hour * 100 + minute
+}
+
+function sortMatchesByTime(matches) {
+  return matches.slice().sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
+}
+
+function getFinishCache() {
+  try {
+    return wx.getStorageSync(FINISH_CACHE_KEY) || {}
+  } catch (error) {
+    return {}
+  }
+}
+
+function setFinishCache(cache) {
+  try {
+    wx.setStorageSync(FINISH_CACHE_KEY, cache)
+  } catch (error) {
+    // Cache failure should not block rendering.
+  }
+}
+
+function applyFinishDetection(matches) {
+  const cache = getFinishCache()
+  let changed = false
+  const nextMatches = matches.map((match) => {
+    if (match.matchStatus !== 'finished') {
+      return match
+    }
+    const detectedAt = cache[match.id] || match.finishDetectedAt || Date.now()
+    if (!cache[match.id]) {
+      cache[match.id] = detectedAt
+      changed = true
+    }
+    return {
+      ...match,
+      finishDetectedAt: detectedAt
+    }
+  })
+
+  if (changed) {
+    setFinishCache(cache)
+  }
+  return nextMatches
+}
+
+function keepVisibleMatch(match) {
+  if (match.matchStatus !== 'finished') {
+    return true
+  }
+  const detectedAt = match.finishDetectedAt || Date.now()
+  return Date.now() - detectedAt <= FINISHED_KEEP_MS
+}
+
+function getPercentLevel(percent) {
+  if (percent >= 100) return 'p100'
+  if (percent >= 75) return 'p75'
+  if (percent >= 50) return 'p50'
+  if (percent >= 25) return 'p25'
+  return 'p0'
+}
+
+function getWinnerFromScore(score) {
+  const parts = String(score || '').split('-').map((item) => Number(item))
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return ''
+  if (parts[0] > parts[1]) return 'home'
+  if (parts[0] < parts[1]) return 'away'
+  return 'draw'
+}
+
+function getPickWinner(match) {
+  const result = match.pick && match.pick.result ? match.pick.result : ''
+  if (result.includes('平局')) return 'draw'
+  if (result.includes(match.home.cn) || result.includes('主胜')) return 'home'
+  if (result.includes(match.away.cn) || result.includes('客胜')) return 'away'
+  return ''
+}
+
+function buildReviewFromFinishedMatch(match) {
+  const actualWinner = getWinnerFromScore(match.liveScore)
+  const pickWinner = getPickWinner(match)
+  const resultMainCorrect = actualWinner && pickWinner && actualWinner === pickWinner
+  const scoreMainCorrect = match.liveScore === match.pick.score
+  const scoreBackupCorrect = match.liveScore === match.pick.backup
+  const percentValue = ((resultMainCorrect ? 100 : 0) + (scoreMainCorrect ? 100 : scoreBackupCorrect ? 50 : 0)) / 2
+
+  return {
+    id: `${match.id}-review-live`,
+    matchId: match.id,
+    home: match.home.cn,
+    away: match.away.cn,
+    score: match.liveScore,
+    resultMain: match.pick.result,
+    resultBackup: match.pick.resultBackup || '',
+    scoreMain: match.pick.score,
+    scoreBackup: match.pick.backup,
+    resultMainClass: resultMainCorrect ? 'review-ok' : 'review-bad',
+    resultBackupClass: 'review-bad',
+    scoreMainClass: scoreMainCorrect ? 'review-ok' : 'review-bad',
+    scoreBackupClass: scoreBackupCorrect ? 'review-ok' : 'review-bad',
+    percent: `${percentValue}%`,
+    percentLevel: getPercentLevel(percentValue),
+    endedAtSort: match.finishDetectedAt || Date.now()
+  }
+}
+
+function mergeReviewMatches(staticReviews, matches) {
+  const dynamicReviews = matches
+    .filter((match) => match.matchStatus === 'finished' && match.liveScore)
+    .map(buildReviewFromFinishedMatch)
+  const reviewMap = {}
+  dynamicReviews.concat(staticReviews).forEach((review) => {
+    reviewMap[review.matchId] = review
+  })
+  return Object.keys(reviewMap)
+    .map((key) => reviewMap[key])
+    .sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
+    .slice(0, 10)
+}
+
+function getReviewRate(reviews) {
+  if (!reviews.length) return '0.0%'
+  const rate = reviews.reduce((sum, item) => sum + parseFloat(item.percent), 0) / reviews.length
+  return `${rate.toFixed(1)}%`
+}
 
 Page({
   data: {
-    matches,
-    featured: matches[0],
+    matches: sortedUpcomingMatches,
+    featured: sortedUpcomingMatches[0],
     reviewOpen: false,
-    reviewSummary: '3 场已复盘 · 方向 2/3',
-    finishedMatches: [
-      {
-        id: 'mexico-southafrica-review',
-        home: '墨西哥',
-        away: '南非',
-        score: '2-0',
-        pick: '墨西哥胜 2-0',
-        accuracy: '完全命中',
-        levelClass: 'hit'
-      },
-      {
-        id: 'korea-czechia-review',
-        home: '韩国',
-        away: '捷克',
-        score: '2-1',
-        pick: '韩国不败 1-1',
-        accuracy: '方向命中',
-        levelClass: 'near'
-      },
-      {
-        id: 'canada-bosnia-review',
-        home: '加拿大',
-        away: '波黑',
-        score: '待更新',
-        pick: '加拿大不败 2-1',
-        accuracy: '赛后更新',
-        levelClass: 'pending'
+    reviewSummary: `${finishedMatches.slice(0, 10).length} 场已复盘`,
+    reviewSuccessRate: getReviewRate(finishedMatches.slice(0, 10)),
+    finishedMatches: finishedMatches.slice(0, 10),
+    isRefreshing: false,
+    syncText: '下拉同步实时比分'
+  },
+
+  onLoad() {
+    this.scoreTimer = setInterval(() => {
+      this.refreshAll({ silent: true })
+    }, 10000)
+  },
+
+  onShow() {
+    this.refreshAll()
+  },
+
+  onUnload() {
+    if (this.scoreTimer) clearInterval(this.scoreTimer)
+    if (this.refreshFallback) clearTimeout(this.refreshFallback)
+  },
+
+  onPullDownRefresh() {
+    this.refreshAll({ manual: true })
+  },
+
+  refreshAll(options = {}) {
+    if (this.refreshing) {
+      if (options.manual) wx.stopPullDownRefresh()
+      return
+    }
+    this.refreshing = true
+    const showStatus = !options.silent || options.manual
+    if (showStatus) {
+      this.setData({
+        isRefreshing: true,
+        syncText: options.manual ? '正在手动同步' : '正在同步最新数据'
+      })
+      wx.showNavigationBarLoading()
+    }
+
+    let pending = 2
+    let finished = false
+    const finish = () => {
+      if (finished) return
+      finished = true
+      this.refreshing = false
+      clearTimeout(this.refreshFallback)
+      if (showStatus) {
+        this.setData({ syncText: '同步完成' })
+        wx.hideNavigationBarLoading()
+        wx.stopPullDownRefresh()
+        setTimeout(() => {
+          this.setData({ isRefreshing: false, syncText: '下拉同步实时比分' })
+        }, 800)
       }
-    ]
+    }
+    const taskDone = () => {
+      pending -= 1
+      if (pending <= 0) finish()
+    }
+    const updateMatches = (matches) => {
+      const nextMatches = applyFinishDetection(matches)
+      const visibleMatches = nextMatches.filter(keepVisibleMatch)
+      const sortedMatches = sortMatchesByTime(visibleMatches)
+      const nextReviews = mergeReviewMatches(finishedMatches, nextMatches)
+      this.setData({
+        matches: sortedMatches,
+        featured: sortedMatches[0],
+        finishedMatches: nextReviews,
+        reviewSummary: `${nextReviews.length} 场已复盘`,
+        reviewSuccessRate: getReviewRate(nextReviews)
+      })
+    }
+
+    refreshTeamStats(this.data.matches, updateMatches, taskDone)
+    refreshLiveScores(this.data.matches, updateMatches, taskDone)
+    this.refreshFallback = setTimeout(finish, 5000)
   },
 
   toggleReview() {
-    this.setData({
-      reviewOpen: !this.data.reviewOpen
-    })
+    this.setData({ reviewOpen: !this.data.reviewOpen })
   }
 })

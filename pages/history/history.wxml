@@ -1,0 +1,52 @@
+<view class="safe-page history-page">
+  <view class="hero">
+    <view class="hero-mark">
+      <image class="hero-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+    </view>
+    <view class="hero-copy">
+      <text class="hero-title">世界杯赛前播报</text>
+      <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键看完整分析。</text>
+      <text class="hero-version">数据库更新：6/13 09:24 · 版本 1.0.1</text>
+      <text class="hero-model">预测模型：GPT5.5</text>
+    </view>
+  </view>
+
+  <view class="search-bar glass">
+    <view>
+      <text class="search-title">按日期搜索</text>
+      <text class="search-subtitle">展示最近 10 个历史预测</text>
+    </view>
+    <picker mode="selector" range="{{historyDates}}" value="{{historyDateIndex}}" bindchange="onHistoryDateChange">
+      <view class="date-filter">{{selectedHistoryDate}}</view>
+    </picker>
+  </view>
+
+  <block wx:if="{{filteredHistoryMatches.length}}">
+    <block wx:for="{{filteredHistoryMatches}}" wx:key="id">
+      <navigator class="history-card glass" url="/pages/detail/detail?id={{item.id}}" hover-class="history-card-hover">
+        <view class="history-top">
+          <view>
+            <text class="history-date">{{item.dateText}} · {{item.kickoff}}</text>
+            <text class="history-score">{{item.home.cn}} {{item.review.score}} {{item.away.cn}}</text>
+          </view>
+          <text class="review-percent percent-{{item.review.percentLevel}}">{{item.review.percent}}</text>
+        </view>
+        <view class="history-body">
+          <text>胜负主选：{{item.review.resultMain}}</text>
+          <text>比分主选：{{item.review.scoreMain}}</text>
+        </view>
+        <view class="history-body muted-line" wx:if="{{item.review.resultBackup}}">
+          <text>胜负备选：{{item.review.resultBackup}}</text>
+          <text>比分备选：{{item.review.scoreBackup}}</text>
+        </view>
+        <view class="history-body muted-line" wx:else>
+          <text>胜负备选：无</text>
+          <text>比分备选：{{item.review.scoreBackup}}</text>
+        </view>
+      </navigator>
+    </block>
+  </block>
+  <view class="empty-history glass" wx:else>
+    <text>该日期暂无历史预测</text>
+  </view>
+</view>
