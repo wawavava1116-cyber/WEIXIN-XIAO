@@ -1,6 +1,7 @@
 const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require('../../utils/matches')
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
+const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 
 const FINISHED_KEEP_MS = 12 * 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
@@ -143,10 +144,14 @@ function getReviewRate(reviews) {
   return `${rate.toFixed(1)}%`
 }
 
+function prepareDisplayMatches(matches) {
+  return sortFavoritesFirst(decorateMatches(sortMatchesByTime(matches), getFavoriteIds()))
+}
+
 Page({
   data: {
-    matches: sortedUpcomingMatches,
-    featured: sortedUpcomingMatches[0],
+    matches: prepareDisplayMatches(sortedUpcomingMatches),
+    featured: prepareDisplayMatches(sortedUpcomingMatches)[0],
     reviewOpen: false,
     reviewSummary: `${finishedMatches.slice(0, 10).length} 场已复盘`,
     reviewSuccessRate: getReviewRate(finishedMatches.slice(0, 10)),
@@ -163,6 +168,7 @@ Page({
 
   onShow() {
     this.refreshAll()
+    this.applyFavoriteState()
   },
 
   onUnload() {
@@ -212,7 +218,7 @@ Page({
     const updateMatches = (matches) => {
       const nextMatches = applyFinishDetection(matches)
       const visibleMatches = nextMatches.filter(keepVisibleMatch)
-      const sortedMatches = sortMatchesByTime(visibleMatches)
+      const sortedMatches = prepareDisplayMatches(visibleMatches)
       const nextReviews = mergeReviewMatches(finishedMatches, nextMatches)
       this.setData({
         matches: sortedMatches,
@@ -230,5 +236,28 @@ Page({
 
   toggleReview() {
     this.setData({ reviewOpen: !this.data.reviewOpen })
+  },
+
+  applyFavoriteState() {
+    const matches = prepareDisplayMatches(this.data.matches)
+    this.setData({
+      matches,
+      featured: matches[0]
+    })
+  },
+
+  toggleFavorite(event) {
+    const matchId = event.currentTarget.dataset.id
+    if (!matchId) return
+    const favoriteIds = toggleFavorite(matchId)
+    const matches = sortFavoritesFirst(decorateMatches(this.data.matches, favoriteIds))
+    this.setData({
+      matches,
+      featured: matches[0]
+    })
+    wx.showToast({
+      title: favoriteIds.indexOf(matchId) !== -1 ? '已关注' : '已取消',
+      icon: 'none'
+    })
   }
 })

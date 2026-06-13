@@ -1,0 +1,53 @@
+<view class="safe-page favorites-page">
+  <view class="favorite-hero">
+    <text class="favorite-title">我的关注</text>
+    <text class="favorite-subtitle">已关注比赛会自动排在首页最上面，也会集中收纳在这里。</text>
+  </view>
+
+  <block wx:if="{{favoriteMatches.length}}">
+    <block wx:for="{{favoriteMatches}}" wx:key="id">
+      <navigator class="favorite-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="favorite-card-hover">
+        <view class="favorite-top">
+          <view class="favorite-left">
+            <view class="favorite-star" catchtap="toggleFavorite" data-id="{{item.id}}">
+              <text>★</text>
+            </view>
+            <view class="favorite-meta">
+              <text class="favorite-date">{{item.dateText}} · {{item.kickoff}} · {{item.weatherIcon}} {{item.weather}}</text>
+              <text class="favorite-venue">{{item.group}} · {{item.venue}}</text>
+            </view>
+          </view>
+          <text class="favorite-arrow">›</text>
+        </view>
+        <view class="favorite-teams">
+          <view class="favorite-team">
+            <image class="favorite-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+            <view>
+              <text class="favorite-cn">{{item.home.cn}}</text>
+              <text class="favorite-en">{{item.home.en}}</text>
+            </view>
+          </view>
+          <view class="favorite-vs">
+            <text>{{item.liveScore || 'VS'}}</text>
+          </view>
+          <view class="favorite-team right">
+            <view>
+              <text class="favorite-en right-text">{{item.away.en}}</text>
+              <text class="favorite-cn">{{item.away.cn}}</text>
+            </view>
+            <image class="favorite-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+          </view>
+        </view>
+        <view class="favorite-pick">
+          <text>倾向：{{item.pick.result}}</text>
+          <text>比分：{{item.pick.score}}</text>
+          <text>进球：{{item.pick.total}}</text>
+        </view>
+      </navigator>
+    </block>
+  </block>
+
+  <view class="empty-favorites glass" wx:else>
+    <text>还没有关注比赛。回到首页点亮星星，就会收纳到这里。</text>
+  </view>
+</view>

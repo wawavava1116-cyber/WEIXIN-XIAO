@@ -24,9 +24,9 @@
 
       <view class="side">
         <image class="big-flag" src="{{match.away.flag}}" mode="aspectFit"></image>
-        <view class="side-title-line">
-          <text class="side-cn">{{match.away.cn}}</text>
+        <view class="side-title-line side-title-right">
           <text class="side-en">{{match.away.en}}</text>
+          <text class="side-cn">{{match.away.cn}}</text>
         </view>
         <text class="side-profile">FIFA {{match.away.rank}} · {{match.away.value}}</text>
       </view>

@@ -274,6 +274,13 @@
   text-decoration: none;
 }
 
+.favorite-entry {
+  color: #050505;
+  background: #facc15;
+  text-decoration: none;
+}
+
+.favorite-entry-hover,
 .history-entry-hover {
   opacity: 0.84;
 }
@@ -298,6 +305,43 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.match-meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10rpx;
+  min-width: 0;
+  flex: 1;
+}
+
+.match-meta-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.favorite-button {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38rpx;
+  height: 38rpx;
+  margin-top: -2rpx;
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.08);
+  border: 2rpx solid rgba(255, 255, 255, 0.12);
+  font-size: 27rpx;
+  line-height: 38rpx;
+  font-weight: 1000;
+}
+
+.favorite-on {
+  color: #050505;
+  background: #facc15;
+  border-color: #ffe58a;
+  box-shadow: 0 0 18rpx rgba(250, 204, 21, 0.42);
 }
 
 .date-line {
@@ -396,6 +440,10 @@
 
 .team.right .team-title-line {
   justify-content: flex-end;
+}
+
+.team.right .en {
+  text-align: right;
 }
 
 .cn {

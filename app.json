@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/favorites/favorites",
     "pages/history/history",
     "pages/detail/detail"
   ],

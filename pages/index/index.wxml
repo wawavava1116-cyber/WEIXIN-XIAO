@@ -57,6 +57,7 @@
     <text>近 7 天比赛</text>
     <view class="section-actions">
       <text class="pill">{{matches.length}} 场</text>
+      <navigator class="pill favorite-entry" url="/pages/favorites/favorites" hover-class="favorite-entry-hover">关注</navigator>
       <navigator class="pill history-entry" url="/pages/history/history" hover-class="history-entry-hover">历史场次</navigator>
     </view>
   </view>
@@ -64,12 +65,17 @@
   <block wx:for="{{matches}}" wx:key="id">
     <navigator class="match-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="match-card-hover">
       <view class="match-top">
-        <view>
+        <view class="match-meta-row">
+          <view class="favorite-button {{item.isFavorite ? 'favorite-on' : ''}}" catchtap="toggleFavorite" data-id="{{item.id}}">
+            <text>{{item.isFavorite ? '★' : '☆'}}</text>
+          </view>
+          <view class="match-meta-copy">
           <view class="date-line">
             <text>{{item.dateText}} · {{item.kickoff}} · {{item.weatherIcon}} {{item.weather}}</text>
             <text class="altitude-tag altitude-{{item.altitudeLevel}}">⛰️ {{item.altitude}}</text>
           </view>
           <text class="venue">{{item.group}} · {{item.venue}}</text>
+          </view>
         </view>
         <text class="arrow">›</text>
       </view>
@@ -92,8 +98,8 @@
         <view class="team right">
           <view class="team-name">
             <view class="team-title-line">
-              <text class="cn">{{item.away.cn}}</text>
               <text class="en">{{item.away.en}}</text>
+              <text class="cn">{{item.away.cn}}</text>
             </view>
             <text class="team-profile">FIFA {{item.away.rank}} · {{item.away.value}}</text>
           </view>
