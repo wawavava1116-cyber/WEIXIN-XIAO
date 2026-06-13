@@ -1,7 +1,7 @@
 <view class="safe-page history-page">
   <view class="hero">
     <view class="hero-mark">
-      <image class="hero-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+      <image class="hero-logo" src="/assets/brand/worldcup26-logo.png" mode="aspectFit"></image>
     </view>
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
@@ -23,7 +23,7 @@
 
   <block wx:if="{{filteredHistoryMatches.length}}">
     <block wx:for="{{filteredHistoryMatches}}" wx:key="id">
-      <navigator class="history-card glass" url="/pages/detail/detail?id={{item.id}}" hover-class="history-card-hover">
+      <navigator class="history-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=history" hover-class="history-card-hover">
         <view class="history-top">
           <view>
             <text class="history-date">{{item.dateText}} · {{item.kickoff}}</text>
