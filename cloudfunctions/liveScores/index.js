@@ -5,7 +5,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const ESPN_LEAGUES = ['fifa.world', 'fifa.world_cup']
 const KNOWN_MATCHES = [
-  { id: 'canada-bosnia-20260612', home: ['canada'], away: ['bosnia', 'bosnia and herzegovina'] },
+  { id: 'canada-bosnia-20260612', home: ['canada'], away: ['bosnia', 'bosnia herzegovina', 'bosnia and herzegovina'] },
   { id: 'usa-paraguay-20260612', home: ['usa', 'united states', 'united states of america'], away: ['paraguay'] },
   { id: 'haiti-scotland-20260613', home: ['haiti'], away: ['scotland'] },
   { id: 'australia-turkey-20260613', home: ['australia'], away: ['turkey', 'turkiye', 'türkiye'] },
@@ -28,7 +28,7 @@ const KNOWN_MATCHES = [
   { id: 'portugal-congodr-20260617', home: ['portugal'], away: ['congo dr', 'dr congo', 'congo democratic republic'] },
   { id: 'uzbekistan-colombia-20260617', home: ['uzbekistan'], away: ['colombia'] },
   { id: 'czechia-southafrica-20260618', home: ['czechia', 'czech republic'], away: ['south africa'] },
-  { id: 'switzerland-bosnia-20260618', home: ['switzerland'], away: ['bosnia', 'bosnia and herzegovina'] },
+  { id: 'switzerland-bosnia-20260618', home: ['switzerland'], away: ['bosnia', 'bosnia herzegovina', 'bosnia and herzegovina'] },
   { id: 'canada-qatar-20260618', home: ['canada'], away: ['qatar'] },
   { id: 'mexico-korea-20260618', home: ['mexico'], away: ['korea republic', 'south korea', 'korea'] }
 ]
@@ -120,7 +120,12 @@ function formatChinaSchedule(isoDate) {
   const weekday = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][chinaDate.getDay()] || ''
   const parts = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(date)
   const getPart = (type) => (parts.find((item) => item.type === type) || {}).value || ''
-  return { dateText: `${getPart('month')}月${getPart('day')}日 ${weekday}`, kickoff: `${getPart('hour')}:${getPart('minute')}` }
+  return {
+    dateText: `${getPart('month')}月${getPart('day')}日 ${weekday}`,
+    kickoff: `${getPart('hour')}:${getPart('minute')}`,
+    scheduleAt: date.toISOString(),
+    sortTime: date.getTime()
+  }
 }
 
 function getDateWindow(matchIds = []) {
@@ -128,7 +133,18 @@ function getDateWindow(matchIds = []) {
     const match = String(id).match(/-(\d{8})$/)
     return match && match[1]
   }).filter(Boolean)
-  if (datesFromMatches.length) return Array.from(new Set(datesFromMatches))
+  if (datesFromMatches.length) {
+    const dates = []
+    datesFromMatches.forEach((dateText) => {
+      dates.push(dateText)
+      const year = Number(dateText.slice(0, 4))
+      const month = Number(dateText.slice(4, 6))
+      const day = Number(dateText.slice(6, 8))
+      const nextDate = new Date(Date.UTC(year, month - 1, day + 1))
+      dates.push(`${nextDate.getUTCFullYear()}${String(nextDate.getUTCMonth() + 1).padStart(2, '0')}${String(nextDate.getUTCDate()).padStart(2, '0')}`)
+    })
+    return Array.from(new Set(dates))
+  }
   const now = new Date()
   return [-1, 0, 1].map((offset) => {
     const date = new Date(now.getTime() + offset * 24 * 60 * 60 * 1000)
@@ -159,6 +175,8 @@ function parseEspnEvent(event) {
       phaseText,
       dateText: chinaSchedule.dateText,
       kickoff: chinaSchedule.kickoff,
+      scheduleAt: chinaSchedule.scheduleAt,
+      sortTime: chinaSchedule.sortTime,
       updatedAt: new Date().toISOString(),
       source: 'ESPN public scoreboard'
     }

@@ -16,6 +16,8 @@ function applyScoresToMatches(matches, scores) {
     match.statusText = latest.statusText || match.statusText
     match.dateText = latest.dateText || match.dateText
     match.kickoff = latest.kickoff || match.kickoff
+    match.scheduleAt = latest.scheduleAt || match.scheduleAt
+    match.sortTime = latest.sortTime || match.sortTime
     if (match.matchStatus === 'not_started') {
       match.liveScore = ''
       match.matchClock = ''

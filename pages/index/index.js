@@ -2,18 +2,21 @@ const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require(
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 
-const FINISHED_KEEP_MS = 60 * 60 * 1000
+const FINISHED_KEEP_MS = 12 * 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
 const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
 
 function getMatchTimeValue(match) {
+  if (typeof match.sortTime === 'number' && match.sortTime > 0) {
+    return match.sortTime
+  }
   const dateMatch = String(match.dateText || '').match(/(\d+)月(\d+)日/)
   const timeMatch = String(match.kickoff || '').match(/(\d{1,2}):(\d{2})/)
   const month = dateMatch ? Number(dateMatch[1]) : 12
   const day = dateMatch ? Number(dateMatch[2]) : 31
   const hour = timeMatch ? Number(timeMatch[1]) : 23
   const minute = timeMatch ? Number(timeMatch[2]) : 59
-  return month * 1000000 + day * 10000 + hour * 100 + minute
+  return new Date(2026, month - 1, day, hour, minute).getTime()
 }
 
 function sortMatchesByTime(matches) {

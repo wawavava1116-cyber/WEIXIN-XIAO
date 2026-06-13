@@ -809,32 +809,32 @@ const matches = [
 ]
 
 const matchMeta = {
-  'canada-bosnia-20260612': { dateText: '6月13日 周六', kickoff: '03:00', weatherIcon: '☁️', weather: '21℃' },
-  'usa-paraguay-20260612': { dateText: '6月13日 周六', kickoff: '09:00', weatherIcon: '☀️', weather: '23℃' },
-  'haiti-scotland-20260613': { dateText: '6月14日 周日', kickoff: '02:00', weatherIcon: '🌧️', weather: '19℃' },
-  'australia-turkey-20260613': { dateText: '6月14日 周日', kickoff: '05:00', weatherIcon: '☁️', weather: '18℃' },
-  'brazil-morocco-20260613': { dateText: '6月14日 周日', kickoff: '08:00', weatherIcon: '☀️', weather: '24℃' },
-  'qatar-switzerland-20260613': { dateText: '6月14日 周日', kickoff: '11:00', weatherIcon: '☀️', weather: '17℃' },
-  'ivorycoast-ecuador-20260614': { dateText: '6月15日 周一', kickoff: '02:00', weatherIcon: '☁️', weather: '25℃' },
-  'germany-curacao-20260614': { dateText: '6月15日 周一', kickoff: '05:00', weatherIcon: '☀️', weather: '31℃' },
-  'netherlands-japan-20260614': { dateText: '6月15日 周一', kickoff: '08:00', weatherIcon: '☀️', weather: '30℃' },
-  'sweden-tunisia-20260614': { dateText: '6月15日 周一', kickoff: '11:00', weatherIcon: '☀️', weather: '28℃' },
-  'saudi-uruguay-20260615': { dateText: '6月16日 周二', kickoff: '02:00', weatherIcon: '⛈️', weather: '29℃' },
-  'spain-caboverde-20260615': { dateText: '6月16日 周二', kickoff: '05:00', weatherIcon: '☁️', weather: '28℃' },
-  'iran-newzealand-20260615': { dateText: '6月16日 周二', kickoff: '08:00', weatherIcon: '☀️', weather: '22℃' },
-  'belgium-egypt-20260615': { dateText: '6月16日 周二', kickoff: '11:00', weatherIcon: '☁️', weather: '16℃' },
-  'france-senegal-20260616': { dateText: '6月17日 周三', kickoff: '02:00', weatherIcon: '☀️', weather: '24℃' },
-  'iraq-norway-20260616': { dateText: '6月17日 周三', kickoff: '05:00', weatherIcon: '🌧️', weather: '20℃' },
-  'argentina-algeria-20260616': { dateText: '6月17日 周三', kickoff: '08:00', weatherIcon: '☀️', weather: '27℃' },
-  'austria-jordan-20260616': { dateText: '6月17日 周三', kickoff: '11:00', weatherIcon: '☀️', weather: '17℃' },
-  'ghana-panama-20260617': { dateText: '6月18日 周四', kickoff: '02:00', weatherIcon: '☁️', weather: '22℃' },
-  'england-croatia-20260617': { dateText: '6月18日 周四', kickoff: '05:00', weatherIcon: '☀️', weather: '31℃' },
-  'portugal-congodr-20260617': { dateText: '6月18日 周四', kickoff: '08:00', weatherIcon: '☀️', weather: '32℃' },
-  'uzbekistan-colombia-20260617': { dateText: '6月18日 周四', kickoff: '11:00', weatherIcon: '☀️', weather: '24℃' },
-  'czechia-southafrica-20260618': { dateText: '6月19日 周五', kickoff: '02:00', weatherIcon: '☁️', weather: '28℃' },
-  'switzerland-bosnia-20260618': { dateText: '6月19日 周五', kickoff: '05:00', weatherIcon: '☀️', weather: '22℃' },
-  'canada-qatar-20260618': { dateText: '6月19日 周五', kickoff: '08:00', weatherIcon: '☁️', weather: '18℃' },
-  'mexico-korea-20260618': { dateText: '6月19日 周五', kickoff: '11:00', weatherIcon: '☀️', weather: '26℃' }
+  'canada-bosnia-20260612': { dateText: '6月13日 周六', kickoff: '03:00', scheduleAt: '2026-06-13T03:00:00+08:00', weatherIcon: '☁️', weather: '21℃' },
+  'usa-paraguay-20260612': { dateText: '6月13日 周六', kickoff: '09:00', scheduleAt: '2026-06-13T09:00:00+08:00', weatherIcon: '☀️', weather: '23℃' },
+  'qatar-switzerland-20260613': { dateText: '6月14日 周日', kickoff: '03:00', scheduleAt: '2026-06-14T03:00:00+08:00', weatherIcon: '☀️', weather: '17℃' },
+  'brazil-morocco-20260613': { dateText: '6月14日 周日', kickoff: '06:00', scheduleAt: '2026-06-14T06:00:00+08:00', weatherIcon: '☀️', weather: '24℃' },
+  'haiti-scotland-20260613': { dateText: '6月14日 周日', kickoff: '09:00', scheduleAt: '2026-06-14T09:00:00+08:00', weatherIcon: '🌧️', weather: '19℃' },
+  'australia-turkey-20260613': { dateText: '6月14日 周日', kickoff: '12:00', scheduleAt: '2026-06-14T12:00:00+08:00', weatherIcon: '☁️', weather: '18℃' },
+  'germany-curacao-20260614': { dateText: '6月15日 周一', kickoff: '01:00', scheduleAt: '2026-06-15T01:00:00+08:00', weatherIcon: '☀️', weather: '31℃' },
+  'netherlands-japan-20260614': { dateText: '6月15日 周一', kickoff: '04:00', scheduleAt: '2026-06-15T04:00:00+08:00', weatherIcon: '☀️', weather: '30℃' },
+  'ivorycoast-ecuador-20260614': { dateText: '6月15日 周一', kickoff: '07:00', scheduleAt: '2026-06-15T07:00:00+08:00', weatherIcon: '☁️', weather: '25℃' },
+  'sweden-tunisia-20260614': { dateText: '6月15日 周一', kickoff: '10:00', scheduleAt: '2026-06-15T10:00:00+08:00', weatherIcon: '☀️', weather: '28℃' },
+  'spain-caboverde-20260615': { dateText: '6月16日 周二', kickoff: '00:00', scheduleAt: '2026-06-16T00:00:00+08:00', weatherIcon: '☁️', weather: '28℃' },
+  'belgium-egypt-20260615': { dateText: '6月16日 周二', kickoff: '03:00', scheduleAt: '2026-06-16T03:00:00+08:00', weatherIcon: '☁️', weather: '16℃' },
+  'saudi-uruguay-20260615': { dateText: '6月16日 周二', kickoff: '06:00', scheduleAt: '2026-06-16T06:00:00+08:00', weatherIcon: '⛈️', weather: '29℃' },
+  'iran-newzealand-20260615': { dateText: '6月16日 周二', kickoff: '09:00', scheduleAt: '2026-06-16T09:00:00+08:00', weatherIcon: '☀️', weather: '22℃' },
+  'france-senegal-20260616': { dateText: '6月17日 周三', kickoff: '03:00', scheduleAt: '2026-06-17T03:00:00+08:00', weatherIcon: '☀️', weather: '24℃' },
+  'iraq-norway-20260616': { dateText: '6月17日 周三', kickoff: '06:00', scheduleAt: '2026-06-17T06:00:00+08:00', weatherIcon: '🌧️', weather: '20℃' },
+  'argentina-algeria-20260616': { dateText: '6月17日 周三', kickoff: '09:00', scheduleAt: '2026-06-17T09:00:00+08:00', weatherIcon: '☀️', weather: '27℃' },
+  'austria-jordan-20260616': { dateText: '6月17日 周三', kickoff: '12:00', scheduleAt: '2026-06-17T12:00:00+08:00', weatherIcon: '☀️', weather: '17℃' },
+  'portugal-congodr-20260617': { dateText: '6月18日 周四', kickoff: '01:00', scheduleAt: '2026-06-18T01:00:00+08:00', weatherIcon: '☀️', weather: '32℃' },
+  'england-croatia-20260617': { dateText: '6月18日 周四', kickoff: '04:00', scheduleAt: '2026-06-18T04:00:00+08:00', weatherIcon: '☀️', weather: '31℃' },
+  'ghana-panama-20260617': { dateText: '6月18日 周四', kickoff: '07:00', scheduleAt: '2026-06-18T07:00:00+08:00', weatherIcon: '☁️', weather: '22℃' },
+  'uzbekistan-colombia-20260617': { dateText: '6月18日 周四', kickoff: '10:00', scheduleAt: '2026-06-18T10:00:00+08:00', weatherIcon: '☀️', weather: '24℃' },
+  'czechia-southafrica-20260618': { dateText: '6月19日 周五', kickoff: '00:00', scheduleAt: '2026-06-19T00:00:00+08:00', weatherIcon: '☁️', weather: '28℃' },
+  'switzerland-bosnia-20260618': { dateText: '6月19日 周五', kickoff: '03:00', scheduleAt: '2026-06-19T03:00:00+08:00', weatherIcon: '☀️', weather: '22℃' },
+  'canada-qatar-20260618': { dateText: '6月19日 周五', kickoff: '06:00', scheduleAt: '2026-06-19T06:00:00+08:00', weatherIcon: '☁️', weather: '18℃' },
+  'mexico-korea-20260618': { dateText: '6月19日 周五', kickoff: '09:00', scheduleAt: '2026-06-19T09:00:00+08:00', weatherIcon: '☀️', weather: '26℃' }
 }
 
 const venueAltitudes = {
@@ -902,6 +902,8 @@ matches.forEach((match) => {
   const meta = matchMeta[match.id] || { kickoff: '待定', weatherIcon: '⏱️', weather: '赛前更新' }
   match.dateText = meta.dateText || match.dateText
   match.kickoff = meta.kickoff
+  match.scheduleAt = meta.scheduleAt || ''
+  match.sortTime = meta.scheduleAt ? Date.parse(meta.scheduleAt) : 0
   match.weatherIcon = meta.weatherIcon
   match.weather = meta.weather
   match.altitude = venueAltitudes[match.venue] || '待定'
@@ -931,6 +933,17 @@ function getPercentLevel(percent) {
   return 'p0'
 }
 
+function sortKeyToLocalMs(sortKey) {
+  const text = String(sortKey || '')
+  if (text.length < 12) return 0
+  const year = Number(text.slice(0, 4))
+  const month = Number(text.slice(4, 6))
+  const day = Number(text.slice(6, 8))
+  const hour = Number(text.slice(8, 10))
+  const minute = Number(text.slice(10, 12))
+  return Date.parse(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00+08:00`)
+}
+
 const finishedMatches = finishedReviewSource.map((item) => {
   const resultWeight = getPredictionWeight(item.resultMainCorrect, item.resultBackupCorrect)
   const scoreWeight = getPredictionWeight(item.scoreMainCorrect, item.scoreBackupCorrect)
@@ -942,7 +955,8 @@ const finishedMatches = finishedReviewSource.map((item) => {
     scoreMainClass: item.scoreMainCorrect ? 'review-ok' : 'review-bad',
     scoreBackupClass: item.scoreBackupCorrect ? 'review-ok' : 'review-bad',
     percent: `${percentValue}%`,
-    percentLevel: getPercentLevel(percentValue)
+    percentLevel: getPercentLevel(percentValue),
+    endedAtMs: sortKeyToLocalMs(item.endedAtSort)
   }
 }).sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
 
@@ -991,9 +1005,12 @@ function makeHistoryFallback(review) {
 }
 
 const upcomingMatches = matches.filter((match) => !match.isFinished)
-const recentFinishedHomeMatches = finishedMatches.filter((review) => review.retainOnHome).slice(0, 10).map((review) => {
+const recentFinishedHomeMatches = finishedMatches.filter((review) => {
+  if (!review.retainOnHome || !review.endedAtMs) return false
+  return Date.now() - review.endedAtMs <= 12 * 60 * 60 * 1000
+}).slice(0, 10).map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
-  return match && { ...match, matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: Date.now(), review }
+  return match && { ...match, matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: review.endedAtMs, review }
 }).filter(Boolean)
 const historyMatches = finishedMatches.map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
