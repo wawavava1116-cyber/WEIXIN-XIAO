@@ -67,9 +67,19 @@
   color: #050505;
   background: #facc15;
   border: 2rpx solid #ffe58a;
-  font-size: 27rpx;
+  font-size: 26rpx;
+  line-height: 1;
   font-weight: 1000;
   box-shadow: 0 0 18rpx rgba(250, 204, 21, 0.42);
+}
+
+.favorite-star text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform: translate(0, -1rpx);
 }
 
 .favorite-meta {
