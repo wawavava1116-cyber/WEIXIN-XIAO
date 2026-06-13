@@ -85,14 +85,5 @@ Page({
     refreshLiveScores([this.data.match], (updatedMatches) => {
       this.setMatch(updatedMatches[0])
     })
-  },
-
-  showReward() {
-    wx.showModal({
-      title: '感谢支持',
-      content: '这里可以接入微信赞赏码或客服二维码。当前版本先保留不强制支付的打赏入口。',
-      confirmText: '继续加油',
-      showCancel: false
-    })
   }
 })

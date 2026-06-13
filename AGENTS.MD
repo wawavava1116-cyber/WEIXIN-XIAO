@@ -31,7 +31,7 @@
 - `utils/liveTeamStats.js`：球队排名和身价的可选实时覆盖逻辑。
 - `cloudfunctions/liveScores/index.js`：公开比分接口抓取、状态转换、北京时间转换。
 - `pages/index/`：首页、今日焦点、近 7 天比赛、复盘入口。
-- `pages/detail/`：单场比赛详情和打赏入口。
+- `pages/detail/`：单场比赛详情。
 - `pages/history/`：历史场次和日期筛选。
 - `assets/flags/`：国家队旗帜。
 - `assets/brand/`：世界杯视觉相关图片。
