@@ -1,7 +1,7 @@
 <view class="safe-page history-page">
   <view class="hero">
     <view class="hero-mark">
-      <image class="hero-logo" src="/assets/brand/worldcup26-logo.png" mode="aspectFit"></image>
+      <image class="hero-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
     </view>
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
