@@ -868,6 +868,40 @@ const predictionDiscipline = {
   'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', oneXtwo: '主胜为主，平局低权重保护', order: '墨西哥胜 > 平局保护 > 2.5球谨慎大' }
 }
 
+const injuryImpactNotes = {
+  'mexico-korea-20260618': {
+    home: '墨西哥首轮出现红牌停赛风险，相关球员下一场无缘出战，赛前需要核对官方停赛名单。若缺口在中后场，墨西哥高位压迫后的回追保护会下降，主胜方向保留，但不宜把盘口追得过深。',
+    away: '韩国目前更关键的是锋线与前腰健康度。若核心攻击手首发，反击速度会放大墨西哥身后空间，因此平局只作为低权重保护，不在首页展示。'
+  },
+  'czechia-southafrica-20260618': {
+    home: '捷克暂无明确新增停赛输入，主要看中卫和高中锋健康度。若高点齐整，定位球和二点球优势会提升。',
+    away: '南非首轮有红牌停赛影响，下一场相关球员无法出战，防线轮换和中场拦截会受影响。速度反击仍有威胁，但阵型完整度下降，所以平局优先，南非不宜作为主方向。'
+  },
+  'haiti-scotland-20260613': {
+    home: '海地需要确认锋线速度点和边翼卫身体状态；若主力速度点缺阵，反击威胁会明显下降。',
+    away: '苏格兰重点看中锋、后腰和中卫轴线是否齐整。核心骨架完整时客胜方向更稳，深让仍需谨慎。'
+  },
+  'australia-turkey-20260613': {
+    home: '澳大利亚需关注中卫转身速度和主力中锋健康度；若高点不齐，定位球优势会被削弱。',
+    away: '土耳其核心前腰和边锋出勤决定进攻上限。若创造点首发，客胜优先；若缺阵，平局保护权重提高。'
+  },
+  'brazil-morocco-20260613': {
+    home: '巴西需确认边锋群和中场推进点是否首发。若攻击群齐整，主胜方向清晰；若轮换偏保守，比分会更接近。',
+    away: '摩洛哥边后卫和后腰健康度决定反击质量。若两翼齐整，巴西赢球但未必轻松穿盘。'
+  },
+  'qatar-switzerland-20260613': {
+    home: '卡塔尔暂无确认核心停赛，重点看门将和中卫组合稳定性。若防线轮换，被瑞士压迫后出球风险较高。',
+    away: '瑞士中轴线经验充足，若主力后腰和中卫齐整，客胜与低比分方向更稳。'
+  }
+}
+
+function getDefaultInjuryImpact(match) {
+  return {
+    home: `${match.home.cn}暂无确认新增红牌停赛，赛前重点核对首发门将、中卫和核心进攻点。若关键位置临场缺阵，需要下调进攻效率或防线稳定性。`,
+    away: `${match.away.cn}暂无确认新增红牌停赛，主要关注长途旅行后的轮换和核心球员健康度。若中前场主力不齐，比分倾向会更保守。`
+  }
+}
+
 function applyPredictionRule(match) {
   const rule = predictionDiscipline[match.id]
   if (!rule) {
@@ -910,6 +944,7 @@ matches.forEach((match) => {
   const altitudeValue = parseInt(match.altitude, 10)
   match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
   applyPredictionRule(match)
+  match.analysis.injuryImpact = injuryImpactNotes[match.id] || getDefaultInjuryImpact(match)
 })
 
 const finishedReviewSource = [
@@ -1007,7 +1042,7 @@ function makeHistoryFallback(review) {
 const upcomingMatches = matches.filter((match) => !match.isFinished)
 const recentFinishedHomeMatches = finishedMatches.filter((review) => {
   if (!review.retainOnHome || !review.endedAtMs) return false
-  return Date.now() - review.endedAtMs <= 12 * 60 * 60 * 1000
+  return Date.now() - review.endedAtMs <= 60 * 60 * 1000
 }).slice(0, 10).map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
   return match && { ...match, matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: review.endedAtMs, review }

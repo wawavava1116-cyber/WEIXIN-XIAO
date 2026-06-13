@@ -70,6 +70,12 @@
     <text class="body-line">{{match.away.cn}}：{{match.analysis.news.away}}</text>
   </view>
 
+  <view class="analysis-card glass" wx:if="{{match.analysis.injuryImpact}}">
+    <text class="block-title">球员伤停信息及影响</text>
+    <text class="body-line">{{match.home.cn}}：{{match.analysis.injuryImpact.home}}</text>
+    <text class="body-line">{{match.away.cn}}：{{match.analysis.injuryImpact.away}}</text>
+  </view>
+
   <view class="analysis-card glass">
     <text class="block-title">战术与比赛环境</text>
     <text class="body-line">{{match.analysis.tactics}}</text>

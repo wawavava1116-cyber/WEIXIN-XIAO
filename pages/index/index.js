@@ -3,9 +3,35 @@ const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 
-const FINISHED_KEEP_MS = 12 * 60 * 60 * 1000
+const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
 const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
+const FEATURED_PRIORITY = {
+  'brazil-morocco-20260613': 100,
+  'australia-turkey-20260613': 72,
+  'haiti-scotland-20260613': 68,
+  'qatar-switzerland-20260613': 58,
+  'netherlands-japan-20260614': 96,
+  'germany-curacao-20260614': 86,
+  'ivorycoast-ecuador-20260614': 70,
+  'sweden-tunisia-20260614': 62,
+  'spain-caboverde-20260615': 96,
+  'saudi-uruguay-20260615': 86,
+  'belgium-egypt-20260615': 82,
+  'iran-newzealand-20260615': 66,
+  'france-senegal-20260616': 98,
+  'argentina-algeria-20260616': 96,
+  'iraq-norway-20260616': 78,
+  'austria-jordan-20260616': 66,
+  'england-croatia-20260617': 100,
+  'portugal-congodr-20260617': 94,
+  'uzbekistan-colombia-20260617': 72,
+  'ghana-panama-20260617': 64,
+  'mexico-korea-20260618': 96,
+  'switzerland-bosnia-20260618': 76,
+  'canada-qatar-20260618': 74,
+  'czechia-southafrica-20260618': 62
+}
 
 function getMatchTimeValue(match) {
   if (typeof match.sortTime === 'number' && match.sortTime > 0) {
@@ -22,6 +48,41 @@ function getMatchTimeValue(match) {
 
 function sortMatchesByTime(matches) {
   return matches.slice().sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
+}
+
+function getMatchDayValue(match) {
+  const timeValue = getMatchTimeValue(match)
+  const date = new Date(timeValue)
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+}
+
+function getFeaturedPriority(match) {
+  return FEATURED_PRIORITY[match.id] || 0
+}
+
+function getFinishDetectedAt(match) {
+  if (match.finishDetectedAt) return match.finishDetectedAt
+  if (match.review && match.review.endedAtMs) return match.review.endedAtMs
+  if (match.matchStatus === 'finished' && match.sortTime) {
+    return match.sortTime + 2 * 60 * 60 * 1000
+  }
+  return Date.now()
+}
+
+function selectFeaturedMatch(matches) {
+  const activeMatches = sortMatchesByTime(matches).filter((match) => match.matchStatus !== 'finished')
+  const now = Date.now()
+  const futureOrLiveMatches = activeMatches.filter((match) => match.matchStatus === 'live' || !match.sortTime || match.sortTime >= now)
+  const focusPool = futureOrLiveMatches.length ? futureOrLiveMatches : activeMatches
+  if (!focusPool.length) return matches[0] || null
+
+  const focusDay = getMatchDayValue(focusPool[0])
+  const sameDayMatches = focusPool.filter((match) => getMatchDayValue(match) === focusDay)
+  return sameDayMatches.slice().sort((a, b) => {
+    const priorityDiff = getFeaturedPriority(b) - getFeaturedPriority(a)
+    if (priorityDiff) return priorityDiff
+    return getMatchTimeValue(a) - getMatchTimeValue(b)
+  })[0]
 }
 
 function getFinishCache() {
@@ -47,7 +108,7 @@ function applyFinishDetection(matches) {
     if (match.matchStatus !== 'finished') {
       return match
     }
-    const detectedAt = cache[match.id] || match.finishDetectedAt || Date.now()
+    const detectedAt = cache[match.id] || getFinishDetectedAt(match)
     if (!cache[match.id]) {
       cache[match.id] = detectedAt
       changed = true
@@ -68,7 +129,7 @@ function keepVisibleMatch(match) {
   if (match.matchStatus !== 'finished') {
     return true
   }
-  const detectedAt = match.finishDetectedAt || Date.now()
+  const detectedAt = getFinishDetectedAt(match)
   return Date.now() - detectedAt <= FINISHED_KEEP_MS
 }
 
@@ -151,7 +212,7 @@ function prepareDisplayMatches(matches) {
 Page({
   data: {
     matches: prepareDisplayMatches(sortedUpcomingMatches),
-    featured: prepareDisplayMatches(sortedUpcomingMatches)[0],
+    featured: selectFeaturedMatch(sortedUpcomingMatches),
     reviewOpen: false,
     reviewSummary: `${finishedMatches.slice(0, 10).length} 场已复盘`,
     reviewSuccessRate: getReviewRate(finishedMatches.slice(0, 10)),
@@ -218,11 +279,12 @@ Page({
     const updateMatches = (matches) => {
       const nextMatches = applyFinishDetection(matches)
       const visibleMatches = nextMatches.filter(keepVisibleMatch)
-      const sortedMatches = prepareDisplayMatches(visibleMatches)
+      const timeSortedMatches = sortMatchesByTime(visibleMatches)
+      const sortedMatches = sortFavoritesFirst(decorateMatches(timeSortedMatches, getFavoriteIds()))
       const nextReviews = mergeReviewMatches(finishedMatches, nextMatches)
       this.setData({
         matches: sortedMatches,
-        featured: sortedMatches[0],
+        featured: selectFeaturedMatch(timeSortedMatches),
         finishedMatches: nextReviews,
         reviewSummary: `${nextReviews.length} 场已复盘`,
         reviewSuccessRate: getReviewRate(nextReviews)
@@ -242,7 +304,7 @@ Page({
     const matches = prepareDisplayMatches(this.data.matches)
     this.setData({
       matches,
-      featured: matches[0]
+      featured: selectFeaturedMatch(matches)
     })
   },
 
@@ -253,7 +315,7 @@ Page({
     const matches = sortFavoritesFirst(decorateMatches(this.data.matches, favoriteIds))
     this.setData({
       matches,
-      featured: matches[0]
+      featured: selectFeaturedMatch(matches)
     })
     wx.showToast({
       title: favoriteIds.indexOf(matchId) !== -1 ? '已关注' : '已取消',

@@ -135,11 +135,12 @@ When writing or updating analysis text, use concise Chinese:
 
 - Homepage should show only the main result pick, not the backup result pick.
 - Detail page may show backup result and backup score.
-- Finished matches stay on homepage for at most 12 hours after final whistle.
+- Finished matches stay on homepage for at most 1 hour after final whistle.
 - Finished matches should always remain in review and history pages.
 - History page should display the latest 10 historical predictions by end time.
 - Homepage match ordering must use `sortTime`, not plain text sorting.
 - If cloud live-score data returns schedule or status, it should override static schedule display.
+- Every database update must also update the `数据库更新` display time on both homepage and history page. This applies to changes in `utils/matches.js`, predictions, reviews, schedule, team data, focus priority, or injury impact notes.
 
 ## Decision Heuristics
 
