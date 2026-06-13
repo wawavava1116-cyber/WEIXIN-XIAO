@@ -43,8 +43,16 @@ Page({
   },
 
   onLoad(options) {
-    const detailMatches = historyMatches.concat(matches)
-    const match = detailMatches.find((item) => item.id === options.id) || detailMatches[0]
+    const primaryMatches = options.source === 'history' ? historyMatches : matches
+    const fallbackMatches = options.source === 'history' ? matches : historyMatches
+    const match = primaryMatches.find((item) => item.id === options.id) ||
+      fallbackMatches.find((item) => item.id === options.id) ||
+      primaryMatches[0] ||
+      fallbackMatches[0]
+    if (!match) {
+      wx.showToast({ title: '未找到比赛', icon: 'none' })
+      return
+    }
     wx.setNavigationBarTitle({
       title: `${match.home.cn} vs ${match.away.cn}`
     })
