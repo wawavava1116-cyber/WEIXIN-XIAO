@@ -50,6 +50,20 @@ function sortMatchesByTime(matches) {
   return matches.slice().sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
 }
 
+function cloneMatch(match) {
+  return {
+    ...match,
+    home: { ...match.home },
+    away: { ...match.away },
+    pick: { ...match.pick },
+    analysis: match.analysis ? { ...match.analysis } : match.analysis
+  }
+}
+
+function getRefreshBaseMatches() {
+  return sortedUpcomingMatches.map(cloneMatch)
+}
+
 function getMatchDayValue(match) {
   const timeValue = getMatchTimeValue(match)
   const date = new Date(timeValue)
@@ -291,8 +305,9 @@ Page({
       })
     }
 
-    refreshTeamStats(this.data.matches, updateMatches, taskDone)
-    refreshLiveScores(this.data.matches, updateMatches, taskDone)
+    const refreshBaseMatches = getRefreshBaseMatches()
+    refreshTeamStats(refreshBaseMatches, updateMatches, taskDone)
+    refreshLiveScores(refreshBaseMatches, updateMatches, taskDone)
     this.refreshFallback = setTimeout(finish, 5000)
   },
 

@@ -186,21 +186,23 @@ function parseEspnEvent(event) {
 async function fetchEspnScores(matchIds = []) {
   const matches = {}
   const dates = getDateWindow(matchIds)
-  for (const league of ESPN_LEAGUES) {
-    for (const date of dates) {
+  const requests = []
+  ESPN_LEAGUES.forEach((league) => {
+    dates.forEach((date) => {
       const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${league}/scoreboard?dates=${date}`
-      try {
-        const data = await requestJson(url)
+      requests.push(
+        requestJson(url).then((data) => {
         ;(data.events || []).forEach((event) => {
           const parsed = parseEspnEvent(event)
           if (parsed) matches[parsed.id] = parsed.value
         })
-      } catch (error) {
-        // Try next public endpoint/date.
-      }
-    }
-    if (Object.keys(matches).length) break
-  }
+        }).catch(() => {
+          // Try every public endpoint/date; a single failure should not block updates.
+        })
+      )
+    })
+  })
+  await Promise.all(requests)
   return matches
 }
 
