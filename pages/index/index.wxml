@@ -1,4 +1,16 @@
 <view class="safe-page home-page">
+  <view class="startup-mask" wx:if="{{startupLoading}}">
+    <view class="startup-panel">
+      <text class="startup-percent">{{startupProgress}}%</text>
+      <view class="startup-logo-shell">
+        <image class="startup-logo startup-logo-base" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+        <view class="startup-logo-fill" style="height: {{startupProgress}}%;">
+          <image class="startup-logo startup-logo-active" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <view class="warning-marquee">
     <text class="warning-track">⚠️ 理性观赛，远离违法赌博。本小程序内容仅供赛前信息参考，不提供任何投注服务。严禁利用预测内容参与任何形式的非法博彩。 ⚠️ 理性观赛，远离违法赌博。</text>
   </view>
@@ -15,7 +27,7 @@
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
       <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键看完整分析。</text>
-      <text class="hero-version">数据库更新：6/13 17:21 · 版本 1.0.2</text>
+      <text class="hero-version">{{databaseBadge}}</text>
       <text class="hero-model">预测模型：GPT5.5</text>
     </view>
   </view>

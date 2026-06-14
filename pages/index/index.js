@@ -2,9 +2,11 @@ const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require(
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
+const { getDatabaseBadge } = require('../../utils/buildInfo')
 
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
+const LIVE_SCORE_CACHE_KEY = 'worldcup_live_score_cache'
 const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
 const FEATURED_PRIORITY = {
   'brazil-morocco-20260613': 100,
@@ -30,7 +32,11 @@ const FEATURED_PRIORITY = {
   'mexico-korea-20260618': 96,
   'switzerland-bosnia-20260618': 76,
   'canada-qatar-20260618': 74,
-  'czechia-southafrica-20260618': 62
+  'czechia-southafrica-20260618': 62,
+  'usa-australia-20260619': 96,
+  'brazil-haiti-20260619': 92,
+  'turkey-paraguay-20260619': 76,
+  'scotland-morocco-20260619': 70
 }
 
 function getMatchTimeValue(match) {
@@ -223,6 +229,15 @@ function prepareDisplayMatches(matches) {
   return sortFavoritesFirst(decorateMatches(sortMatchesByTime(matches), getFavoriteIds()))
 }
 
+function clearStartupCaches() {
+  try {
+    wx.removeStorageSync(LIVE_SCORE_CACHE_KEY)
+    wx.removeStorageSync(FINISH_CACHE_KEY)
+  } catch (error) {
+    // Cache cleanup should not block opening the page.
+  }
+}
+
 Page({
   data: {
     matches: prepareDisplayMatches(sortedUpcomingMatches),
@@ -231,17 +246,26 @@ Page({
     reviewSummary: `${finishedMatches.slice(0, 10).length} 场已复盘`,
     reviewSuccessRate: getReviewRate(finishedMatches.slice(0, 10)),
     finishedMatches: finishedMatches.slice(0, 10),
+    databaseBadge: getDatabaseBadge(),
+    startupLoading: true,
+    startupProgress: 0,
     isRefreshing: false,
     syncText: '下拉同步实时比分'
   },
 
   onLoad() {
+    this.startupDone = false
+    this.runStartupRefresh()
     this.scoreTimer = setInterval(() => {
       this.refreshAll({ silent: true })
     }, 10000)
   },
 
   onShow() {
+    if (!this.startupDone) {
+      this.applyFavoriteState()
+      return
+    }
     this.refreshAll()
     this.applyFavoriteState()
   },
@@ -249,10 +273,61 @@ Page({
   onUnload() {
     if (this.scoreTimer) clearInterval(this.scoreTimer)
     if (this.refreshFallback) clearTimeout(this.refreshFallback)
+    if (this.startupProgressTimer) clearInterval(this.startupProgressTimer)
   },
 
   onPullDownRefresh() {
     this.refreshAll({ manual: true })
+  },
+
+  runStartupRefresh() {
+    clearStartupCaches()
+    this.startStartupProgress()
+    this.checkForAppUpdate()
+    this.refreshAll({
+      startup: true,
+      afterFinish: () => this.finishStartupProgress()
+    })
+  },
+
+  startStartupProgress() {
+    if (this.startupProgressTimer) clearInterval(this.startupProgressTimer)
+    this.setData({ startupProgress: 0, startupLoading: true })
+    this.startupProgressTimer = setInterval(() => {
+      const current = Number(this.data.startupProgress || 0)
+      if (current >= 92) return
+      const step = current < 45 ? 6 : current < 75 ? 4 : 2
+      this.setData({ startupProgress: Math.min(92, current + step) })
+    }, 120)
+  },
+
+  finishStartupProgress() {
+    if (this.startupProgressTimer) {
+      clearInterval(this.startupProgressTimer)
+      this.startupProgressTimer = null
+    }
+    this.setData({ startupProgress: 100 })
+    setTimeout(() => {
+      this.startupDone = true
+      this.setData({ startupLoading: false })
+    }, 220)
+  },
+
+  checkForAppUpdate() {
+    if (!wx.getUpdateManager) return
+    const updateManager = wx.getUpdateManager()
+    updateManager.onCheckForUpdate(() => {})
+    updateManager.onUpdateReady(() => {
+      wx.showModal({
+        title: '新版本已准备好',
+        content: '重启小程序后显示最新赛程',
+        confirmText: '立即重启',
+        success(res) {
+          if (res.confirm) updateManager.applyUpdate()
+        }
+      })
+    })
+    updateManager.onUpdateFailed(() => {})
   },
 
   refreshAll(options = {}) {
@@ -261,7 +336,7 @@ Page({
       return
     }
     this.refreshing = true
-    const showStatus = !options.silent || options.manual
+    const showStatus = (!options.silent || options.manual) && !options.startup
     if (showStatus) {
       this.setData({
         isRefreshing: true,
@@ -285,6 +360,7 @@ Page({
           this.setData({ isRefreshing: false, syncText: '下拉同步实时比分' })
         }, 800)
       }
+      if (options.afterFinish) options.afterFinish()
     }
     const taskDone = () => {
       pending -= 1

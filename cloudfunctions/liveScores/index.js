@@ -30,7 +30,11 @@ const KNOWN_MATCHES = [
   { id: 'czechia-southafrica-20260618', home: ['czechia', 'czech republic'], away: ['south africa'] },
   { id: 'switzerland-bosnia-20260618', home: ['switzerland'], away: ['bosnia', 'bosnia herzegovina', 'bosnia and herzegovina'] },
   { id: 'canada-qatar-20260618', home: ['canada'], away: ['qatar'] },
-  { id: 'mexico-korea-20260618', home: ['mexico'], away: ['korea republic', 'south korea', 'korea'] }
+  { id: 'mexico-korea-20260618', home: ['mexico'], away: ['korea republic', 'south korea', 'korea'] },
+  { id: 'brazil-haiti-20260619', home: ['brazil'], away: ['haiti'] },
+  { id: 'scotland-morocco-20260619', home: ['scotland'], away: ['morocco'] },
+  { id: 'turkey-paraguay-20260619', home: ['turkey', 'turkiye', 't眉rkiye'], away: ['paraguay'] },
+  { id: 'usa-australia-20260619', home: ['usa', 'united states', 'united states of america'], away: ['australia'] }
 ]
 
 function requestJson(url) {

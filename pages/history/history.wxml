@@ -6,7 +6,7 @@
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
       <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键看完整分析。</text>
-      <text class="hero-version">数据库更新：6/13 17:21 · 版本 1.0.2</text>
+      <text class="hero-version">{{databaseBadge}}</text>
       <text class="hero-model">预测模型：GPT5.5</text>
     </view>
   </view>

@@ -1,4 +1,5 @@
 const { historyMatches } = require('../../utils/matches')
+const { getDatabaseBadge } = require('../../utils/buildInfo')
 
 Page({
   data: {
@@ -6,6 +7,7 @@ Page({
     filteredHistoryMatches: historyMatches,
     historyDates: ['全部'].concat(Array.from(new Set(historyMatches.map((item) => item.dateText)))),
     historyDateIndex: 0,
+    databaseBadge: getDatabaseBadge(),
     selectedHistoryDate: '全部'
   },
 

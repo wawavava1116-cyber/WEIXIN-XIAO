@@ -805,6 +805,110 @@ const matches = [
       handicap: '墨西哥-0.25',
       marketTotal: '2.25/2.5球'
     })
+  },
+  {
+    id: 'brazil-haiti-20260619',
+    dateText: '6月20日 周六',
+    group: 'C组',
+    venue: 'Philadelphia Stadium',
+    home: team.brazil,
+    away: team.haiti,
+    pick: { result: '巴西胜', score: '3-0', backup: '2-0', total: '2-4球' },
+    analysis: makeAnalysis({
+      result: '巴西主胜',
+      score: '3-0',
+      backup: '2-0',
+      total: '2-4球',
+      order: '巴西胜 > 巴西-1.5谨慎 > 巴西零封',
+      homeForm: '巴西整体个人能力、控球压迫和禁区创造力明显高于海地，面对低位防守时需要耐心打开边路。',
+      awayForm: '海地速度和身体冲击有威胁，但持续防守质量和后场出球稳定性会被强队压迫放大。',
+      homeNews: '巴西首轮后需要核对边锋和中场推进点体能；若攻击群齐整，主胜和零封方向更稳。',
+      awayNews: '海地需要确认锋线速度点和中卫组合健康，若主力反击点缺阵，进球上限会明显下降。',
+      tactics: '巴西会长时间围攻并利用边路一对一制造机会，海地更可能压低阵型等待反击和定位球。',
+      h2h: '正式大赛直接交锋样本有限，本场更看阵容深度、控球压制和海地防线抗压。',
+      risk: '巴西若早早轮换或进球后降速，深盘穿透存在波动；海地反击速度和定位球是主要冷门入口。',
+      oneXtwo: '主胜方向清晰，不设置胜平负备选',
+      handicap: '巴西-1.5附近，赢球优先，穿盘需看首发强度',
+      marketTotal: '2.75/3球，巴西早进球则大球空间更高'
+    })
+  },
+  {
+    id: 'scotland-morocco-20260619',
+    dateText: '6月20日 周六',
+    group: 'C组',
+    venue: 'Boston Stadium',
+    home: team.scotland,
+    away: team.morocco,
+    pick: { result: '平局优先', score: '1-1', backup: '0-1', total: '1-2球' },
+    analysis: makeAnalysis({
+      result: '平局优先，摩洛哥不败',
+      score: '1-1',
+      backup: '0-1',
+      total: '1-2球',
+      order: '摩洛哥不败 > 平局 > 2.5小球',
+      homeForm: '苏格兰身体对抗、定位球和二点球质量稳定，能把比赛拖进高强度消耗。',
+      awayForm: '摩洛哥防守纪律和转换速度更成熟，面对欧洲身体流球队时反击质量有优势。',
+      homeNews: '苏格兰需要核对中场硬度和锋线支点体能，若中前场消耗过大，后段推进会下降。',
+      awayNews: '摩洛哥边后卫和后腰健康很关键，若两翼齐整，反击推进和防线保护都更可靠。',
+      tactics: '苏格兰争高点和定位球，摩洛哥压缩中路后打边路转换，节奏可能偏谨慎。',
+      h2h: '历史交锋参考有限，现阶段更看小组第二轮积分压力和双方防守稳定性。',
+      risk: '早段定位球、黄牌尺度和摩洛哥边路身后空间会改变低比分节奏。',
+      oneXtwo: '平局权重最高，客队不败保护',
+      handicap: '摩洛哥受让或0球更稳',
+      marketTotal: '2/2.25球，倾向小比分'
+    })
+  },
+  {
+    id: 'turkey-paraguay-20260619',
+    dateText: '6月20日 周六',
+    group: 'D组',
+    venue: 'San Francisco Bay Area Stadium',
+    home: team.turkey,
+    away: team.paraguay,
+    pick: { result: '土耳其胜', score: '2-1', backup: '1-1', total: '2-3球' },
+    analysis: makeAnalysis({
+      result: '土耳其胜，平局低权重保护',
+      score: '2-1',
+      backup: '1-1',
+      total: '2-3球',
+      order: '土耳其胜 > 平局保护 > 双方进球',
+      homeForm: '土耳其中前场创造力和脚下能力更强，能通过前腰和边锋连续制造禁区前沿机会。',
+      awayForm: '巴拉圭对抗硬、节奏直接，防守端韧性强，但阵地战创造力通常不如反击和定位球。',
+      homeNews: '土耳其核心前腰、边锋和后腰保护情况需要赛前确认，若创造点齐整，主胜更有支撑。',
+      awayNews: '巴拉圭中卫和防守型中场健康决定抗压下限，若主力屏障缺阵，禁区前沿压力会增大。',
+      tactics: '土耳其主动控球提速，巴拉圭用身体对抗和定位球打断节奏，比赛可能有较多犯规和转换。',
+      h2h: '交锋样本不宜直接定价，本场更看土耳其创造力能否避开巴拉圭的硬对抗。',
+      risk: '土耳其后场专注度、巴拉圭定位球、裁判尺度和黄牌累积会影响胜负方向。',
+      oneXtwo: '主胜略优，平局只作低权重备选',
+      handicap: '土耳其-0.25到-0.5，深追需谨慎',
+      marketTotal: '2.25/2.5球，双方进球可关注'
+    })
+  },
+  {
+    id: 'usa-australia-20260619',
+    dateText: '6月20日 周六',
+    group: 'D组',
+    venue: 'Seattle Stadium',
+    home: team.usa,
+    away: team.australia,
+    pick: { result: '美国胜', score: '2-0', backup: '2-1', total: '2-3球' },
+    analysis: makeAnalysis({
+      result: '美国主胜',
+      score: '2-0',
+      backup: '2-1',
+      total: '2-3球',
+      order: '美国胜 > 美国-0.75 > 2.5球谨慎',
+      homeForm: '美国主场环境、冲刺速度和中前场压迫更有优势，能持续冲击澳大利亚后场出球。',
+      awayForm: '澳大利亚身体和定位球稳定，但面对高节奏压迫时转身速度和中场出球会受到考验。',
+      homeNews: '美国需要核对主力边后卫和中场屏障体能，若首发完整，攻守平衡更好。',
+      awayNews: '澳大利亚门将、中卫和高点前锋状态关键，若高点不齐，定位球威胁会下降。',
+      tactics: '美国用边路速度和前场压迫抢开局，澳大利亚更依赖长传、二点球和定位球制造波动。',
+      h2h: '历史交锋参考有限，本场主场因素和小组第二轮积分压力权重更高。',
+      risk: '美国若久攻不下，澳大利亚高球和定位球会放大风险；西雅图天气和场地适应也需临场确认。',
+      oneXtwo: '主胜方向清晰，不设置胜平负备选',
+      handicap: '美国-0.75附近，赢球优先，穿盘看早段效率',
+      marketTotal: '2.25/2.5球，美国先入球则有到3球空间'
+    })
   }
 ]
 
@@ -834,7 +938,11 @@ const matchMeta = {
   'czechia-southafrica-20260618': { dateText: '6月19日 周五', kickoff: '00:00', scheduleAt: '2026-06-19T00:00:00+08:00', weatherIcon: '☁️', weather: '28℃' },
   'switzerland-bosnia-20260618': { dateText: '6月19日 周五', kickoff: '03:00', scheduleAt: '2026-06-19T03:00:00+08:00', weatherIcon: '☀️', weather: '22℃' },
   'canada-qatar-20260618': { dateText: '6月19日 周五', kickoff: '06:00', scheduleAt: '2026-06-19T06:00:00+08:00', weatherIcon: '☁️', weather: '18℃' },
-  'mexico-korea-20260618': { dateText: '6月19日 周五', kickoff: '09:00', scheduleAt: '2026-06-19T09:00:00+08:00', weatherIcon: '☀️', weather: '26℃' }
+  'mexico-korea-20260618': { dateText: '6月19日 周五', kickoff: '09:00', scheduleAt: '2026-06-19T09:00:00+08:00', weatherIcon: '☀️', weather: '26℃' },
+  'brazil-haiti-20260619': { dateText: '6月20日 周六', kickoff: '00:00', scheduleAt: '2026-06-20T00:00:00+08:00', weatherIcon: '☁️', weather: '27℃' },
+  'scotland-morocco-20260619': { dateText: '6月20日 周六', kickoff: '03:00', scheduleAt: '2026-06-20T03:00:00+08:00', weatherIcon: '🌧️', weather: '20℃' },
+  'turkey-paraguay-20260619': { dateText: '6月20日 周六', kickoff: '06:00', scheduleAt: '2026-06-20T06:00:00+08:00', weatherIcon: '☀️', weather: '18℃' },
+  'usa-australia-20260619': { dateText: '6月20日 周六', kickoff: '09:00', scheduleAt: '2026-06-20T09:00:00+08:00', weatherIcon: '☁️', weather: '17℃' }
 }
 
 const venueAltitudes = {
@@ -865,7 +973,11 @@ const predictionDiscipline = {
   'belgium-egypt-20260615': { result: '比利时胜', resultBackup: '', oneXtwo: '主胜方向，不设胜平负备选', order: '比利时胜 > 比利时-0.5 > 2.5球谨慎大' },
   'england-croatia-20260617': { result: '平局优先，英格兰小胜备选', resultBackup: '英格兰胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 英格兰胜 > 2.5小球' },
   'czechia-southafrica-20260618': { result: '平局优先，捷克小胜备选', resultBackup: '捷克胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 捷克胜 > 2.5小球' },
-  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', oneXtwo: '主胜为主，平局低权重保护', order: '墨西哥胜 > 平局保护 > 2.5球谨慎大' }
+  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', oneXtwo: '主胜为主，平局低权重保护', order: '墨西哥胜 > 平局保护 > 2.5球谨慎大' },
+  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', oneXtwo: '主胜方向清晰，不设置胜平负备选', order: '巴西胜 > 巴西-1.5谨慎 > 巴西零封' },
+  'scotland-morocco-20260619': { result: '平局优先', resultBackup: '摩洛哥胜', oneXtwo: '平局优先，客胜作低权重备选', order: '摩洛哥不败 > 平局 > 2.5小球' },
+  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', oneXtwo: '主胜略优，平局低权重保护', order: '土耳其胜 > 平局保护 > 双方进球' },
+  'usa-australia-20260619': { result: '美国胜', resultBackup: '', oneXtwo: '主胜方向清晰，不设置胜平负备选', order: '美国胜 > 美国-0.75 > 2.5球谨慎' }
 }
 
 const injuryImpactNotes = {
