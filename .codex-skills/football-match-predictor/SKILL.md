@@ -137,6 +137,8 @@ When writing or updating analysis text, use concise Chinese:
 - Detail page may show backup result and backup score.
 - Finished matches stay on homepage for at most 1 hour after final whistle.
 - Finished matches should always remain in review and history pages.
+- Before publishing refreshed predictions or adding future fixtures, audit all already-started and finished matches. Finished matches must be added to `finishedReviewSource`, marked out of `upcomingMatches` via `isFinished`, and must not remain on the homepage as not-started static fixtures.
+- The homepage startup overlay should not be dismissed until the first live-score sync has completed, so live matches and matches finished within the last hour can display score, status, phase, and updated sort fields before users see the list.
 - History page should display the latest 10 historical predictions by end time.
 - Homepage match ordering must use `sortTime`, not plain text sorting.
 - If cloud live-score data returns schedule or status, it should override static schedule display.

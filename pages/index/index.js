@@ -384,7 +384,9 @@ Page({
     const refreshBaseMatches = getRefreshBaseMatches()
     refreshTeamStats(refreshBaseMatches, updateMatches, taskDone)
     refreshLiveScores(refreshBaseMatches, updateMatches, taskDone)
-    this.refreshFallback = setTimeout(finish, 5000)
+    if (!options.startup) {
+      this.refreshFallback = setTimeout(finish, 5000)
+    }
   },
 
   toggleReview() {

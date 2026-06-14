@@ -24,6 +24,7 @@
   gap: 16rpx;
   width: 100%;
   max-width: 520rpx;
+  transform: translateY(-8vh);
 }
 
 .startup-logo-shell {
