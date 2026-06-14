@@ -38,6 +38,56 @@
     </view>
   </view>
 
+  <view class="probability-card glass" wx:if="{{scorePanel.mode === 'pending' && match.analysis.probability}}">
+    <view class="probability-section">
+      <text class="block-title">胜平负概率占比</text>
+      <view class="result-probability-bar">
+        <block wx:for="{{match.analysis.probability.result}}" wx:key="key">
+          <view class="result-segment probability-{{item.level}} {{item.isSmall ? 'segment-small' : ''}}" style="width: {{item.value}}%;">
+            <text class="segment-percent">{{item.value}}%</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="probability-section">
+      <text class="block-title">预期进球概率占比</text>
+      <view class="goal-probability-grid">
+        <view class="goal-team goal-team-left">
+          <text class="goal-team-name">{{match.analysis.probability.goals.home.team}}</text>
+          <view class="stacked-probability-bar">
+            <block wx:for="{{match.analysis.probability.goals.home.items}}" wx:key="key">
+              <view class="result-segment probability-{{item.level}} {{item.isSmall ? 'segment-small' : ''}}" style="width: {{item.value}}%;">
+                <text class="segment-percent">{{item.value}}%</text>
+              </view>
+            </block>
+          </view>
+          <view class="goal-axis">
+            <block wx:for="{{match.analysis.probability.goals.home.items}}" wx:key="key">
+              <text style="width: {{item.value}}%;">{{item.label}}</text>
+            </block>
+          </view>
+        </view>
+
+        <view class="goal-team goal-team-right">
+          <text class="goal-team-name">{{match.analysis.probability.goals.away.team}}</text>
+          <view class="stacked-probability-bar">
+            <block wx:for="{{match.analysis.probability.goals.away.items}}" wx:key="key">
+              <view class="result-segment probability-{{item.level}} {{item.isSmall ? 'segment-small' : ''}}" style="width: {{item.value}}%;">
+                <text class="segment-percent">{{item.value}}%</text>
+              </view>
+            </block>
+          </view>
+          <view class="goal-axis">
+            <block wx:for="{{match.analysis.probability.goals.away.items}}" wx:key="key">
+              <text style="width: {{item.value}}%;">{{item.label}}</text>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <view class="conclusion glass">
     <text class="block-title">综合结论</text>
     <text class="conclusion-text">{{match.analysis.conclusion}}</text>

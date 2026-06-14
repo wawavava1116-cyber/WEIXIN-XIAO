@@ -33,6 +33,10 @@ When updating this mini program, keep these fields consistent:
 - `analysis.market.oneXtwo`: 1X2 market view.
 - `analysis.market.handicap`: Asian handicap view.
 - `analysis.market.total`: over-under view.
+- `analysis.probability.result`: win/draw/loss percentage analysis for detail pages. Use integer percentages that total 100, with labels for home win, draw, and away win.
+- `analysis.probability.goals`: expected goal-count percentage analysis for detail pages. Home side order is `3+`, `2`, `1`, `0`; away side order is `0`, `1`, `2`, `3+`. Use integer percentages and keep each side total at 100.
+- Probability fields must be derived before final picks from objective inputs: market/handicap and total-goals view, FIFA or league ranking, squad market value, injuries and suspensions, recent form, head-to-head, venue/travel/context, and confirmed lineup news when available.
+- Do not derive probabilities from `pick.result`, `pick.score`, or `pick.backup`. The final pick should follow the probability analysis, not the other way around.
 - `analysis.order`: final market priority.
 - `analysis.risk`: risk points.
 - `finishedReviewSource`: finished match review and hit-rate fields.
@@ -43,6 +47,7 @@ Collect enough evidence for each section before deciding:
 
 - Fixture: competition, date, kickoff, timezone conversion, venue, home/away status.
 - Market: 1X2, Asian handicap, totals, and notable movement if available.
+- Probability: estimate win/draw/loss and team goal-count percentages from market lines, ranking gap, squad value gap, injury/suspension impact, form, head-to-head, venue and travel. Record uncertainty when market or team-news sources are stale.
 - Team form: recent 5-10 matches, goals for/against, clean sheets, opponent quality.
 - Squad news: injuries, suspensions, expected goalkeeper, striker availability, tactical absences.
 - Tactical matchup: possession/directness, pressing, transition threat, set pieces, defensive weaknesses.
@@ -71,6 +76,48 @@ Collect enough evidence for each section before deciding:
 - Do not let score backup imply an unsupported 1X2 backup.
 
 ## Probability And Review Method
+
+### Pre-match Probability Algorithm
+
+When generating `analysis.probability`, use market-implied data first. The probability model must be built before final picks and must not be reverse-engineered from `pick.result`, `pick.score`, or `pick.backup`.
+
+Evidence priority:
+
+1. Correct-score odds.
+2. Team total goals odds / team to score odds / clean-sheet odds.
+3. 1X2, Asian handicap, and over-under lines.
+4. Ranking, squad market value, injuries, suspensions, expected lineup, recent form, head-to-head, venue, travel, altitude, weather, and schedule context.
+
+Correct-score odds usage:
+
+- Treat correct-score odds as the strongest direct signal for both result probability and team goal-count probability.
+- Convert available correct-score odds into implied probabilities with `1 / odds`, then normalize after removing bookmaker margin when possible.
+- Aggregate correct-score probabilities into win/draw/loss:
+  - Home win: all scores where home goals > away goals.
+  - Draw: all scores where home goals = away goals.
+  - Away win: all scores where away goals > home goals.
+- Aggregate the same correct-score table into team goal-count buckets:
+  - Home buckets: `3+`, `2`, `1`, `0`.
+  - Away buckets: `0`, `1`, `2`, `3+`.
+- If exact score markets omit long-tail outcomes, distribute the missing tail carefully:
+  - Strong favorite: tail mainly goes to favorite `3+` and underdog `0/1`.
+  - Balanced match: tail should be spread across `1`, `2`, and draw-like outcomes.
+  - Defensive/low-total match: do not over-allocate `3+`.
+
+Team goal odds usage:
+
+- Team total goals odds and "team to score / not score" markets are the main correction layer for expected goals.
+- If underdog `team not to score` / opponent clean sheet is strongly priced, increase that team's `0` bucket and reduce `1`, `2`, `3+`.
+- If a team `over 1.5 goals` is strongly priced, increase `2` and `3+`; if `under 0.5 goals` is strongly priced, increase `0`.
+- Do not let a predicted backup score alone increase a team's scoring probability; only market/team-news evidence should do that.
+
+Calibration rules:
+
+- 1X2 and handicap should calibrate the result totals derived from correct-score odds. A deep favorite should not show high underdog unbeaten probability unless odds, injuries, red cards, or lineup news justify it.
+- Over-under should calibrate the combined goal buckets. A low total line should suppress both teams' `3+`; a high total line can lift `2` and `3+`.
+- Ranking and squad value adjust the market output only when odds are missing, stale, or clearly inconsistent with team news.
+- Injury and suspension impact can override market priors when the missing player is a goalkeeper, core center back, defensive midfielder, captain, set-piece taker, or key attacker.
+- Document uncertainty when score odds or team-goal odds are unavailable; do not invent odds.
 
 For finished matches, use this hit-rate system:
 
@@ -108,6 +155,15 @@ When writing or updating analysis text, use concise Chinese:
 胜平负：
 亚盘：
 大小球：
+
+胜平负百分比概率分析：
+主胜：
+平局：
+客胜：
+
+预期进球数分析：
+主队 3+ / 2 / 1 / 0：
+客队 0 / 1 / 2 / 3+：
 
 球队状态
 主队：

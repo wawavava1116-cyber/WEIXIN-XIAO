@@ -1014,6 +1014,179 @@ function getDefaultInjuryImpact(match) {
   }
 }
 
+function getProbabilityLevel(percent) {
+  if (percent >= 50) return 'green'
+  if (percent >= 30) return 'yellow'
+  if (percent >= 15) return 'orange'
+  return 'red'
+}
+
+function makeProbabilityItem(key, label, value) {
+  return {
+    key,
+    label,
+    value,
+    level: getProbabilityLevel(value),
+    isSmall: value < 18
+  }
+}
+
+function parseScoreValue(score) {
+  const parts = String(score || '').split('-').map((item) => Number(item.trim()))
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return null
+  return { home: parts[0], away: parts[1] }
+}
+
+function parseTeamValue(value) {
+  const number = Number(String(value || '').replace(/[^0-9.]/g, ''))
+  return Number.isNaN(number) ? 0 : number
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value))
+}
+
+function getHandicapValue(match) {
+  const text = `${(match.analysis && match.analysis.market && match.analysis.market.handicap) || ''} ${(match.analysis && match.analysis.order) || ''}`
+  const homeName = match.home.cn
+  const awayName = match.away.cn
+  const numberMatch = text.match(/-?\d+(?:\.\d+)?/)
+  const line = numberMatch ? Math.abs(Number(numberMatch[0])) : 0
+  if (!line) return 0
+  if (text.includes(homeName) || text.includes('主')) return line
+  if (text.includes(awayName) || text.includes('客')) return -line
+  return 0
+}
+
+function getTotalGoalLine(match) {
+  const text = `${(match.analysis && match.analysis.market && match.analysis.market.total) || ''} ${(match.pick && match.pick.total) || ''}`
+  const matches = text.match(/\d+(?:\.\d+)?/g)
+  if (!matches || !matches.length) return 2.5
+  const values = matches.map((item) => Number(item)).filter((item) => !Number.isNaN(item))
+  return values.length ? values.reduce((sum, item) => sum + item, 0) / values.length : 2.5
+}
+
+function getStrengthScores(match) {
+  const homeRank = Number(match.home.rank || 80)
+  const awayRank = Number(match.away.rank || 80)
+  const homeValue = parseTeamValue(match.home.value)
+  const awayValue = parseTeamValue(match.away.value)
+  const rankEdge = clamp((awayRank - homeRank) / 55, -0.9, 0.9)
+  const valueEdge = homeValue && awayValue ? clamp(Math.log((homeValue + 20) / (awayValue + 20)) / 3, -0.9, 0.9) : 0
+  const marketEdge = clamp(getHandicapValue(match) / 2, -0.75, 0.75)
+  const homeContext = 0.06
+  const edge = clamp(rankEdge * 0.42 + valueEdge * 0.38 + marketEdge * 0.2 + homeContext, -0.95, 0.95)
+  return {
+    edge,
+    homePower: clamp(1 + edge, 0.25, 1.9),
+    awayPower: clamp(1 - edge, 0.25, 1.9)
+  }
+}
+
+function buildResultProbability(match) {
+  const strength = getStrengthScores(match)
+  const edge = strength.edge
+  const drawBase = clamp(26 - Math.abs(edge) * 16, 12, 30)
+  let home = (100 - drawBase) * (0.5 + edge * 0.42)
+  let away = 100 - drawBase - home
+  home = clamp(Math.round(home), 4, 88)
+  away = clamp(Math.round(away), 4, 88)
+  const draw = 100 - home - away
+  const normalized = { home, draw, away }
+  return [
+    makeProbabilityItem('home', `${match.home.cn}胜`, normalized.home),
+    makeProbabilityItem('draw', '平局', normalized.draw),
+    makeProbabilityItem('away', `${match.away.cn}胜`, normalized.away)
+  ]
+}
+
+function addGoalWeight(distribution, goals, weight) {
+  const key = goals >= 3 ? '3+' : String(Math.max(0, goals))
+  distribution[key] += weight
+}
+
+function normalizeGoalDistribution(distribution, order) {
+  const total = order.reduce((sum, key) => sum + distribution[key], 0)
+  let used = 0
+  const values = order.map((key, index) => {
+    const value = index === order.length - 1 ? 100 - used : Math.round(distribution[key] * 100 / total)
+    used += value
+    return makeProbabilityItem(key, key, value)
+  })
+  return values
+}
+
+function buildTeamGoalProbability(expectedGoals, order, shutoutPressure = 0) {
+  const distribution = { '0': 10, '1': 18, '2': 12, '3+': 6 }
+  if (shutoutPressure >= 0.75) {
+    distribution['0'] += 104
+    distribution['1'] += 4
+  } else if (shutoutPressure >= 0.55) {
+    distribution['0'] += 88
+    distribution['1'] += 6
+  } else if (shutoutPressure >= 0.35) {
+    distribution['0'] += 70
+    distribution['1'] += 8
+  } else if (expectedGoals < 0.45) {
+    distribution['0'] += 56
+    distribution['1'] += 10
+  } else if (expectedGoals < 0.75) {
+    distribution['0'] += 42
+    distribution['1'] += 16
+  } else if (expectedGoals < 1.05) {
+    distribution['0'] += 20
+    distribution['1'] += 30
+    distribution['2'] += 6
+  } else if (expectedGoals < 1.65) {
+    distribution['1'] += 30
+    distribution['2'] += 20
+    distribution['0'] += 6
+  } else if (expectedGoals < 2.25) {
+    distribution['2'] += 30
+    distribution['3+'] += 18
+    distribution['1'] += 10
+  } else {
+    distribution['3+'] += 36
+    distribution['2'] += 20
+  }
+  return normalizeGoalDistribution(distribution, order)
+}
+
+function buildProbabilityAnalysis(match) {
+  const homeOrder = ['3+', '2', '1', '0']
+  const awayOrder = ['0', '1', '2', '3+']
+  const strength = getStrengthScores(match)
+  const totalLine = clamp(getTotalGoalLine(match), 1.75, 3.5)
+  const handicapLine = Math.abs(getHandicapValue(match))
+  const totalPower = strength.homePower + strength.awayPower
+  const favoriteGap = Math.abs(strength.edge)
+  const shutoutPressure = clamp((favoriteGap - 0.32) * 1.35 + Math.max(0, handicapLine - 0.75) * 0.34, 0, 1)
+  const loserPenalty = shutoutPressure >= 0.75 ? 0.48 : shutoutPressure >= 0.55 ? 0.58 : favoriteGap > 0.55 ? 0.68 : favoriteGap > 0.38 ? 0.82 : 1
+  const winnerBonus = favoriteGap > 0.55 ? 1.12 : favoriteGap > 0.38 ? 1.06 : 1
+  const rawHomeExpected = totalLine * strength.homePower / totalPower
+  const rawAwayExpected = totalLine * strength.awayPower / totalPower
+  const homeExpected = strength.edge >= 0
+    ? rawHomeExpected * winnerBonus
+    : rawHomeExpected * loserPenalty
+  const awayExpected = strength.edge >= 0
+    ? rawAwayExpected * loserPenalty
+    : rawAwayExpected * winnerBonus
+
+  return {
+    result: buildResultProbability(match),
+    goals: {
+      home: {
+        team: match.home.cn,
+        items: buildTeamGoalProbability(homeExpected, homeOrder, strength.edge < 0 ? shutoutPressure : 0)
+      },
+      away: {
+        team: match.away.cn,
+        items: buildTeamGoalProbability(awayExpected, awayOrder, strength.edge >= 0 ? shutoutPressure : 0)
+      }
+    }
+  }
+}
+
 function applyPredictionRule(match) {
   const rule = predictionDiscipline[match.id]
   if (!rule) {
@@ -1057,9 +1230,11 @@ matches.forEach((match) => {
   match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
   applyPredictionRule(match)
   match.analysis.injuryImpact = injuryImpactNotes[match.id] || getDefaultInjuryImpact(match)
+  match.analysis.probability = buildProbabilityAnalysis(match)
 })
 
 const finishedReviewSource = [
+  { id: 'australia-turkey-review', matchId: 'australia-turkey-20260613', homeTeam: 'australia', awayTeam: 'turkey', home: '澳大利亚', away: '土耳其', dateText: '6月14日 周日', kickoff: '12:00', group: 'D组', venue: 'BC Place Vancouver', endedAtSort: 202606141400, score: '2-0', resultMain: '土耳其胜', resultBackup: '平局', scoreMain: '1-2', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, retainOnHome: true },
   { id: 'haiti-scotland-review', matchId: 'haiti-scotland-20260613', homeTeam: 'haiti', awayTeam: 'scotland', home: '海地', away: '苏格兰', dateText: '6月14日 周日', kickoff: '09:00', group: 'C组', venue: 'Boston Stadium', endedAtSort: 202606141100, score: '0-1', resultMain: '苏格兰胜', resultBackup: '', scoreMain: '0-2', scoreBackup: '0-1', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true, retainOnHome: true },
   { id: 'brazil-morocco-review', matchId: 'brazil-morocco-20260613', homeTeam: 'brazil', awayTeam: 'morocco', home: '巴西', away: '摩洛哥', dateText: '6月14日 周日', kickoff: '06:00', group: 'C组', venue: 'New York New Jersey Stadium', endedAtSort: 202606140800, score: '1-1', resultMain: '巴西胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true, retainOnHome: true },
   { id: 'qatar-switzerland-review', matchId: 'qatar-switzerland-20260613', homeTeam: 'qatar', awayTeam: 'switzerland', home: '卡塔尔', away: '瑞士', dateText: '6月14日 周日', kickoff: '03:00', group: 'B组', venue: 'San Francisco Bay Area Stadium', endedAtSort: 202606140500, score: '1-1', resultMain: '瑞士胜', resultBackup: '', scoreMain: '0-2', scoreBackup: '1-2', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, retainOnHome: true },

@@ -7,6 +7,8 @@
 1. `README.MD`：项目功能、导入方式、云函数部署方式。
 2. `TODO.MD`：当前待办和风险。
 3. `.codex-skills/football-match-predictor/SKILL.md`：比赛预测和复盘数据更新规则。
+4. `CODEX_HANDOFF_2026-06-14.MD`：2026-06-14 在家里电脑完成的调整和后续交接记录。
+5. `CODEX_CHANGELOG.MD`：所有 Codex/协作者修改小程序并提交或上传 Git 前必须追加的变更日志。
 
 ## Skill 加载规则
 
@@ -66,6 +68,7 @@
 ## 开发规则
 
 - 尽量保持微信小程序原生写法，不引入大型框架。
+- 任何人或任何 Codex 对小程序做出修改，并准备提交或上传到 Git 前，必须在 `CODEX_CHANGELOG.MD` 顶部追加一条变更日志，写清楚时间、目的、涉及文件、主要改动、数据/复盘影响、云函数是否要重新部署、验证结果和后续注意事项。
 - 修改 `cloudfunctions/liveScores` 后，需要提醒用户重新上传并部署云函数。
 - 不要提交 `cloudfunctions/liveScores/node_modules/`。
 - 修改资源图片后检查小程序包体积。
