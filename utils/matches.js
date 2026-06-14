@@ -1031,6 +1031,19 @@ function makeProbabilityItem(key, label, value) {
   }
 }
 
+function applyRelativeProbabilityLevels(items, levels) {
+  const ranked = items
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => {
+      const diff = b.item.value - a.item.value
+      return diff || a.index - b.index
+    })
+  ranked.forEach((entry, index) => {
+    entry.item.level = levels[index] || levels[levels.length - 1]
+  })
+  return items
+}
+
 function parseScoreValue(score) {
   const parts = String(score || '').split('-').map((item) => Number(item.trim()))
   if (parts.length !== 2 || parts.some(Number.isNaN)) return null
@@ -1093,11 +1106,11 @@ function buildResultProbability(match) {
   away = clamp(Math.round(away), 4, 88)
   const draw = 100 - home - away
   const normalized = { home, draw, away }
-  return [
+  return applyRelativeProbabilityLevels([
     makeProbabilityItem('home', `${match.home.cn}胜`, normalized.home),
     makeProbabilityItem('draw', '平局', normalized.draw),
     makeProbabilityItem('away', `${match.away.cn}胜`, normalized.away)
-  ]
+  ], ['green', 'yellow', 'red'])
 }
 
 function addGoalWeight(distribution, goals, weight) {
@@ -1113,7 +1126,7 @@ function normalizeGoalDistribution(distribution, order) {
     used += value
     return makeProbabilityItem(key, key, value)
   })
-  return values
+  return applyRelativeProbabilityLevels(values, ['green', 'yellow', 'orange', 'red'])
 }
 
 function buildTeamGoalProbability(expectedGoals, order, shutoutPressure = 0) {
