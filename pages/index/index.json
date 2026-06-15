@@ -2,8 +2,5 @@
   "navigationBarTitleText": "世界杯赛前播报",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "light",
-  "backgroundColor": "#050505",
-  "usingComponents": {
-    "ec-canvas": "/ec-canvas/ec-canvas"
-  }
+  "backgroundColor": "#050505"
 }

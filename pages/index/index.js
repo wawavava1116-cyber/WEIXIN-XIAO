@@ -4,7 +4,6 @@ const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 const { getDatabaseBadge } = require('../../utils/buildInfo')
 const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
-const echarts = require('echarts')
 
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
@@ -355,12 +354,14 @@ function buildReviewChart(reviews) {
   const ordered = reviews.slice().sort((a, b) => (a.endedAtSort || 0) - (b.endedAtSort || 0)).slice(-10)
   if (!ordered.length) return { points: [], segments: [], values: [] }
   let total = 0
-  const step = ordered.length > 1 ? 100 / (ordered.length - 1) : 0
+  const leftStart = 16
+  const leftEnd = 78
+  const step = ordered.length > 1 ? (leftEnd - leftStart) / (ordered.length - 1) : 0
   const points = ordered.map((review, index) => {
     total += Number(review.percentValue ?? parseFloat(review.percent) ?? 0)
     const value = Math.max(0, Math.min(100, total / (index + 1)))
     return {
-      left: ordered.length > 1 ? index * step : 50,
+      left: ordered.length > 1 ? leftStart + index * step : (leftStart + leftEnd) / 2,
       bottom: value,
       value: value.toFixed(1),
       level: getPercentLevel(value)
@@ -368,11 +369,12 @@ function buildReviewChart(reviews) {
   })
   const values = points.map((point) => Number(point.value))
   const segments = []
+  const yScale = 0.22
   for (let index = 1; index < points.length; index += 1) {
     const prev = points[index - 1]
     const current = points[index]
     const dx = current.left - prev.left
-    const dy = current.bottom - prev.bottom
+    const dy = (current.bottom - prev.bottom) * yScale
     segments.push({
       left: prev.left,
       bottom: prev.bottom,
@@ -380,73 +382,13 @@ function buildReviewChart(reviews) {
       angle: Math.atan2(-dy, dx) * 180 / Math.PI
     })
   }
-  return { points, segments, values }
-}
-
-function buildReviewChartOption(reviews) {
-  const chart = buildReviewChart(reviews)
-  const values = chart.values.map((value) => Number(value))
-  const lastIndex = values.length - 1
-  const seriesData = values.map((value, index) => {
-    if (index !== lastIndex) return value
-    return {
-      value,
-      label: {
-        show: true,
-        formatter: `${value.toFixed(1)}%`,
-        position: 'right',
-        color: '#ff4d4f',
-        fontSize: 9,
-        fontWeight: 900,
-        distance: 3
-      }
-    }
-  })
+  const finalPoint = points[points.length - 1] || null
   return {
-    animation: false,
-    grid: { left: 26, right: 42, top: 6, bottom: 4, containLabel: false },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: values.map((_, index) => String(index + 1)),
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: { show: false },
-      splitLine: { show: false }
-    },
-    yAxis: {
-      type: 'value',
-      min: 0,
-      max: 100,
-      interval: 50,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: {
-        show: true,
-        color: 'rgba(255,255,255,0.58)',
-        fontSize: 8,
-        margin: 3,
-        formatter(value) {
-          return value === 0 ? '0' : `${value}%`
-        }
-      },
-      splitLine: {
-        show: true,
-        lineStyle: { color: 'rgba(255,255,255,0.12)', width: 1 }
-      }
-    },
-    series: [{
-      type: 'line',
-      data: seriesData,
-      showSymbol: true,
-      symbol: 'circle',
-      symbolSize: 5,
-      smooth: false,
-      label: { show: false },
-      lineStyle: { color: '#ff3438', width: 2 },
-      itemStyle: { color: '#ff3438', borderColor: '#ff3438', borderWidth: 0 },
-      areaStyle: { color: 'rgba(255,52,56,0.08)' }
-    }]
+    points,
+    segments,
+    values,
+    finalPoint,
+    finalLabel: finalPoint ? `${Number(finalPoint.value).toFixed(1)}%` : ''
   }
 }
 
@@ -469,8 +411,6 @@ function clearStartupCaches() {
 
 Page({
   data: {
-    echarts,
-    historyMiniEc: { lazyLoad: true, disableTouch: true },
     matches: prepareDisplayMatches(sortedUpcomingMatches),
     favoriteCount: getFavoriteIds().length,
     featured: selectFeaturedMatch(sortedUpcomingMatches),
@@ -495,10 +435,7 @@ Page({
   },
 
   onReady() {
-    setTimeout(() => {
-      if (this.data.startupLoading) return
-      this.renderReviewChart(this.data.finishedMatches)
-    }, 120)
+    // The history mini chart is rendered with lightweight WXML/CSS to keep the upload package small.
   },
 
   onShow() {
@@ -549,11 +486,7 @@ Page({
     this.setData({ startupProgress: 100 })
     setTimeout(() => {
       this.startupDone = true
-      this.setData({ startupLoading: false }, () => {
-        setTimeout(() => {
-          this.renderReviewChart(this.data.finishedMatches)
-        }, 120)
-      })
+      this.setData({ startupLoading: false })
     }, 220)
   },
 
@@ -624,10 +557,6 @@ Page({
         reviewSummary: `${nextReviews.length} 场历史复盘`,
         reviewSuccessRate: getReviewRate(nextReviews),
         reviewChart: buildReviewChart(nextReviews)
-      }, () => {
-        setTimeout(() => {
-          this.renderReviewChart(nextReviews)
-        }, 80)
       })
     }
 
@@ -640,33 +569,7 @@ Page({
   },
 
   toggleReview() {
-    this.setData({ reviewOpen: !this.data.reviewOpen }, () => {
-      setTimeout(() => {
-        this.renderReviewChart(this.data.finishedMatches)
-      }, 80)
-    })
-  },
-
-  renderReviewChart(reviews) {
-    const component = this.selectComponent && this.selectComponent('#historyMiniChart')
-    if (!component || !reviews || !reviews.length) return
-    const option = buildReviewChartOption(reviews)
-    component.init((canvas, width, height, dpr) => {
-      if (!width || !height) return null
-      if (this.historyMiniChart) {
-        this.historyMiniChart.dispose()
-        this.historyMiniChart = null
-      }
-      const chart = echarts.init(canvas, null, {
-        width,
-        height,
-        devicePixelRatio: dpr || 1
-      })
-      canvas.setChart(chart)
-      chart.setOption(option, true)
-      this.historyMiniChart = chart
-      return chart
-    })
+    this.setData({ reviewOpen: !this.data.reviewOpen })
   },
 
   applyFavoriteState() {

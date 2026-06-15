@@ -2,7 +2,28 @@
   "description": "世界杯赛前播报微信小程序",
   "cloudfunctionRoot": "cloudfunctions/",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "node_modules"
+      },
+      {
+        "type": "folder",
+        "value": "miniprogram_npm"
+      },
+      {
+        "type": "folder",
+        "value": "ec-canvas"
+      },
+      {
+        "type": "folder",
+        "value": "cloudfunctions/liveScores/node_modules"
+      },
+      {
+        "type": "folder",
+        "value": "cloudfunctions/liveScores/miniprogram_npm"
+      }
+    ],
     "include": []
   },
   "setting": {

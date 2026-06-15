@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-15 15:40 - 历史复盘迷你图恢复为轻量图表
+
+- 环境：公司电脑 Codex
+- 目的：修复原生 canvas 版本在首页标题栏中不可见的问题，并避免重新引入 ECharts 导致主包超限。
+- 涉及文件：`pages/index/index.wxml`、`pages/index/index.wxss`、`pages/index/index.js`、`pages/index/index.json`
+- 主要改动：移除原生 canvas 残留初始化，恢复 WXML/CSS 迷你折线图；压缩节点间距、预留右侧最终百分比空间；修复首页 JSON 标题配置。
+- 数据库/赛程/复盘：未改动比赛数据。
+- 云函数：不需要重新部署。
+- 验证：`node -c pages/index/index.js`；Node 按 UTF-8 读取并解析 `pages/index/index.json` 通过。
+- 后续注意：小程序开发者工具内看到 PowerShell 乱码不代表 JSON 实际损坏，以 Node/微信开发者工具读取结果为准。
+
 这个文件用于记录每次 Codex 或协作者对小程序做出的重要修改，方便后续在公司电脑、家里电脑或其他环境继续接手。
 
 ## 写入规则
@@ -32,6 +43,55 @@
 - 验证：
 - 后续注意：
 ```
+
+---
+
+## 2026-06-15 15:32 - 历史复盘迷你图改为原生 canvas 连续绘制
+
+- 环境：公司电脑 Codex
+- 目的：修复轻量折线图节点不连续、最后百分比被裁切、首个节点贴近 Y 轴的问题。
+- 涉及文件：
+  - `pages/index/index.js`
+  - `pages/index/index.wxml`
+  - `pages/index/index.wxss`
+  - `CODEX_CHANGELOG.MD`
+- 主要改动：
+  - 首页历史复盘迷你图改为小程序原生 `canvas` 手绘，不引入 ECharts 等大体积库。
+  - 横向绘制区域从左侧 Y 轴和右侧百分比标签中间开始，缩短节点间总跨度，为最终百分比预留空间。
+  - Y 轴标签保留 `100%`、`50%`、`0`，并让首个节点与 Y 轴保持间距。
+  - 折线、节点和最终百分比都由同一坐标系统绘制，避免 CSS 旋转线段造成断点错位。
+- 数据库/赛程/复盘：无数据变更。
+- 云函数：未修改云函数，无需重新部署。
+- 验证：
+  - 已运行 `node -c pages/index/index.js`
+  - 已验证 `pages/index/index.json` 可解析。
+- 后续注意：该图表仍不依赖第三方库，上传包体积不受影响；如开发者工具仍显示旧图，重新编译即可。
+
+---
+
+## 2026-06-15 15:26 - 移除首页完整 ECharts 主包依赖并压缩上传包
+
+- 环境：公司电脑 Codex
+- 目的：修复微信开发者工具上传失败 `source size 4733KB exceed max limit 2MB` 的问题。
+- 涉及文件：
+  - `pages/index/index.js`
+  - `pages/index/index.wxml`
+  - `pages/index/index.wxss`
+  - `pages/index/index.json`
+  - `project.config.json`
+  - `CODEX_CHANGELOG.MD`
+- 主要改动：
+  - 首页历史复盘迷你图从 `echarts/ec-canvas` 改为轻量 WXML/WXSS 原生折线图，保留折线、节点、Y 轴 `0/50%/100%` 和最终百分比。
+  - 移除首页对 `echarts` 的 `require` 和 `ec-canvas` 组件注册，避免把 3MB+ 的 ECharts 主包打进上传包。
+  - `project.config.json` 明确忽略 `node_modules`、`miniprogram_npm`、`ec-canvas` 以及云函数本地依赖目录。
+- 数据库/赛程/复盘：无数据变更。
+- 云函数：未修改云函数，无需重新部署。
+- 验证：
+  - 已运行 `node -c pages/index/index.js`
+  - 已验证 `pages/index/index.json` 和 `project.config.json` 可解析。
+  - 已确认页面代码中无 `echarts/ec-canvas` 引用。
+  - 已按忽略目录估算主包约 `1.56MB`，低于微信上传单包 `2MB` 限制。
+- 后续注意：微信开发者工具里需要重新编译；如果仍按旧包体上传，执行“清缓存并编译”后再上传。
 
 ---
 

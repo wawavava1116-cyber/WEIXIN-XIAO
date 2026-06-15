@@ -43,7 +43,25 @@
         <text class="review-title">历史复盘</text>
       </view>
       <view class="review-head-chart history-mini-chart">
-        <ec-canvas wx:if="{{!startupLoading}}" id="historyMiniChart" canvas-id="historyMiniChart" class="review-ec-canvas history-mini-ec-canvas" echarts="{{echarts}}" ec="{{historyMiniEc}}"></ec-canvas>
+        <view class="mini-chart-shell">
+          <view class="mini-y-axis">
+            <text>100%</text>
+            <text>50%</text>
+            <text>0</text>
+          </view>
+          <view class="chart-area compact-chart-area">
+            <view class="chart-grid chart-grid-top"></view>
+            <view class="chart-grid chart-grid-mid"></view>
+            <view class="chart-grid chart-grid-bottom"></view>
+            <block wx:for="{{reviewChart.segments}}" wx:key="index">
+              <view class="chart-segment compact-chart-segment" style="left: {{item.left}}%; bottom: {{item.bottom}}%; width: {{item.width}}%; transform: rotate({{item.angle}}deg);"></view>
+            </block>
+            <block wx:for="{{reviewChart.points}}" wx:key="index">
+              <view class="chart-point compact-chart-point" style="left: {{item.left}}%; bottom: {{item.bottom}}%;"></view>
+            </block>
+            <text class="mini-final-label">{{reviewChart.finalLabel}}</text>
+          </view>
+        </view>
       </view>
       <text class="review-arrow history-expand">{{reviewOpen ? '收起' : '展开'}}</text>
     </view>
