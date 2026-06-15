@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "wx-server-sdk": "latest"
+    "wx-server-sdk": "latest",
+    "long": "4.0.0"
+  },
+  "overrides": {
+    "long": "4.0.0"
   }
 }

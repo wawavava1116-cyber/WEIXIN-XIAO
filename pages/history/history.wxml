@@ -31,17 +31,31 @@
           </view>
           <text class="review-percent percent-{{item.review.percentLevel}}">{{item.review.percent}}</text>
         </view>
-        <view class="history-body">
-          <text>胜负主选：{{item.review.resultMain}}</text>
-          <text>比分主选：{{item.review.scoreMain}}</text>
-        </view>
-        <view class="history-body muted-line" wx:if="{{item.review.resultBackup}}">
-          <text>胜负备选：{{item.review.resultBackup}}</text>
-          <text>比分备选：{{item.review.scoreBackup}}</text>
-        </view>
-        <view class="history-body muted-line" wx:else>
-          <text>胜负备选：无</text>
-          <text>比分备选：{{item.review.scoreBackup}}</text>
+        <view class="review-pick-grid">
+          <view class="review-pick-cell review-pick-left">
+            <text class="review-pick-label">胜负</text>
+            <view class="review-pick-value">
+              <text class="{{item.review.resultMainClass}}">{{item.review.resultMainShort || item.review.resultMain}}</text>
+              <text wx:if="{{item.review.resultBackupShort}}" class="review-bracket">（</text>
+              <text wx:if="{{item.review.resultBackupShort}}" class="{{item.review.resultBackupClass}}">{{item.review.resultBackupShort}}</text>
+              <text wx:if="{{item.review.resultBackupShort}}" class="review-bracket">）</text>
+            </view>
+          </view>
+          <view class="review-pick-cell review-pick-center">
+            <text class="review-pick-label">比分</text>
+            <view class="review-pick-value">
+              <text class="{{item.review.scoreMainClass}}">{{item.review.scoreMain}}</text>
+              <text wx:if="{{item.review.scoreBackup}}" class="review-bracket">（</text>
+              <text wx:if="{{item.review.scoreBackup}}" class="{{item.review.scoreBackupClass}}">{{item.review.scoreBackup}}</text>
+              <text wx:if="{{item.review.scoreBackup}}" class="review-bracket">）</text>
+            </view>
+          </view>
+          <view class="review-pick-cell review-pick-right">
+            <text class="review-pick-label">预期进球</text>
+            <view class="review-pick-value">
+              <text class="{{item.review.totalClass}}">{{item.review.totalPick || '未记录'}}</text>
+            </view>
+          </view>
         </view>
       </navigator>
     </block>

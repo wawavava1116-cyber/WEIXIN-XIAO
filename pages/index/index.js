@@ -3,6 +3,8 @@ const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 const { getDatabaseBadge } = require('../../utils/buildInfo')
+const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
+const echarts = require('echarts')
 
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
@@ -177,56 +179,283 @@ function getPickWinner(match) {
   return ''
 }
 
-function buildReviewFromFinishedMatch(match) {
-  const actualWinner = getWinnerFromScore(match.liveScore)
-  const pickWinner = getPickWinner(match)
-  const resultMainCorrect = actualWinner && pickWinner && actualWinner === pickWinner
-  const scoreMainCorrect = match.liveScore === match.pick.score
-  const scoreBackupCorrect = match.liveScore === match.pick.backup
-  const percentValue = ((resultMainCorrect ? 100 : 0) + (scoreMainCorrect ? 100 : scoreBackupCorrect ? 50 : 0)) / 2
+function getStaticMatch(sourceMatch) {
+  if (!sourceMatch) return null
+  const matchId = typeof sourceMatch === 'string' ? sourceMatch : sourceMatch.id
+  const byId = sortedUpcomingMatches.find((match) => match.id === matchId)
+  if (byId) return byId
+  const homeName = sourceMatch.home && sourceMatch.home.cn
+  const awayName = sourceMatch.away && sourceMatch.away.cn
+  return sortedUpcomingMatches.find((match) => (
+    match.home && match.away &&
+    match.home.cn === homeName &&
+    match.away.cn === awayName
+  )) || null
+}
 
+function inferResultBackupFromAnalysis(match) {
+  const text = String((match.analysis && (match.analysis.conclusion || match.analysis.order || match.analysis.market && match.analysis.market.oneXtwo)) || '')
+  if (!text) return ''
+  const homeName = match.home && match.home.cn
+  const awayName = match.away && match.away.cn
+  if (homeName && text.includes(`${homeName}不败`)) return `${homeName}不败`
+  if (awayName && text.includes(`${awayName}不败`)) return `${awayName}不败`
+  if (text.includes('主队不败') && homeName) return `${homeName}不败`
+  if (text.includes('客队不败') && awayName) return `${awayName}不败`
+  return ''
+}
+
+function getPredictionWeight(mainCorrect, backupCorrect) {
+  if (mainCorrect) return 100
+  if (backupCorrect) return 50
+  return 0
+}
+
+function getScoreTotal(score) {
+  const parts = String(score || '').split('-').map((item) => Number(item))
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return null
+  return parts[0] + parts[1]
+}
+
+function parseTotalRange(totalText) {
+  const text = String(totalText || '')
+  const rangeMatch = text.match(/(\d+)\s*-\s*(\d+)/)
+  if (rangeMatch) {
+    return { min: Number(rangeMatch[1]), max: Number(rangeMatch[2]) }
+  }
+  const singleMatch = text.match(/(\d+)/)
+  if (singleMatch) {
+    const value = Number(singleMatch[1])
+    return { min: value, max: value }
+  }
+  return null
+}
+
+function isTotalCorrect(score, totalText) {
+  const actualTotal = getScoreTotal(score)
+  const range = parseTotalRange(totalText)
+  if (actualTotal === null || !range) return false
+  return actualTotal >= range.min && actualTotal <= range.max
+}
+
+function inferTotalPickFromScores(scoreMain, scoreBackup) {
+  const totals = [getScoreTotal(scoreMain), getScoreTotal(scoreBackup)].filter((value) => value !== null)
+  if (!totals.length) return ''
+  const min = Math.min(...totals)
+  const max = Math.max(...totals)
+  return min === max ? `${min}球` : `${min}-${max}球`
+}
+
+function formatPercentValue(value) {
+  return Number.isInteger(value) ? `${value}%` : `${value.toFixed(1)}%`
+}
+
+function getShortResult(result, homeName, awayName) {
+  const text = String(result || '')
+  if (!text) return ''
+  if (text.includes('平')) return '平'
+  if (homeName && text.includes(homeName) && text.includes('不败')) return '胜'
+  if (awayName && text.includes(awayName) && text.includes('不败')) return '负'
+  if (homeName && text.includes(homeName)) return '胜'
+  if (awayName && text.includes(awayName)) return '负'
+  if (text.includes('主胜')) return '胜'
+  if (text.includes('客胜')) return '负'
+  if (text.includes('胜')) return '胜'
+  return text
+}
+
+function getReviewResultDisplay(review) {
+  if (review.resultDisplay) return review.resultDisplay
+  const mainText = review.resultMainShort || getShortResult(review.resultMain, review.home, review.away)
+  const backupText = review.resultBackupShort || getShortResult(review.resultBackup, review.home, review.away)
+  return `${mainText || review.resultMain || ''}${backupText ? `（${backupText}）` : ''}`
+}
+
+function getReviewScoreDisplay(review) {
+  if (review.scoreDisplay) return review.scoreDisplay
+  return `${review.scoreMain || ''}${review.scoreBackup ? `（${review.scoreBackup}）` : ''}`
+}
+
+function decorateReviewItem(review) {
+  const totalPick = review.totalPick || inferTotalPickFromScores(review.scoreMain, review.scoreBackup)
+  const resultWeight = getPredictionWeight(review.resultMainCorrect, review.resultBackupCorrect)
+  const scoreWeight = getPredictionWeight(review.scoreMainCorrect, review.scoreBackupCorrect)
+  const totalCorrect = typeof review.totalCorrect === 'boolean' ? review.totalCorrect : isTotalCorrect(review.score, totalPick)
+  const totalWeight = totalCorrect ? 100 : 0
+  const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + totalWeight * 0.25
   return {
+    ...review,
+    totalPick,
+    resultMainShort: getShortResult(review.resultMain, review.home, review.away),
+    resultBackupShort: getShortResult(review.resultBackup, review.home, review.away),
+    resultDisplay: getReviewResultDisplay(review),
+    scoreDisplay: getReviewScoreDisplay(review),
+    resultMainClass: review.resultMainCorrect ? 'review-ok' : 'review-bad',
+    resultBackupClass: review.resultBackupCorrect ? 'review-ok' : 'review-bad',
+    scoreMainClass: review.scoreMainCorrect ? 'review-ok' : 'review-bad',
+    scoreBackupClass: review.scoreBackupCorrect ? 'review-ok' : 'review-bad',
+    totalCorrect,
+    totalClass: totalCorrect ? 'review-ok' : 'review-bad',
+    percentValue,
+    percent: formatPercentValue(percentValue),
+    percentLevel: getPercentLevel(percentValue)
+  }
+}
+
+function buildReviewFromFinishedMatch(match) {
+  const staticMatch = getStaticMatch(match)
+  const basePick = (staticMatch && staticMatch.pick) || match.pick || {}
+  const resultBackup = basePick.resultBackup || (staticMatch ? inferResultBackupFromAnalysis(staticMatch) : inferResultBackupFromAnalysis(match))
+  const scoreMain = basePick.score || (match.pick && match.pick.score) || ''
+  const scoreBackup = basePick.backup || (match.pick && match.pick.backup) || ''
+  const totalPick = basePick.total || (match.pick && match.pick.total) || inferTotalPickFromScores(scoreMain, scoreBackup)
+  const actualWinner = getWinnerFromScore(match.liveScore)
+  const pickWinner = getPickWinner({ ...match, pick: basePick })
+  const resultMainCorrect = actualWinner && pickWinner && actualWinner === pickWinner
+  const resultBackupCorrect = actualWinner && resultBackup && getShortResult(resultBackup, match.home.cn, match.away.cn) === getShortResult(actualWinner === 'home' ? match.home.cn : actualWinner === 'away' ? match.away.cn : '平局', match.home.cn, match.away.cn)
+  const scoreMainCorrect = match.liveScore === scoreMain
+  const scoreBackupCorrect = match.liveScore === scoreBackup
+  return decorateReviewItem({
     id: `${match.id}-review-live`,
     matchId: match.id,
     home: match.home.cn,
     away: match.away.cn,
     score: match.liveScore,
-    resultMain: match.pick.result,
-    resultBackup: match.pick.resultBackup || '',
-    scoreMain: match.pick.score,
-    scoreBackup: match.pick.backup,
-    resultMainClass: resultMainCorrect ? 'review-ok' : 'review-bad',
-    resultBackupClass: 'review-bad',
-    scoreMainClass: scoreMainCorrect ? 'review-ok' : 'review-bad',
-    scoreBackupClass: scoreBackupCorrect ? 'review-ok' : 'review-bad',
-    percent: `${percentValue}%`,
-    percentLevel: getPercentLevel(percentValue),
+    resultMain: basePick.result || '',
+    resultBackup,
+    scoreMain,
+    scoreBackup,
+    totalPick,
+    resultMainCorrect,
+    resultBackupCorrect,
+    scoreMainCorrect,
+    scoreBackupCorrect,
     endedAtSort: match.finishDetectedAt || Date.now()
-  }
+  })
 }
 
 function mergeReviewMatches(staticReviews, matches) {
   const dynamicReviews = matches
     .filter((match) => match.matchStatus === 'finished' && match.liveScore)
     .map(buildReviewFromFinishedMatch)
-  const reviewMap = {}
-  dynamicReviews.concat(staticReviews).forEach((review) => {
-    reviewMap[review.matchId] = review
-  })
-  return Object.keys(reviewMap)
-    .map((key) => reviewMap[key])
-    .sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
-    .slice(0, 10)
+  if (dynamicReviews.length) {
+    saveDynamicReviews(dynamicReviews)
+  }
+  return mergeReviewLists(staticReviews, getDynamicReviews())
+    .map(decorateReviewItem)
 }
 
 function getReviewRate(reviews) {
   if (!reviews.length) return '0.0%'
-  const rate = reviews.reduce((sum, item) => sum + parseFloat(item.percent), 0) / reviews.length
+  const rate = reviews.reduce((sum, item) => sum + Number(item.percentValue ?? parseFloat(item.percent) ?? 0), 0) / reviews.length
   return `${rate.toFixed(1)}%`
+}
+
+function buildReviewChart(reviews) {
+  const ordered = reviews.slice().sort((a, b) => (a.endedAtSort || 0) - (b.endedAtSort || 0)).slice(-10)
+  if (!ordered.length) return { points: [], segments: [], values: [] }
+  let total = 0
+  const step = ordered.length > 1 ? 100 / (ordered.length - 1) : 0
+  const points = ordered.map((review, index) => {
+    total += Number(review.percentValue ?? parseFloat(review.percent) ?? 0)
+    const value = Math.max(0, Math.min(100, total / (index + 1)))
+    return {
+      left: ordered.length > 1 ? index * step : 50,
+      bottom: value,
+      value: value.toFixed(1),
+      level: getPercentLevel(value)
+    }
+  })
+  const values = points.map((point) => Number(point.value))
+  const segments = []
+  for (let index = 1; index < points.length; index += 1) {
+    const prev = points[index - 1]
+    const current = points[index]
+    const dx = current.left - prev.left
+    const dy = current.bottom - prev.bottom
+    segments.push({
+      left: prev.left,
+      bottom: prev.bottom,
+      width: Math.sqrt(dx * dx + dy * dy),
+      angle: Math.atan2(-dy, dx) * 180 / Math.PI
+    })
+  }
+  return { points, segments, values }
+}
+
+function buildReviewChartOption(reviews) {
+  const chart = buildReviewChart(reviews)
+  const values = chart.values.map((value) => Number(value))
+  const lastIndex = values.length - 1
+  const seriesData = values.map((value, index) => {
+    if (index !== lastIndex) return value
+    return {
+      value,
+      label: {
+        show: true,
+        formatter: `${value.toFixed(1)}%`,
+        position: 'right',
+        color: '#ff4d4f',
+        fontSize: 9,
+        fontWeight: 900,
+        distance: 3
+      }
+    }
+  })
+  return {
+    animation: false,
+    grid: { left: 26, right: 42, top: 6, bottom: 4, containLabel: false },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: values.map((_, index) => String(index + 1)),
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: { show: false },
+      splitLine: { show: false }
+    },
+    yAxis: {
+      type: 'value',
+      min: 0,
+      max: 100,
+      interval: 50,
+      axisLine: { show: false },
+      axisTick: { show: false },
+      axisLabel: {
+        show: true,
+        color: 'rgba(255,255,255,0.58)',
+        fontSize: 8,
+        margin: 3,
+        formatter(value) {
+          return value === 0 ? '0' : `${value}%`
+        }
+      },
+      splitLine: {
+        show: true,
+        lineStyle: { color: 'rgba(255,255,255,0.12)', width: 1 }
+      }
+    },
+    series: [{
+      type: 'line',
+      data: seriesData,
+      showSymbol: true,
+      symbol: 'circle',
+      symbolSize: 5,
+      smooth: false,
+      label: { show: false },
+      lineStyle: { color: '#ff3438', width: 2 },
+      itemStyle: { color: '#ff3438', borderColor: '#ff3438', borderWidth: 0 },
+      areaStyle: { color: 'rgba(255,52,56,0.08)' }
+    }]
+  }
 }
 
 function prepareDisplayMatches(matches) {
   return sortFavoritesFirst(decorateMatches(sortMatchesByTime(matches), getFavoriteIds()))
+}
+
+function prepareReviews(reviews) {
+  return reviews.map(decorateReviewItem)
 }
 
 function clearStartupCaches() {
@@ -240,12 +469,16 @@ function clearStartupCaches() {
 
 Page({
   data: {
+    echarts,
+    historyMiniEc: { lazyLoad: true, disableTouch: true },
     matches: prepareDisplayMatches(sortedUpcomingMatches),
+    favoriteCount: getFavoriteIds().length,
     featured: selectFeaturedMatch(sortedUpcomingMatches),
     reviewOpen: false,
-    reviewSummary: `${finishedMatches.slice(0, 10).length} 场已复盘`,
-    reviewSuccessRate: getReviewRate(finishedMatches.slice(0, 10)),
-    finishedMatches: finishedMatches.slice(0, 10),
+    reviewSummary: `${finishedMatches.slice(0, 10).length} 场历史复盘`,
+    reviewSuccessRate: getReviewRate(prepareReviews(finishedMatches.slice(0, 10))),
+    finishedMatches: prepareReviews(finishedMatches.slice(0, 10)),
+    reviewChart: buildReviewChart(prepareReviews(finishedMatches.slice(0, 10))),
     databaseBadge: getDatabaseBadge(),
     startupLoading: true,
     startupProgress: 0,
@@ -259,6 +492,13 @@ Page({
     this.scoreTimer = setInterval(() => {
       this.refreshAll({ silent: true })
     }, 10000)
+  },
+
+  onReady() {
+    setTimeout(() => {
+      if (this.data.startupLoading) return
+      this.renderReviewChart(this.data.finishedMatches)
+    }, 120)
   },
 
   onShow() {
@@ -309,7 +549,11 @@ Page({
     this.setData({ startupProgress: 100 })
     setTimeout(() => {
       this.startupDone = true
-      this.setData({ startupLoading: false })
+      this.setData({ startupLoading: false }, () => {
+        setTimeout(() => {
+          this.renderReviewChart(this.data.finishedMatches)
+        }, 120)
+      })
     }, 220)
   },
 
@@ -374,10 +618,16 @@ Page({
       const nextReviews = mergeReviewMatches(finishedMatches, nextMatches)
       this.setData({
         matches: sortedMatches,
+        favoriteCount: getFavoriteIds().length,
         featured: selectFeaturedMatch(timeSortedMatches),
         finishedMatches: nextReviews,
-        reviewSummary: `${nextReviews.length} 场已复盘`,
-        reviewSuccessRate: getReviewRate(nextReviews)
+        reviewSummary: `${nextReviews.length} 场历史复盘`,
+        reviewSuccessRate: getReviewRate(nextReviews),
+        reviewChart: buildReviewChart(nextReviews)
+      }, () => {
+        setTimeout(() => {
+          this.renderReviewChart(nextReviews)
+        }, 80)
       })
     }
 
@@ -390,13 +640,41 @@ Page({
   },
 
   toggleReview() {
-    this.setData({ reviewOpen: !this.data.reviewOpen })
+    this.setData({ reviewOpen: !this.data.reviewOpen }, () => {
+      setTimeout(() => {
+        this.renderReviewChart(this.data.finishedMatches)
+      }, 80)
+    })
+  },
+
+  renderReviewChart(reviews) {
+    const component = this.selectComponent && this.selectComponent('#historyMiniChart')
+    if (!component || !reviews || !reviews.length) return
+    const option = buildReviewChartOption(reviews)
+    component.init((canvas, width, height, dpr) => {
+      if (!width || !height) return null
+      if (this.historyMiniChart) {
+        this.historyMiniChart.dispose()
+        this.historyMiniChart = null
+      }
+      const chart = echarts.init(canvas, null, {
+        width,
+        height,
+        devicePixelRatio: dpr || 1
+      })
+      canvas.setChart(chart)
+      chart.setOption(option, true)
+      this.historyMiniChart = chart
+      return chart
+    })
   },
 
   applyFavoriteState() {
-    const matches = prepareDisplayMatches(this.data.matches)
+    const favoriteIds = getFavoriteIds()
+    const matches = sortFavoritesFirst(decorateMatches(this.data.matches, favoriteIds))
     this.setData({
       matches,
+      favoriteCount: favoriteIds.length,
       featured: selectFeaturedMatch(matches)
     })
   },
@@ -408,6 +686,7 @@ Page({
     const matches = sortFavoritesFirst(decorateMatches(this.data.matches, favoriteIds))
     this.setData({
       matches,
+      favoriteCount: favoriteIds.length,
       featured: selectFeaturedMatch(matches)
     })
     wx.showToast({

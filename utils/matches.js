@@ -137,13 +137,13 @@ const matches = [
     venue: 'Toronto Stadium',
     home: team.canada,
     away: team.bosnia,
-    pick: { result: '加拿大不败，倾向小胜', score: '2-1', backup: '1-1', total: '2-3球' },
+    pick: { result: '加拿大胜', score: '2-1', backup: '1-1', total: '2-3球', resultBackup: '平局', resultBackupText: '胜平负备选：平局' },
     analysis: makeAnalysis({
-      result: '加拿大不败，倾向主胜',
+      result: '加拿大胜',
       score: '2-1',
       backup: '1-1',
       total: '2-3球',
-      order: '加拿大不败 > 加拿大0球/平手 > 2.5球附近谨慎看大',
+      order: '加拿大胜 > 平局保护 > 加拿大-0.25谨慎',
       homeForm: '主场揭幕战动力强，前场速度和高压节奏是主要优势。',
       awayForm: '波黑经验不错，但客场抗压和边路回追会受到考验。',
       homeNews: '赛前需确认主力边锋与中卫健康状态，阵容完整时上限更高。',
@@ -189,13 +189,13 @@ const matches = [
     venue: 'Boston Stadium',
     home: team.haiti,
     away: team.scotland,
-    pick: { result: '苏格兰不败', score: '1-1', backup: '0-1', total: '1-2球' },
+    pick: { result: '苏格兰胜', score: '0-2', backup: '0-1', total: '1-2球', resultBackup: '', resultBackupText: '胜平负备选：无' },
     analysis: makeAnalysis({
-      result: '苏格兰不败，平局优先',
-      score: '1-1',
+      result: '苏格兰胜',
+      score: '0-2',
       backup: '0-1',
       total: '1-2球',
-      order: '苏格兰不败 > 小2.5 > 苏格兰0球',
+      order: '苏格兰胜 > 苏格兰-1.5谨慎 > 小2.5/2.75',
       homeForm: '海地速度和冲击力在线，但大赛控场经验是疑问。',
       awayForm: '苏格兰体系成熟，身体对抗与定位球质量更稳。',
       homeNews: '重点确认锋线速度点是否首发，这是海地最主要的破局方式。',
@@ -204,7 +204,7 @@ const matches = [
       h2h: '直接交锋意义有限，风格差异比历史记录更重要。',
       risk: '海地早早进球会让苏格兰被迫提速，比赛可能变开放。',
       oneXtwo: '平/客方向',
-      handicap: '苏格兰0球更稳',
+      handicap: '苏格兰-1.5属于深让，不能写苏格兰0球',
       marketTotal: '2/2.25球，倾向低比分'
     })
   },
@@ -215,9 +215,9 @@ const matches = [
     venue: 'BC Place Vancouver',
     home: team.australia,
     away: team.turkey,
-    pick: { result: '土耳其不败', score: '1-2', backup: '1-1', total: '2-3球' },
+    pick: { result: '土耳其胜', score: '1-2', backup: '1-1', total: '2-3球', resultBackup: '平局', resultBackupText: '胜平负备选：平局' },
     analysis: makeAnalysis({
-      result: '土耳其不败，倾向客胜',
+      result: '土耳其胜',
       score: '1-2',
       backup: '1-1',
       total: '2-3球',
@@ -293,13 +293,13 @@ const matches = [
     venue: 'Philadelphia Stadium',
     home: team.ivoryCoast,
     away: team.ecuador,
-    pick: { result: '平局优先', score: '1-1', backup: '2-1', total: '2-3球' },
+    pick: { result: '平局', score: '1-1', backup: '2-1', total: '2-3球', resultBackup: '科特迪瓦胜', resultBackupText: '胜平负备选：科特迪瓦胜' },
     analysis: makeAnalysis({
-      result: '平局优先，科特迪瓦不败',
+      result: '平局',
       score: '1-1',
       backup: '2-1',
       total: '2-3球',
-      order: '科特迪瓦0球 > 平局 > 2.5小球',
+      order: '平局 > 科特迪瓦胜 > 2-3球',
       homeForm: '科特迪瓦身体强度与边路冲击突出，能制造禁区混乱。',
       awayForm: '厄瓜多尔跑动能力和转换速度强，防线年轻但压迫积极。',
       homeNews: '中锋与边锋状态决定终结效率。',
@@ -307,8 +307,8 @@ const matches = [
       tactics: '双方都喜欢速度和对抗，中场二点球会决定比赛走势。',
       h2h: '直接交锋少，风格和体能分配更关键。',
       risk: '比赛可能因早牌、点球或定位球突然打开。',
-      oneXtwo: '平局与主队不败',
-      handicap: '科特迪瓦0球',
+      oneXtwo: '平局主选，科特迪瓦胜作低权重备选',
+      handicap: '科特迪瓦0球只作受让保护，最终推荐拆成平局主选与科特迪瓦胜备选',
       marketTotal: '2.25球'
     })
   },
@@ -345,9 +345,9 @@ const matches = [
     venue: 'Dallas Stadium',
     home: team.netherlands,
     away: team.japan,
-    pick: { result: '荷兰不败', score: '2-1', backup: '1-1', total: '2-3球' },
+    pick: { result: '荷兰胜', score: '2-1', backup: '1-1', total: '2-3球', resultBackup: '', resultBackupText: '胜平负备选：无' },
     analysis: makeAnalysis({
-      result: '荷兰不败，倾向小胜',
+      result: '荷兰胜',
       score: '2-1',
       backup: '1-1',
       total: '2-3球',
@@ -373,7 +373,7 @@ const matches = [
     away: team.tunisia,
     pick: { result: '瑞典小胜', score: '1-0', backup: '1-1', total: '1-2球' },
     analysis: makeAnalysis({
-      result: '瑞典不败，倾向小胜',
+      result: '瑞典胜',
       score: '1-0',
       backup: '1-1',
       total: '1-2球',
@@ -475,9 +475,9 @@ const matches = [
     venue: 'Seattle Stadium',
     home: team.belgium,
     away: team.egypt,
-    pick: { result: '比利时不败', score: '2-1', backup: '1-1', total: '2-3球' },
+    pick: { result: '比利时胜', score: '2-1', backup: '1-1', total: '2-3球', resultBackup: '', resultBackupText: '胜平负备选：无' },
     analysis: makeAnalysis({
-      result: '比利时不败，倾向小胜',
+      result: '比利时胜',
       score: '2-1',
       backup: '1-1',
       total: '2-3球',
@@ -607,7 +607,7 @@ const matches = [
     away: team.panama,
     pick: { result: '加纳胜', score: '2-1', backup: '1-1', total: '2-3球' },
     analysis: makeAnalysis({
-      result: '加纳不败，倾向小胜',
+      result: '加纳胜',
       score: '2-1',
       backup: '1-1',
       total: '2-3球',
@@ -631,9 +631,9 @@ const matches = [
     venue: 'Dallas Stadium',
     home: team.england,
     away: team.croatia,
-    pick: { result: '英格兰不败', score: '1-1', backup: '2-1', total: '2-3球' },
+    pick: { result: '平局', score: '1-1', backup: '2-1', total: '2-3球', resultBackup: '英格兰胜', resultBackupText: '胜平负备选：英格兰胜' },
     analysis: makeAnalysis({
-      result: '英格兰不败，平局权重高',
+      result: '平局',
       score: '1-1',
       backup: '2-1',
       total: '2-3球',
@@ -709,13 +709,13 @@ const matches = [
     venue: 'Atlanta Stadium',
     home: team.czechia,
     away: team.southAfrica,
-    pick: { result: '捷克不败', score: '1-1', backup: '2-1', total: '2-3球' },
+    pick: { result: '平局', score: '1-1', backup: '2-1', total: '2-3球', resultBackup: '捷克胜', resultBackupText: '胜平负备选：捷克胜' },
     analysis: makeAnalysis({
-      result: '捷克不败，平局优先',
+      result: '平局',
       score: '1-1',
       backup: '2-1',
       total: '2-3球',
-      order: '捷克0球 > 平局 > 2.5小球',
+      order: '平局 > 捷克胜 > 2.5小球',
       homeForm: '捷克身体和定位球优势明显，但转换速度需要保护。',
       awayForm: '南非跑动积极，边路速度和反击能制造麻烦。',
       homeNews: '捷克中卫与高中锋健康决定定位球威胁。',
@@ -723,8 +723,8 @@ const matches = [
       tactics: '捷克争高点和二点球，南非打快速推进，攻防转换会很关键。',
       h2h: '交锋参考有限，A组第二轮积分形势会影响保守程度。',
       risk: '双方首轮结果、南非反击、捷克防线回追。',
-      oneXtwo: '主队不败',
-      handicap: '捷克0球',
+      oneXtwo: '平局主选，捷克胜作低权重备选',
+      handicap: '捷克0球只作受让保护，最终推荐拆成平局主选与捷克胜备选',
       marketTotal: '2.25球'
     })
   },
@@ -787,9 +787,9 @@ const matches = [
     venue: 'Estadio Guadalajara',
     home: team.mexico,
     away: team.korea,
-    pick: { result: '墨西哥不败', score: '2-1', backup: '1-1', total: '2-3球' },
+    pick: { result: '墨西哥胜', score: '2-1', backup: '1-1', total: '2-3球', resultBackup: '平局', resultBackupText: '胜平负备选：平局' },
     analysis: makeAnalysis({
-      result: '墨西哥不败，倾向小胜',
+      result: '墨西哥胜',
       score: '2-1',
       backup: '1-1',
       total: '2-3球',
@@ -801,7 +801,7 @@ const matches = [
       tactics: '墨西哥主动压上，韩国打快速转换，比赛可能出现双方进球。',
       h2h: '双方世界杯交锋有记忆点，但本场更看主场环境和二轮积分。',
       risk: '墨西哥压上后的身后空间、韩国反击、瓜达拉哈拉高强度气氛。',
-      oneXtwo: '主队不败',
+      oneXtwo: '主胜为主，平局低权重保护',
       handicap: '墨西哥-0.25',
       marketTotal: '2.25/2.5球'
     })
@@ -839,13 +839,13 @@ const matches = [
     venue: 'Boston Stadium',
     home: team.scotland,
     away: team.morocco,
-    pick: { result: '平局优先', score: '1-1', backup: '0-1', total: '1-2球' },
+    pick: { result: '平局', score: '1-1', backup: '0-1', total: '1-2球', resultBackup: '摩洛哥胜', resultBackupText: '胜平负备选：摩洛哥胜' },
     analysis: makeAnalysis({
-      result: '平局优先，摩洛哥不败',
+      result: '平局',
       score: '1-1',
       backup: '0-1',
       total: '1-2球',
-      order: '摩洛哥不败 > 平局 > 2.5小球',
+      order: '平局 > 摩洛哥胜 > 2.5小球',
       homeForm: '苏格兰身体对抗、定位球和二点球质量稳定，能把比赛拖进高强度消耗。',
       awayForm: '摩洛哥防守纪律和转换速度更成熟，面对欧洲身体流球队时反击质量有优势。',
       homeNews: '苏格兰需要核对中场硬度和锋线支点体能，若中前场消耗过大，后段推进会下降。',
@@ -853,7 +853,7 @@ const matches = [
       tactics: '苏格兰争高点和定位球，摩洛哥压缩中路后打边路转换，节奏可能偏谨慎。',
       h2h: '历史交锋参考有限，现阶段更看小组第二轮积分压力和双方防守稳定性。',
       risk: '早段定位球、黄牌尺度和摩洛哥边路身后空间会改变低比分节奏。',
-      oneXtwo: '平局权重最高，客队不败保护',
+      oneXtwo: '平局主选，摩洛哥胜作低权重备选',
       handicap: '摩洛哥受让或0球更稳',
       marketTotal: '2/2.25球，倾向小比分'
     })
@@ -970,14 +970,51 @@ const predictionDiscipline = {
   'australia-turkey-20260613': { result: '土耳其胜', resultBackup: '平局', oneXtwo: '客胜为主，平局低权重保护', order: '土耳其胜 > 平局保护 > 2.5球谨慎大' },
   'brazil-morocco-20260613': { result: '巴西胜', resultBackup: '', oneXtwo: '主胜方向，不再把平局列为胜平负备选', order: '巴西胜 > 巴西-0.5 > 双方进球谨慎关注' },
   'netherlands-japan-20260614': { result: '荷兰胜', resultBackup: '', oneXtwo: '主胜方向，不设胜平负备选', order: '荷兰胜 > 荷兰-0.5 > 2.5球谨慎大' },
-  'belgium-egypt-20260615': { result: '比利时胜', resultBackup: '', oneXtwo: '主胜方向，不设胜平负备选', order: '比利时胜 > 比利时-0.5 > 2.5球谨慎大' },
-  'england-croatia-20260617': { result: '平局优先，英格兰小胜备选', resultBackup: '英格兰胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 英格兰胜 > 2.5小球' },
-  'czechia-southafrica-20260618': { result: '平局优先，捷克小胜备选', resultBackup: '捷克胜', oneXtwo: '平局优先，主胜备选', order: '平局 > 捷克胜 > 2.5小球' },
-  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', oneXtwo: '主胜为主，平局低权重保护', order: '墨西哥胜 > 平局保护 > 2.5球谨慎大' },
-  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', oneXtwo: '主胜方向清晰，不设置胜平负备选', order: '巴西胜 > 巴西-1.5谨慎 > 巴西零封' },
-  'scotland-morocco-20260619': { result: '平局优先', resultBackup: '摩洛哥胜', oneXtwo: '平局优先，客胜作低权重备选', order: '摩洛哥不败 > 平局 > 2.5小球' },
-  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', oneXtwo: '主胜略优，平局低权重保护', order: '土耳其胜 > 平局保护 > 双方进球' },
-  'usa-australia-20260619': { result: '美国胜', resultBackup: '', oneXtwo: '主胜方向清晰，不设置胜平负备选', order: '美国胜 > 美国-0.75 > 2.5球谨慎' }
+  'ivorycoast-ecuador-20260614': { result: '平局', resultBackup: '科特迪瓦胜', oneXtwo: '平局主选，科特迪瓦胜作低权重备选', handicap: '科特迪瓦0球只作受让保护，最终推荐拆成平局主选与科特迪瓦胜备选', order: '平局 > 科特迪瓦胜 > 2-3球' },
+  'germany-curacao-20260614': { result: '德国胜', resultBackup: '', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', order: '德国胜 > 德国-1.5谨慎 > 2-3球' },
+  'spain-caboverde-20260615': { result: '西班牙胜', resultBackup: '', score: '2-0', backup: '3-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '西班牙控球压制强，但若早早领先会更重视比赛管理，西班牙-1.5可看但不宜追深', order: '西班牙胜 > 西班牙-1.5谨慎 > 2-3球' },
+  'belgium-egypt-20260615': { result: '比利时胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '比利时进攻端更完整，但埃及反击和定位球会限制穿盘确定性', order: '比利时胜 > 比利时-0.75谨慎 > 2-3球' },
+  'saudi-uruguay-20260615': { result: '乌拉圭胜', resultBackup: '', score: '1-3', backup: '0-2', total: '3-4球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '乌拉圭在贝尔萨高压和纵向推进下进球上限更高，但沙特主场式环境和反击有破门窗口', order: '乌拉圭胜 > 乌拉圭-1谨慎 > 3-4球' },
+  'iran-newzealand-20260615': { result: '伊朗胜', resultBackup: '', score: '1-0', backup: '2-0', total: '1-2球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '伊朗强在控制风险和定位球，教练打法偏稳，主胜优先但不追大比分', order: '伊朗胜 > 小2.5 > 1-2球' },
+  'france-senegal-20260616': { result: '法国胜', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '法国个人能力和转换效率更高，但塞内加尔防线身体对抗强，赢球与大胜要分开', order: '法国胜 > 法国-0.75 > 2-3球' },
+  'iraq-norway-20260616': { result: '挪威胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '挪威锋线冲击力明显，伊拉克低位防守能拖节奏但难完全限制禁区终结', order: '挪威胜 > 挪威-0.75 > 2-3球' },
+  'argentina-algeria-20260616': { result: '阿根廷胜', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '阿根廷更擅长控节奏和保护领先，强队稳赢但不机械放大比分', order: '阿根廷胜 > 阿根廷-1谨慎 > 2-3球' },
+  'austria-jordan-20260616': { result: '奥地利胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '奥地利高压打法会制造连续射门和二次进攻，约旦若被迫出球更容易出现失误', order: '奥地利胜 > 奥地利-1 > 3-4球' },
+  'england-croatia-20260617': { result: '平局', resultBackup: '英格兰胜', score: '1-1', backup: '2-1', total: '2-3球', oneXtwo: '平局主选，英格兰胜作低权重备选', handicap: '英格兰个体优势明显，但克罗地亚控球和中场保护能降低比赛回合数', order: '平局 > 英格兰胜 > 2-3球' },
+  'portugal-congodr-20260617': { result: '葡萄牙胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '葡萄牙进攻点多，刚果民主共和国反击有身体优势但防线横移压力大', order: '葡萄牙胜 > 葡萄牙-1 > 3-4球' },
+  'ghana-panama-20260617': { result: '加纳胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '加纳前场冲击力更好，但巴拿马对抗和定位球会制造波动', order: '加纳胜 > 平局保护 > 2-3球' },
+  'uzbekistan-colombia-20260617': { result: '哥伦比亚胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '哥伦比亚边路和前场个人能力更强，但乌兹别克斯坦低位组织会压低上限', order: '哥伦比亚胜 > 哥伦比亚-0.75 > 2-3球' },
+  'czechia-southafrica-20260618': { result: '捷克胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '捷克胜主选，平局作低权重备选', handicap: '南非受停赛和防线轮换影响，捷克定位球与高点优势更容易转化为胜势', order: '捷克胜 > 平局保护 > 2-3球' },
+  'switzerland-bosnia-20260618': { result: '瑞士胜', resultBackup: '', score: '1-0', backup: '2-0', total: '1-2球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '瑞士结构稳定但节奏偏谨慎，波黑若回收防线，大胜概率低于赢球概率', order: '瑞士胜 > 小2.5 > 1-2球' },
+  'canada-qatar-20260618': { result: '加拿大胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '加拿大速度和主场环境更有利，卡塔尔组织性不差但防线回追会吃压力', order: '加拿大胜 > 加拿大-0.75谨慎 > 2-3球' },
+  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜为主，平局低权重保护', handicap: '墨西哥高压和主场海拔有优势，但韩国反击速度会限制深盘信心', order: '墨西哥胜 > 平局保护 > 2-3球' },
+  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-1.5 > 3-4球' },
+  'scotland-morocco-20260619': { result: '平局', resultBackup: '摩洛哥胜', score: '1-1', backup: '0-1', total: '1-2球', oneXtwo: '平局主选，摩洛哥胜作低权重备选', handicap: '摩洛哥防守和反击质量更好，苏格兰身体对抗能拖慢比赛', order: '平局 > 摩洛哥胜 > 1-2球' },
+  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '土耳其创造力更强，但巴拉圭对抗和定位球会让比赛保持悬念', order: '土耳其胜 > 平局保护 > 2-3球' },
+  'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '美国高节奏压迫能制造更多机会，澳大利亚定位球有威胁但阵地战创造力有限', order: '美国胜 > 美国-0.75 > 2-3球' }
+}
+
+const coachStyleNotes = {
+  'spain-caboverde-20260615': '教练打法与攻防端：西班牙更强调控球、压迫和边路传中，进攻稳定但领先后会控制风险；佛得角若深守，西班牙主胜清晰但大比分上限不宜机械放大。',
+  'belgium-egypt-20260615': '教练打法与攻防端：比利时前场个人能力和肋部推进更强，埃及反击速度与定位球能制造一球空间，因此主胜倾向保留但穿盘不宜过深。',
+  'saudi-uruguay-20260615': '教练打法与攻防端：乌拉圭在贝尔萨式高压和纵向推进下进攻回合数高，沙特防线若被迫连续出球，失误会放大比分；但沙特反击也有破门窗口。',
+  'iran-newzealand-20260615': '教练打法与攻防端：伊朗更重视阵型完整、定位球和比赛管理，新西兰低位防守会压低节奏，所以更像主胜小比分而不是开放大球。',
+  'france-senegal-20260616': '教练打法与攻防端：法国转换速度和个人能力优势明显，塞内加尔身体对抗与防线纪律较好，法国赢面高但不等于必然大胜穿深盘。',
+  'iraq-norway-20260616': '教练打法与攻防端：挪威锋线冲击和禁区终结更强，伊拉克低位防守能拖慢节奏但难持续限制高点和身后冲刺。',
+  'argentina-algeria-20260616': '教练打法与攻防端：阿根廷擅长控节奏和保护领先，阿尔及利亚反击能力不弱，因此主胜更稳，比分不盲目放大。',
+  'austria-jordan-20260616': '教练打法与攻防端：奥地利高压和二次进攻会制造连续射门，约旦若出球受压容易出现防线断点，进球上限高于普通实力模型。',
+  'england-croatia-20260617': '教练打法与攻防端：英格兰个体优势明显但比赛管理偏谨慎，克罗地亚中场控球和降速能力强，强强对话更容易形成低回合拉锯。',
+  'portugal-congodr-20260617': '教练打法与攻防端：葡萄牙进攻点丰富且边中结合强，刚果民主共和国身体和反击能回击，但防线横移会承压，比分上限略高。',
+  'ghana-panama-20260617': '教练打法与攻防端：加纳速度和个人突破更有威胁，巴拿马对抗、定位球和防守韧性会把比赛维持在一球差附近。',
+  'uzbekistan-colombia-20260617': '教练打法与攻防端：哥伦比亚边路和前场个人能力占优，乌兹别克斯坦更偏组织防守和中低位反击，客胜优先但进球数不追高。',
+  'czechia-southafrica-20260618': '教练打法与攻防端：捷克高点、定位球和直接打法能针对南非防线轮换；南非有速度反击，但停赛与阵型完整度下降让捷克胜面上升。',
+  'switzerland-bosnia-20260618': '教练打法与攻防端：瑞士结构稳定、攻守转换风险低，波黑若压低阵型会限制大比分，瑞士更像稳胜小比分。',
+  'canada-qatar-20260618': '教练打法与攻防端：加拿大速度和纵深冲击更直接，卡塔尔组织性不差但回追保护压力大，主胜可期但仍需防一球差。',
+  'mexico-korea-20260618': '教练打法与攻防端：墨西哥高压和主场海拔能制造压迫优势，韩国反击速度会拉高双方进球概率，主胜但平局保留低权重。',
+  'brazil-haiti-20260619': '教练打法与攻防端：巴西边路爆点、禁区终结和连续进攻能力明显高出一档，海地若无法长期摆出有效低位防线，比分容易被放大。',
+  'scotland-morocco-20260619': '教练打法与攻防端：摩洛哥防守纪律和反击质量更好，苏格兰身体对抗和定位球能拖慢比赛，低比分更合理。',
+  'turkey-paraguay-20260619': '教练打法与攻防端：土耳其脚下创造力更强，巴拉圭硬度和定位球会制造波动，比赛有双方进球可能但不宜过度追大。',
+  'usa-australia-20260619': '教练打法与攻防端：美国高节奏压迫和边路速度能制造更多机会，澳大利亚定位球威胁明显但阵地战创造力有限。'
 }
 
 const injuryImpactNotes = {
@@ -987,7 +1024,7 @@ const injuryImpactNotes = {
   },
   'czechia-southafrica-20260618': {
     home: '捷克暂无明确新增停赛输入，主要看中卫和高中锋健康度。若高点齐整，定位球和二点球优势会提升。',
-    away: '南非首轮有红牌停赛影响，下一场相关球员无法出战，防线轮换和中场拦截会受影响。速度反击仍有威胁，但阵型完整度下降，所以平局优先，南非不宜作为主方向。'
+    away: '南非首轮有红牌停赛影响，下一场相关球员无法出战，防线轮换和中场拦截会受影响。速度反击仍有威胁，但阵型完整度下降，所以本场以平局主选，捷克胜作为低权重备选。'
   },
   'haiti-scotland-20260613': {
     home: '海地需要确认锋线速度点和边翼卫身体状态；若主力速度点缺阵，反击威胁会明显下降。',
@@ -1243,10 +1280,17 @@ matches.forEach((match) => {
   match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
   applyPredictionRule(match)
   match.analysis.injuryImpact = injuryImpactNotes[match.id] || getDefaultInjuryImpact(match)
+  if (coachStyleNotes[match.id]) {
+    match.analysis.tactics = `${match.analysis.tactics} ${coachStyleNotes[match.id]}`
+  }
   match.analysis.probability = buildProbabilityAnalysis(match)
 })
 
 const finishedReviewSource = [
+  { id: 'sweden-tunisia-review', matchId: 'sweden-tunisia-20260614', homeTeam: 'sweden', awayTeam: 'tunisia', home: '瑞典', away: '突尼斯', dateText: '6月15日 周一', kickoff: '10:00', group: 'F组', venue: 'Estadio Monterrey', endedAtSort: 202606151200, score: '5-1', resultMain: '瑞典小胜', resultBackup: '', scoreMain: '1-0', scoreBackup: '1-1', totalPick: '1-2球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'ivorycoast-ecuador-review', matchId: 'ivorycoast-ecuador-20260614', homeTeam: 'ivoryCoast', awayTeam: 'ecuador', home: '科特迪瓦', away: '厄瓜多尔', dateText: '6月15日 周一', kickoff: '07:00', group: 'E组', venue: 'Philadelphia Stadium', endedAtSort: 202606150900, score: '1-0', resultMain: '平局', resultBackup: '科特迪瓦胜', scoreMain: '1-1', scoreBackup: '2-1', resultMainCorrect: false, resultBackupCorrect: true, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'netherlands-japan-review', matchId: 'netherlands-japan-20260614', homeTeam: 'netherlands', awayTeam: 'japan', home: '荷兰', away: '日本', dateText: '6月15日 周一', kickoff: '04:00', group: 'F组', venue: 'Dallas Stadium', endedAtSort: 202606150600, score: '2-2', resultMain: '荷兰胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'germany-curacao-review', matchId: 'germany-curacao-20260614', homeTeam: 'germany', awayTeam: 'curacao', home: '德国', away: '库拉索', dateText: '6月15日 周一', kickoff: '01:00', group: 'E组', venue: 'Houston Stadium', endedAtSort: 202606150300, score: '7-1', resultMain: '德国胜', resultBackup: '', scoreMain: '3-0', scoreBackup: '2-0', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
   { id: 'australia-turkey-review', matchId: 'australia-turkey-20260613', homeTeam: 'australia', awayTeam: 'turkey', home: '澳大利亚', away: '土耳其', dateText: '6月14日 周日', kickoff: '12:00', group: 'D组', venue: 'BC Place Vancouver', endedAtSort: 202606141400, score: '2-0', resultMain: '土耳其胜', resultBackup: '平局', scoreMain: '1-2', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, retainOnHome: true },
   { id: 'haiti-scotland-review', matchId: 'haiti-scotland-20260613', homeTeam: 'haiti', awayTeam: 'scotland', home: '海地', away: '苏格兰', dateText: '6月14日 周日', kickoff: '09:00', group: 'C组', venue: 'Boston Stadium', endedAtSort: 202606141100, score: '0-1', resultMain: '苏格兰胜', resultBackup: '', scoreMain: '0-2', scoreBackup: '0-1', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true, retainOnHome: true },
   { id: 'brazil-morocco-review', matchId: 'brazil-morocco-20260613', homeTeam: 'brazil', awayTeam: 'morocco', home: '巴西', away: '摩洛哥', dateText: '6月14日 周日', kickoff: '06:00', group: 'C组', venue: 'New York New Jersey Stadium', endedAtSort: 202606140800, score: '1-1', resultMain: '巴西胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '1-1', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true, retainOnHome: true },
@@ -1261,6 +1305,67 @@ function getPredictionWeight(mainCorrect, backupCorrect) {
   if (mainCorrect) return 100
   if (backupCorrect) return 50
   return 0
+}
+
+function getScoreTotal(score) {
+  const parts = String(score || '').split('-').map((item) => Number(item))
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return null
+  return parts[0] + parts[1]
+}
+
+function parseTotalRange(totalText) {
+  const text = String(totalText || '')
+  const rangeMatch = text.match(/(\d+)\s*-\s*(\d+)/)
+  if (rangeMatch) {
+    return { min: Number(rangeMatch[1]), max: Number(rangeMatch[2]) }
+  }
+  const singleMatch = text.match(/(\d+)/)
+  if (singleMatch) {
+    const value = Number(singleMatch[1])
+    return { min: value, max: value }
+  }
+  return null
+}
+
+function isTotalCorrect(score, totalText) {
+  const actualTotal = getScoreTotal(score)
+  const range = parseTotalRange(totalText)
+  if (actualTotal === null || !range) return false
+  return actualTotal >= range.min && actualTotal <= range.max
+}
+
+function inferTotalPickFromScores(scoreMain, scoreBackup) {
+  const totals = [getScoreTotal(scoreMain), getScoreTotal(scoreBackup)].filter((value) => value !== null)
+  if (!totals.length) return ''
+  const min = Math.min(...totals)
+  const max = Math.max(...totals)
+  return min === max ? `${min}球` : `${min}-${max}球`
+}
+
+function formatPercentValue(value) {
+  return Number.isInteger(value) ? `${value}%` : `${value.toFixed(1)}%`
+}
+
+function getShortResult(result, homeName, awayName) {
+  const text = String(result || '')
+  if (!text) return ''
+  if (text.includes('平')) return '平'
+  if (homeName && text.includes(homeName)) return '胜'
+  if (awayName && text.includes(awayName)) return '负'
+  if (text.includes('主胜')) return '胜'
+  if (text.includes('客胜')) return '负'
+  if (text.includes('胜')) return '胜'
+  return text
+}
+
+function formatReviewResult(main, backup, homeName, awayName) {
+  const mainText = getShortResult(main, homeName, awayName)
+  const backupText = getShortResult(backup, homeName, awayName)
+  return `${mainText}${backupText ? `（${backupText}）` : ''}`
+}
+
+function formatReviewScore(main, backup) {
+  return `${main || ''}${backup ? `（${backup}）` : ''}`
 }
 
 function getPercentLevel(percent) {
@@ -1283,16 +1388,27 @@ function sortKeyToLocalMs(sortKey) {
 }
 
 const finishedMatches = finishedReviewSource.map((item) => {
+  const sourceMatch = matches.find((match) => match.id === item.matchId)
+  const totalPick = item.totalPick || (sourceMatch && sourceMatch.pick && sourceMatch.pick.total) || inferTotalPickFromScores(item.scoreMain, item.scoreBackup)
   const resultWeight = getPredictionWeight(item.resultMainCorrect, item.resultBackupCorrect)
   const scoreWeight = getPredictionWeight(item.scoreMainCorrect, item.scoreBackupCorrect)
-  const percentValue = (resultWeight + scoreWeight) / 2
+  const totalCorrect = typeof item.totalCorrect === 'boolean' ? item.totalCorrect : isTotalCorrect(item.score, totalPick)
+  const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + (totalCorrect ? 100 : 0) * 0.25
   return {
     ...item,
+    totalPick,
+    totalCorrect,
+    resultMainShort: getShortResult(item.resultMain, item.home, item.away),
+    resultBackupShort: getShortResult(item.resultBackup, item.home, item.away),
+    resultDisplay: formatReviewResult(item.resultMain, item.resultBackup, item.home, item.away),
+    scoreDisplay: formatReviewScore(item.scoreMain, item.scoreBackup),
     resultMainClass: item.resultMainCorrect ? 'review-ok' : 'review-bad',
     resultBackupClass: item.resultBackupCorrect ? 'review-ok' : 'review-bad',
     scoreMainClass: item.scoreMainCorrect ? 'review-ok' : 'review-bad',
     scoreBackupClass: item.scoreBackupCorrect ? 'review-ok' : 'review-bad',
-    percent: `${percentValue}%`,
+    totalClass: totalCorrect ? 'review-ok' : 'review-bad',
+    percentValue,
+    percent: formatPercentValue(percentValue),
     percentLevel: getPercentLevel(percentValue),
     endedAtMs: sortKeyToLocalMs(item.endedAtSort)
   }
@@ -1354,7 +1470,7 @@ const historyMatches = finishedMatches.map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
   return match && { ...match, review }
 }).filter(Boolean).slice(0, 10)
-const reviewSuccessValue = finishedMatches.length ? finishedMatches.reduce((sum, item) => sum + parseFloat(item.percent), 0) / finishedMatches.length : 0
+const reviewSuccessValue = finishedMatches.length ? finishedMatches.reduce((sum, item) => sum + Number(item.percentValue ?? parseFloat(item.percent) ?? 0), 0) / finishedMatches.length : 0
 const reviewSuccessRate = `${reviewSuccessValue.toFixed(1)}%`
 const reviewSummary = `${finishedMatches.length} 场已复盘`
 

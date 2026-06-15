@@ -3,7 +3,7 @@
     <view class="meta-line">
       <text>{{match.dateText}} · {{match.kickoff}} · {{match.group}}</text>
       <text>{{match.weatherIcon}} {{match.weather}}</text>
-      <text class="altitude altitude-{{match.altitudeLevel}}">⛰ {{match.altitude}}</text>
+      <text class="altitude altitude-{{match.altitudeLevel}}">⛰️ {{match.altitude}}</text>
     </view>
 
     <view class="scoreline">
@@ -38,7 +38,7 @@
     </view>
   </view>
 
-  <view class="probability-card glass" wx:if="{{scorePanel.mode === 'pending' && match.analysis.probability}}">
+  <view class="probability-card glass" wx:if="{{match.analysis && match.analysis.probability}}">
     <view class="probability-section">
       <text class="block-title">胜平负概率占比</text>
       <view class="result-probability-bar">

@@ -1,6 +1,63 @@
 const { matches, historyMatches } = require('../../utils/matches')
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
+const { getDynamicReviews } = require('../../utils/reviewCache')
+
+function buildDynamicHistoryMatch(review) {
+  if (!review || !review.matchId) return null
+  const sourceMatch = matches.find((item) => item.id === review.matchId) ||
+    historyMatches.find((item) => item.id === review.matchId)
+  if (sourceMatch) {
+    return {
+      ...sourceMatch,
+      dateText: review.dateText || sourceMatch.dateText,
+      kickoff: review.kickoff || sourceMatch.kickoff,
+      group: review.group || sourceMatch.group,
+      venue: review.venue || sourceMatch.venue,
+      isFinished: true,
+      matchStatus: 'finished',
+      statusText: '完赛',
+      liveScore: review.score,
+      review: { ...(sourceMatch.review || {}), ...review }
+    }
+  }
+  const analysis = {
+    conclusion: '该场比赛来自实时完赛复盘缓存，数据库正式复盘更新后会显示完整分析。',
+    market: { oneXtwo: '', handicap: '', total: '' },
+    form: { home: '', away: '' },
+    news: { home: '', away: '' },
+    tactics: '',
+    h2h: '',
+    order: '',
+    risk: ''
+  }
+  return {
+    id: review.matchId,
+    dateText: review.dateText || '',
+    kickoff: review.kickoff || '',
+    group: review.group || '',
+    venue: review.venue || '',
+    weatherIcon: '',
+    weather: '',
+    altitude: '',
+    altitudeLevel: 'unknown',
+    isFinished: true,
+    matchStatus: 'finished',
+    statusText: '完赛',
+    liveScore: review.score,
+    home: { cn: review.home || '', en: '', flag: '' },
+    away: { cn: review.away || '', en: '', flag: '' },
+    pick: {
+      result: review.resultMain || '',
+      resultBackup: review.resultBackup || '',
+      score: review.scoreMain || '',
+      backup: review.scoreBackup || '',
+      total: review.totalPick || ''
+    },
+    analysis,
+    review
+  }
+}
 
 function getScorePanel(match) {
   const isFinished = Boolean(match.review || match.isFinished || match.matchStatus === 'finished')
@@ -31,7 +88,7 @@ function getScorePanel(match) {
     mode: 'pending',
     eyebrow: '预测比分',
     score: predictedScore,
-    subLabel: '备选比分',
+    subLabel: '备用比分',
     subScore: (match.pick && match.pick.backup) || '--'
   }
 }
@@ -45,10 +102,11 @@ Page({
   onLoad(options) {
     const primaryMatches = options.source === 'history' ? historyMatches : matches
     const fallbackMatches = options.source === 'history' ? matches : historyMatches
-    const match = primaryMatches.find((item) => item.id === options.id) ||
-      fallbackMatches.find((item) => item.id === options.id) ||
-      primaryMatches[0] ||
-      fallbackMatches[0]
+    const dynamicReview = getDynamicReviews().find((item) => item.matchId === options.id || item.id === options.id)
+    const baseMatch = primaryMatches.find((item) => item.id === options.id) ||
+      fallbackMatches.find((item) => item.id === options.id)
+    const dynamicMatch = dynamicReview ? buildDynamicHistoryMatch(dynamicReview) : null
+    const match = options.source === 'history' && dynamicMatch ? dynamicMatch : (baseMatch || dynamicMatch)
     if (!match) {
       wx.showToast({ title: '未找到比赛', icon: 'none' })
       return

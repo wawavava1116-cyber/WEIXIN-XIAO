@@ -1,11 +1,12 @@
 const DATABASE_VERSION = '1.0.2'
+const DATABASE_UPDATED_AT = new Date('2026-06-15T15:17:00+08:00')
 
 function pad(value) {
   return String(value).padStart(2, '0')
 }
 
 function getDatabaseUpdateText(date) {
-  const beijingDate = new Date((date || new Date()).getTime() + 8 * 60 * 60 * 1000)
+  const beijingDate = new Date((date || DATABASE_UPDATED_AT).getTime() + 8 * 60 * 60 * 1000)
   return `${beijingDate.getUTCMonth() + 1}/${beijingDate.getUTCDate()} ${pad(beijingDate.getUTCHours())}:${pad(beijingDate.getUTCMinutes())}`
 }
 
@@ -15,6 +16,7 @@ function getDatabaseBadge(date) {
 
 module.exports = {
   DATABASE_VERSION,
+  DATABASE_UPDATED_AT,
   getDatabaseUpdateText,
   getDatabaseBadge
 }

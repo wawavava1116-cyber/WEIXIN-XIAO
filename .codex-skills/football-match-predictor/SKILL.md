@@ -27,9 +27,11 @@ When updating this mini program, keep these fields consistent:
 - `scheduleAt`: ISO-like schedule string or cloud score source timestamp.
 - `sortTime`: numeric timestamp used for homepage ordering.
 - `pick.result`: homepage main result pick only.
-- `pick.resultBackup`: detail-page optional result backup. Leave empty for strong favorites unless draw risk is meaningful.
+- `pick.result`: must contain only one main 1X2 pick, such as `巴西胜`, `平局`, or `哥伦比亚胜`. Do not write combined wording such as `平局优先，科特迪瓦不败` in this field.
+- `pick.resultBackup`: detail-page optional result backup. Leave empty for strong favorites unless draw risk is meaningful. If the old wording is `平局优先，科特迪瓦不败`, split it into `pick.result: 平局` and `pick.resultBackup: 科特迪瓦胜`.
 - `pick.score`: main score prediction.
 - `pick.backup`: backup score prediction.
+- `pick.total`: exactly one total-goals range. The range must span no more than 1 goal, such as `2-3球` or `3-4球`; invalid examples include `1-3球` and `2-4球`.
 - `analysis.market.oneXtwo`: 1X2 market view.
 - `analysis.market.handicap`: Asian handicap view.
 - `analysis.market.total`: over-under view.
@@ -50,6 +52,8 @@ Collect enough evidence for each section before deciding:
 - Probability: estimate win/draw/loss and team goal-count percentages from market lines, ranking gap, squad value gap, injury/suspension impact, form, head-to-head, venue and travel. Record uncertainty when market or team-news sources are stale.
 - Team form: recent 5-10 matches, goals for/against, clean sheets, opponent quality.
 - Squad news: injuries, suspensions, expected goalkeeper, striker availability, tactical absences.
+- Coach style: preferred tempo, pressing height, possession/directness, risk tolerance after taking the lead, substitution pattern, and whether the coach can keep a compact low block when outmatched.
+- Attack/defense balance: chance creation quality, shot volume, conversion reliability, box defense, transition defense, goalkeeper reliability, set-piece attack/defense, and whether defensive errors snowball under pressure.
 - Tactical matchup: possession/directness, pressing, transition threat, set pieces, defensive weaknesses.
 - Context: travel, altitude, climate, home advantage, opener pressure, rotation incentives.
 - Head-to-head: use only as supporting context; warn when sample size is small or old.
@@ -67,6 +71,7 @@ Collect enough evidence for each section before deciding:
 - The handicap side and 1X2 wording must agree.
 - A favorite or handicap-giving side should be predicted as win, cover, or scoreline; do not call the favorite "unbeaten".
 - "Unbeaten" is only appropriate for an underdog or handicap-receiving side when the football and market view support win-or-draw protection.
+- The final structured pick should still be split into one main 1X2 pick and one optional backup. Do not store "unbeaten" as the final pick. Convert it into the implied backup side: for example, `平局优先，科特迪瓦不败` becomes main `平局`, backup `科特迪瓦胜`; `土耳其不败，倾向客胜` becomes main `土耳其胜`, backup `平局`.
 - Avoid recommending a favorite at level ball/0 handicap when the market says that team is giving a meaningful line such as `-0.5`, `-0.75`, `-1`, or `-1.5`.
 - If the line is deep, say whether the favorite can win but may not cover, or whether the handicap is too expensive.
 - Do not force a draw backup for a strong favorite with a clear win edge.
@@ -116,25 +121,30 @@ Calibration rules:
 - 1X2 and handicap should calibrate the result totals derived from correct-score odds. A deep favorite should not show high underdog unbeaten probability unless odds, injuries, red cards, or lineup news justify it.
 - Over-under should calibrate the combined goal buckets. A low total line should suppress both teams' `3+`; a high total line can lift `2` and `3+`.
 - Ranking and squad value adjust the market output only when odds are missing, stale, or clearly inconsistent with team news.
+- Coach style and attack/defense balance must calibrate score and total-goals picks after the base result probability is set:
+  - An attacking favorite plus an opponent that cannot sustain a low block can create blowout scorelines; raise the favorite `3+` bucket and consider larger main/backup scores.
+  - A strong favorite with conservative match management, lower tempo, or an opponent with a compact defensive coach should not automatically be pushed to a big handicap score; prefer controlled scores such as `1-0`, `2-0`, or `2-1`.
+  - If both coaches prefer aggressive pressing, vertical attacks, or loose rest-defense, increase both-teams-to-score and high-total tails.
+  - If the favorite is likely to win but the opponent coach defends the box well, distinguish "win probability" from "handicap-cover probability".
+  - If the underdog coach lacks the structure to defend deep and the team has weak box defense or error-prone buildup, do not understate favorite scoring volume just because the underdog is weaker on paper.
 - Injury and suspension impact can override market priors when the missing player is a goalkeeper, core center back, defensive midfielder, captain, set-piece taker, or key attacker.
 - Document uncertainty when score odds or team-goal odds are unavailable; do not invent odds.
 
 For finished matches, use this hit-rate system:
 
-- Result main pick hit: 100.
-- Result backup hit: 50.
-- Result miss: 0.
-- Score main pick hit: 100.
-- Score backup hit: 50.
-- Score miss: 0.
-- Final percent is the average of result weight and score weight.
+- Result main pick hit: 100, result backup hit: 50, result miss: 0.
+- Score main pick hit: 100, score backup hit: 50, score miss: 0.
+- Total-goals range hit: 100, total-goals miss: 0. The range must be checked against the final score total. Example: `2-3球` misses `1-0` and `0-0`, but hits `1-1`, `2-1`, `2-0`, and `3-0`.
+- Final percent uses weighted scoring: result weight 37.5%, score weight 37.5%, total-goals weight 25%.
+- Review display should be compact: result as `胜（平）`, score as `1-1（2-1）`, and total goals as `进球数 2-3球`.
+- Correct items are green; missed items are red.
 
 Examples:
 
-- Result main hit + score main hit = 100%.
-- Result main hit + score backup hit = 75%.
-- Result backup hit + score miss = 25%.
-- Result backup hit + score backup hit = 50%.
+- Result main hit + score main hit + total-goals hit = 100%.
+- Result main hit + score backup hit + total-goals hit = 81.25%.
+- Result backup hit + score miss + total-goals hit = 43.75%.
+- Result backup hit + score backup hit + total-goals hit = 62.5%.
 - Both miss = 0%.
 
 Color levels:
@@ -204,6 +214,9 @@ When writing or updating analysis text, use concise Chinese:
 
 - Strong favorite at home with stable defense: lean `2-0`, `2-1`, or `1-0`; be careful with large handicaps in openers.
 - Favorite with attacking absences or conservative coach: prefer win plus low total rather than aggressive handicap.
+- Favorite with an attack-minded coach, high shot volume, and opponent unable to park the bus: widen the favorite scoring tail and allow bigger main/backup scores.
+- Strong favorite with conservative match management against a compact defensive coach: keep the result strong but cap the scoreline, usually `1-0`, `2-0`, or `2-1`, and avoid overstating total goals.
+- If the favorite is dominant but the opponent coach is tactically mature and defends the box well, distinguish "win probability" from "handicap-cover probability".
 - Underdog with fast transition forwards or strong set pieces: keep `2-1` and `1-1` live only if the match-up supports it.
 - High altitude, heat, travel burden, or hostile venue usually favors the home side late, but may slow tempo early.
 - Tournament openers often start cagey. Avoid forcing over unless both lineups clearly support it.
