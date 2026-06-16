@@ -964,6 +964,35 @@ const venueAltitudes = {
   'Estadio Guadalajara': '1566m'
 }
 
+const modelWeights = {
+  correctScoreOdds: 12,
+  goalEfficiency: 17,
+  marketLines: 16,
+  squadNews: 13,
+  rankValue: 7,
+  recentForm: 10,
+  coachTactics: 8,
+  headToHead: 3,
+  context: 5,
+  betfairFlow: 9
+}
+
+const betfairMarketSnapshot = {
+  'france-senegal-20260616': { marketId: '1.251397403', totalMatched: 425920, delayed: true, odds: { home: 1.525, draw: 4.65, away: 7.7 }, probability: { home: 66, draw: 21, away: 13 } },
+  'iraq-norway-20260616': { marketId: '1.256162419', totalMatched: 432077, delayed: true, odds: { home: 16.75, draw: 7.7, away: 1.235 }, probability: { home: 6, draw: 13, away: 81 } },
+  'argentina-algeria-20260616': { marketId: '1.251397542', totalMatched: 162392, delayed: true, odds: { home: 1.455, draw: 4.75, away: 9.5 }, probability: { home: 69, draw: 21, away: 10 } },
+  'austria-jordan-20260616': { marketId: '1.251397681', totalMatched: 198541, delayed: true, odds: { home: 1.395, draw: 5.55, away: 9.5 }, probability: { home: 72, draw: 17, away: 11 } },
+  'ghana-panama-20260617': { marketId: '1.251399584', totalMatched: 94463, delayed: true, odds: { home: 2.27, draw: 3.475, away: 3.625 }, probability: { home: 44, draw: 29, away: 27 } },
+  'england-croatia-20260617': { marketId: '1.251399725', totalMatched: 125012, delayed: true, odds: { home: 1.775, draw: 3.925, away: 5.55 }, probability: { home: 56, draw: 26, away: 18 } },
+  'portugal-congodr-20260617': { marketId: '1.256138762', totalMatched: 197777, delayed: true, odds: { home: 1.32, draw: 6.1, away: 13.25 }, probability: { home: 76, draw: 16, away: 8 } },
+  'uzbekistan-colombia-20260617': { marketId: '1.251384486', totalMatched: 52049, delayed: true, odds: { home: 10.75, draw: 5.05, away: 1.405 }, probability: { home: 9, draw: 20, away: 71 } },
+  'switzerland-bosnia-20260618': { marketId: '1.257503620', totalMatched: 29113, delayed: true, odds: { home: 1.615, draw: 4.25, away: 6.8 }, probability: { home: 62, draw: 23, away: 15 } },
+  'canada-qatar-20260618': { marketId: '1.257503759', totalMatched: 45280, delayed: true, odds: { home: 1.315, draw: 6.1, away: 12.75 }, probability: { home: 76, draw: 16, away: 8 } },
+  'mexico-korea-20260618': { marketId: '1.257503897', totalMatched: 104161, delayed: true, odds: { home: 2.09, draw: 3.525, away: 4.25 }, probability: { home: 48, draw: 28, away: 24 } },
+  'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 102064, delayed: true, odds: { home: 1.125, draw: 13.5, away: 24.5 }, probability: { home: 89, draw: 7, away: 4 } },
+  'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 72421, delayed: true, odds: { home: 5.85, draw: 3.775, away: 1.765 }, probability: { home: 17, draw: 26, away: 57 } }
+}
+
 const predictionDiscipline = {
   'canada-bosnia-20260612': { result: '加拿大胜', resultBackup: '平局', oneXtwo: '主胜为主，平局作为低权重备选', order: '加拿大胜 > 平局保护 > 加拿大-0.25谨慎' },
   'haiti-scotland-20260613': { result: '苏格兰胜', resultBackup: '', score: '0-2', backup: '0-1', total: '1-2球', oneXtwo: '客胜方向，不设胜平负备选', handicap: '苏格兰-1.5属于深让，不能写苏格兰0球', order: '苏格兰胜 > 苏格兰-1.5谨慎 > 小2.5/2.75' },
@@ -980,7 +1009,7 @@ const predictionDiscipline = {
   'iraq-norway-20260616': { result: '挪威胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '挪威锋线冲击力明显，伊拉克低位防守能拖节奏但难完全限制禁区终结', order: '挪威胜 > 挪威-0.75 > 2-3球' },
   'argentina-algeria-20260616': { result: '阿根廷胜', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '阿根廷更擅长控节奏和保护领先，强队稳赢但不机械放大比分', order: '阿根廷胜 > 阿根廷-1谨慎 > 2-3球' },
   'austria-jordan-20260616': { result: '奥地利胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '奥地利高压打法会制造连续射门和二次进攻，约旦若被迫出球更容易出现失误', order: '奥地利胜 > 奥地利-1 > 3-4球' },
-  'england-croatia-20260617': { result: '平局', resultBackup: '英格兰胜', score: '1-1', backup: '2-1', total: '2-3球', oneXtwo: '平局主选，英格兰胜作低权重备选', handicap: '英格兰个体优势明显，但克罗地亚控球和中场保护能降低比赛回合数', order: '平局 > 英格兰胜 > 2-3球' },
+  'england-croatia-20260617': { result: '英格兰胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: 'Betfair主胜约56%，平局约26%，英格兰胜从备选上调为主选，平局保留低权重保护', handicap: '英格兰个体优势明显，但克罗地亚控球和中场保护能降低比赛回合数，主胜优先但穿深盘谨慎', order: '英格兰胜 > 平局保护 > 2-3球' },
   'portugal-congodr-20260617': { result: '葡萄牙胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '葡萄牙进攻点多，刚果民主共和国反击有身体优势但防线横移压力大', order: '葡萄牙胜 > 葡萄牙-1 > 3-4球' },
   'ghana-panama-20260617': { result: '加纳胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '加纳前场冲击力更好，但巴拿马对抗和定位球会制造波动', order: '加纳胜 > 平局保护 > 2-3球' },
   'uzbekistan-colombia-20260617': { result: '哥伦比亚胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '哥伦比亚边路和前场个人能力更强，但乌兹别克斯坦低位组织会压低上限', order: '哥伦比亚胜 > 哥伦比亚-0.75 > 2-3球' },
@@ -989,7 +1018,7 @@ const predictionDiscipline = {
   'canada-qatar-20260618': { result: '加拿大胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '加拿大速度和主场环境更有利，卡塔尔组织性不差但防线回追会吃压力', order: '加拿大胜 > 加拿大-0.75谨慎 > 2-3球' },
   'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜为主，平局低权重保护', handicap: '墨西哥高压和主场海拔有优势，但韩国反击速度会限制深盘信心', order: '墨西哥胜 > 平局保护 > 2-3球' },
   'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-1.5 > 3-4球' },
-  'scotland-morocco-20260619': { result: '平局', resultBackup: '摩洛哥胜', score: '1-1', backup: '0-1', total: '1-2球', oneXtwo: '平局主选，摩洛哥胜作低权重备选', handicap: '摩洛哥防守和反击质量更好，苏格兰身体对抗能拖慢比赛', order: '平局 > 摩洛哥胜 > 1-2球' },
+  'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: 'Betfair客胜约57%，市场资金更支持摩洛哥，平局作为低比分保护', handicap: '摩洛哥防守和反击质量更好，苏格兰身体对抗能拖慢比赛，客胜优先但一球差更合理', order: '摩洛哥胜 > 平局保护 > 1-2球' },
   'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '土耳其创造力更强，但巴拉圭对抗和定位球会让比赛保持悬念', order: '土耳其胜 > 平局保护 > 2-3球' },
   'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '美国高节奏压迫能制造更多机会，澳大利亚定位球有威胁但阵地战创造力有限', order: '美国胜 > 美国-0.75 > 2-3球' }
 }
@@ -1116,6 +1145,48 @@ function getTotalGoalLine(match) {
   return values.length ? values.reduce((sum, item) => sum + item, 0) / values.length : 2.5
 }
 
+function getBetfairMarket(match) {
+  return betfairMarketSnapshot[match.id] || null
+}
+
+function getBetfairEdge(match) {
+  const market = getBetfairMarket(match)
+  if (!market || !market.probability) return 0
+  return clamp((market.probability.home - market.probability.away) / 100, -0.9, 0.9)
+}
+
+function getBetfairBlendWeight(match) {
+  const market = getBetfairMarket(match)
+  if (!market) return 0
+  const liquidityWeight = clamp((market.totalMatched || 0) / 220000, 0.28, 0.72)
+  const delayedPenalty = market.delayed ? 0.88 : 1
+  return clamp(liquidityWeight * delayedPenalty, 0.22, 0.68)
+}
+
+function blendWithBetfairProbability(match, probability) {
+  const market = getBetfairMarket(match)
+  if (!market || !market.probability) return probability
+  const weight = getBetfairBlendWeight(match)
+  let home = Math.round(probability.home * (1 - weight) + market.probability.home * weight)
+  let draw = Math.round(probability.draw * (1 - weight) + market.probability.draw * weight)
+  let away = 100 - home - draw
+  if (away < 4) {
+    away = 4
+    draw = 100 - home - away
+  }
+  if (draw < 8) {
+    draw = 8
+    away = 100 - home - draw
+  }
+  return { home, draw, away }
+}
+
+function getBetfairMarketText(match) {
+  const market = getBetfairMarket(match)
+  if (!market) return ''
+  return `Betfair交易所参考：成交量约${Math.round((market.totalMatched || 0) / 1000)}K，胜/平/负归一化概率${market.probability.home}%/${market.probability.draw}%/${market.probability.away}%${market.delayed ? '，数据带延迟' : ''}`
+}
+
 function getStrengthScores(match) {
   const homeRank = Number(match.home.rank || 80)
   const awayRank = Number(match.away.rank || 80)
@@ -1124,8 +1195,16 @@ function getStrengthScores(match) {
   const rankEdge = clamp((awayRank - homeRank) / 55, -0.9, 0.9)
   const valueEdge = homeValue && awayValue ? clamp(Math.log((homeValue + 20) / (awayValue + 20)) / 3, -0.9, 0.9) : 0
   const marketEdge = clamp(getHandicapValue(match) / 2, -0.75, 0.75)
-  const homeContext = 0.06
-  const edge = clamp(rankEdge * 0.42 + valueEdge * 0.38 + marketEdge * 0.2 + homeContext, -0.95, 0.95)
+  const rankValueEdge = rankEdge * 0.45 + valueEdge * 0.55
+  const betfairEdge = getBetfairEdge(match)
+  const contextEdge = 0.25
+  const activeWeight = modelWeights.rankValue + modelWeights.marketLines + modelWeights.betfairFlow + modelWeights.context
+  const edge = clamp((
+    rankValueEdge * modelWeights.rankValue +
+    marketEdge * modelWeights.marketLines +
+    betfairEdge * modelWeights.betfairFlow +
+    contextEdge * modelWeights.context
+  ) / activeWeight, -0.95, 0.95)
   return {
     edge,
     homePower: clamp(1 + edge, 0.25, 1.9),
@@ -1142,7 +1221,7 @@ function buildResultProbability(match) {
   home = clamp(Math.round(home), 4, 88)
   away = clamp(Math.round(away), 4, 88)
   const draw = 100 - home - away
-  const normalized = { home, draw, away }
+  const normalized = blendWithBetfairProbability(match, { home, draw, away })
   return applyRelativeProbabilityLevels([
     makeProbabilityItem('home', `${match.home.cn}胜`, normalized.home),
     makeProbabilityItem('draw', '平局', normalized.draw),
@@ -1279,6 +1358,10 @@ matches.forEach((match) => {
   const altitudeValue = parseInt(match.altitude, 10)
   match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
   applyPredictionRule(match)
+  const betfairText = getBetfairMarketText(match)
+  if (betfairText) {
+    match.analysis.market.oneXtwo = `${match.analysis.market.oneXtwo}。${betfairText}`
+  }
   match.analysis.injuryImpact = injuryImpactNotes[match.id] || getDefaultInjuryImpact(match)
   if (coachStyleNotes[match.id]) {
     match.analysis.tactics = `${match.analysis.tactics} ${coachStyleNotes[match.id]}`

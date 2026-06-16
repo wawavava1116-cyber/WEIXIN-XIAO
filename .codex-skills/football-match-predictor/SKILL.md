@@ -90,8 +90,33 @@ Evidence priority:
 
 1. Correct-score odds.
 2. Team total goals odds / team to score odds / clean-sheet odds.
-3. 1X2, Asian handicap, and over-under lines.
+3. 1X2, Asian handicap, over-under lines, and Betfair exchange market data.
 4. Ranking, squad market value, injuries, suspensions, expected lineup, recent form, head-to-head, venue, travel, altitude, weather, and schedule context.
+
+Recommended factor weights for database refreshes:
+
+| Factor | Weight |
+| --- | ---: |
+| Correct-score odds | 12% |
+| Goal efficiency / scoring rate / clean-sheet rate | 17% |
+| 1X2 / Asian handicap / over-under market | 16% |
+| Squad injuries and suspensions | 13% |
+| Ranking / competition level / squad market value | 7% |
+| Recent form | 10% |
+| Coach style and tactical structure | 8% |
+| Head-to-head | 3% |
+| Venue / weather / travel / home-away context | 5% |
+| Betfair back-lay book / traded volume / late market movement | 9% |
+
+Betfair exchange data usage:
+
+- Treat Betfair as a market-sentiment and liquidity signal, not a betting recommendation.
+- Use only read-only market data: market catalogue, market book, back/lay prices, last traded price, total matched, in-play status, and delayed-data flag.
+- Normalize best back/lay midpoint prices into implied home/draw/away probabilities after removing overround.
+- Weight Betfair more when `totalMatched` is high and back/lay spreads are tight; reduce weight when data is delayed, stale, thin, or missing.
+- Use Betfair to calibrate `analysis.probability.result`, `analysis.market.oneXtwo`, `analysis.order`, and risk notes.
+- Do not expose App Key, SSOID, account tokens, or any secret in mini program frontend code, repository files, screenshots, or docs.
+- If Betfair has no market for a fixture, explicitly treat the Betfair factor as unavailable and redistribute judgment to football factors; do not invent exchange prices.
 
 Correct-score odds usage:
 
