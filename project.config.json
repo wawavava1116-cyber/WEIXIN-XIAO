@@ -22,6 +22,14 @@
       {
         "type": "folder",
         "value": "cloudfunctions/liveScores/miniprogram_npm"
+      },
+      {
+        "type": "folder",
+        "value": "server"
+      },
+      {
+        "type": "folder",
+        "value": ".codex-skills"
       }
     ],
     "include": []

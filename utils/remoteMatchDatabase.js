@@ -33,13 +33,19 @@ function setRemoteDatabase(database) {
 }
 
 function refreshRemoteDatabase(onReady, onComplete) {
+  let finished = false
+  let fallbackTimer = null
   const complete = () => {
+    if (finished) return
+    finished = true
+    if (fallbackTimer) clearTimeout(fallbackTimer)
     onComplete && onComplete()
   }
   if (!apiBaseUrl) {
     complete()
     return
   }
+  fallbackTimer = setTimeout(complete, 4000)
   wx.request({
     url: `${apiBaseUrl.replace(/\/$/, '')}/api/database/latest`,
     method: 'GET',

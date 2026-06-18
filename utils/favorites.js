@@ -30,8 +30,7 @@ function toggleFavorite(matchId) {
 }
 
 function decorateMatches(matches, favoriteIds = getFavoriteIds()) {
-  return matches.map((match) => ({
-    ...match,
+  return matches.map((match) => Object.assign({}, match, {
     isFavorite: isFavorite(match.id, favoriteIds)
   }))
 }

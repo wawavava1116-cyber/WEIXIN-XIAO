@@ -9,6 +9,8 @@ const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/re
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
 const LIVE_SCORE_CACHE_KEY = 'worldcup_live_score_cache'
+const ANNOUNCEMENT_CLOSED_KEY = 'worldcup_announcement_closed_at'
+const ANNOUNCEMENT_HIDE_MS = 24 * 60 * 60 * 1000
 const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
 const FEATURED_PRIORITY = {
   'brazil-morocco-20260613': 100,
@@ -59,13 +61,12 @@ function sortMatchesByTime(matches) {
 }
 
 function cloneMatch(match) {
-  return {
-    ...match,
-    home: { ...match.home },
-    away: { ...match.away },
-    pick: { ...match.pick },
-    analysis: match.analysis ? { ...match.analysis } : match.analysis
-  }
+  return Object.assign({}, match, {
+    home: Object.assign({}, match.home),
+    away: Object.assign({}, match.away),
+    pick: Object.assign({}, match.pick),
+    analysis: match.analysis ? Object.assign({}, match.analysis) : match.analysis
+  })
 }
 
 function getRefreshBaseMatches() {
@@ -140,10 +141,9 @@ function applyFinishDetection(matches) {
       cache[match.id] = detectedAt
       changed = true
     }
-    return {
-      ...match,
+    return Object.assign({}, match, {
       finishDetectedAt: detectedAt
-    }
+    })
   })
 
   if (changed) {
@@ -246,8 +246,8 @@ function isTotalCorrect(score, totalText) {
 function inferTotalPickFromScores(scoreMain, scoreBackup) {
   const totals = [getScoreTotal(scoreMain), getScoreTotal(scoreBackup)].filter((value) => value !== null)
   if (!totals.length) return ''
-  const min = Math.min(...totals)
-  const max = Math.max(...totals)
+  const min = Math.min.apply(Math, totals)
+  const max = Math.max.apply(Math, totals)
   return min === max ? `${min}球` : `${min}-${max}球`
 }
 
@@ -288,8 +288,7 @@ function decorateReviewItem(review) {
   const totalCorrect = typeof review.totalCorrect === 'boolean' ? review.totalCorrect : isTotalCorrect(review.score, totalPick)
   const totalWeight = totalCorrect ? 100 : 0
   const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + totalWeight * 0.25
-  return {
-    ...review,
+  return Object.assign({}, review, {
     totalPick,
     resultMainShort: getShortResult(review.resultMain, review.home, review.away),
     resultBackupShort: getShortResult(review.resultBackup, review.home, review.away),
@@ -304,7 +303,7 @@ function decorateReviewItem(review) {
     percentValue,
     percent: formatPercentValue(percentValue),
     percentLevel: getPercentLevel(percentValue)
-  }
+  })
 }
 
 function buildReviewFromFinishedMatch(match) {
@@ -315,7 +314,7 @@ function buildReviewFromFinishedMatch(match) {
   const scoreBackup = basePick.backup || (match.pick && match.pick.backup) || ''
   const totalPick = basePick.total || (match.pick && match.pick.total) || inferTotalPickFromScores(scoreMain, scoreBackup)
   const actualWinner = getWinnerFromScore(match.liveScore)
-  const pickWinner = getPickWinner({ ...match, pick: basePick })
+  const pickWinner = getPickWinner(Object.assign({}, match, { pick: basePick }))
   const resultMainCorrect = actualWinner && pickWinner && actualWinner === pickWinner
   const resultBackupCorrect = actualWinner && resultBackup && getShortResult(resultBackup, match.home.cn, match.away.cn) === getShortResult(actualWinner === 'home' ? match.home.cn : actualWinner === 'away' ? match.away.cn : '平局', match.home.cn, match.away.cn)
   const scoreMainCorrect = match.liveScore === scoreMain
@@ -356,7 +355,10 @@ function mergeReviewMatches(staticReviews, matches) {
 
 function getReviewRate(reviews) {
   if (!reviews.length) return '0.0%'
-  const rate = reviews.reduce((sum, item) => sum + Number(item.percentValue ?? parseFloat(item.percent) ?? 0), 0) / reviews.length
+  const rate = reviews.reduce((sum, item) => {
+    const value = item.percentValue !== undefined && item.percentValue !== null ? item.percentValue : parseFloat(item.percent)
+    return sum + Number(value || 0)
+  }, 0) / reviews.length
   return `${rate.toFixed(1)}%`
 }
 
@@ -368,7 +370,8 @@ function buildReviewChart(reviews) {
   const leftEnd = 78
   const step = ordered.length > 1 ? (leftEnd - leftStart) / (ordered.length - 1) : 0
   const points = ordered.map((review, index) => {
-    total += Number(review.percentValue ?? parseFloat(review.percent) ?? 0)
+    const reviewValue = review.percentValue !== undefined && review.percentValue !== null ? review.percentValue : parseFloat(review.percent)
+    total += Number(reviewValue || 0)
     const value = Math.max(0, Math.min(100, total / (index + 1)))
     return {
       left: ordered.length > 1 ? leftStart + index * step : (leftStart + leftEnd) / 2,
@@ -419,6 +422,23 @@ function clearStartupCaches() {
   }
 }
 
+function shouldShowAnnouncement() {
+  try {
+    const closedAt = Number(wx.getStorageSync(ANNOUNCEMENT_CLOSED_KEY) || 0)
+    return !closedAt || Date.now() - closedAt >= ANNOUNCEMENT_HIDE_MS
+  } catch (error) {
+    return true
+  }
+}
+
+function saveAnnouncementClosedAt() {
+  try {
+    wx.setStorageSync(ANNOUNCEMENT_CLOSED_KEY, Date.now())
+  } catch (error) {
+    // Announcement state should not block normal page use.
+  }
+}
+
 Page({
   data: {
     matches: prepareDisplayMatches(sortedUpcomingMatches),
@@ -432,6 +452,7 @@ Page({
     databaseBadge: getDatabaseBadge(),
     startupLoading: true,
     startupProgress: 0,
+    showAnnouncement: false,
     isRefreshing: false,
     syncText: '下拉同步实时比分'
   },
@@ -460,6 +481,8 @@ Page({
   onUnload() {
     if (this.scoreTimer) clearInterval(this.scoreTimer)
     if (this.refreshFallback) clearTimeout(this.refreshFallback)
+    if (this.startupRemoteFallback) clearTimeout(this.startupRemoteFallback)
+    if (this.startupHardFallback) clearTimeout(this.startupHardFallback)
     if (this.startupProgressTimer) clearInterval(this.startupProgressTimer)
   },
 
@@ -471,12 +494,25 @@ Page({
     clearStartupCaches()
     this.startStartupProgress()
     this.checkForAppUpdate()
-    refreshRemoteDatabase(null, () => {
+    let started = false
+    const startHomeRefresh = () => {
+      if (started) return
+      started = true
+      if (this.startupRemoteFallback) {
+        clearTimeout(this.startupRemoteFallback)
+        this.startupRemoteFallback = null
+      }
       this.refreshAll({
         startup: true,
         afterFinish: () => this.finishStartupProgress()
       })
-    })
+    }
+    this.startupRemoteFallback = setTimeout(startHomeRefresh, 4500)
+    this.startupHardFallback = setTimeout(() => {
+      this.refreshing = false
+      this.finishStartupProgress()
+    }, 10000)
+    refreshRemoteDatabase(null, startHomeRefresh)
   },
 
   startStartupProgress() {
@@ -491,6 +527,10 @@ Page({
   },
 
   finishStartupProgress() {
+    if (this.startupHardFallback) {
+      clearTimeout(this.startupHardFallback)
+      this.startupHardFallback = null
+    }
     if (this.startupProgressTimer) {
       clearInterval(this.startupProgressTimer)
       this.startupProgressTimer = null
@@ -498,8 +538,16 @@ Page({
     this.setData({ startupProgress: 100 })
     setTimeout(() => {
       this.startupDone = true
-      this.setData({ startupLoading: false })
+      this.setData({
+        startupLoading: false,
+        showAnnouncement: shouldShowAnnouncement()
+      })
     }, 220)
+  },
+
+  closeAnnouncement() {
+    saveAnnouncementClosedAt()
+    this.setData({ showAnnouncement: false })
   },
 
   checkForAppUpdate() {

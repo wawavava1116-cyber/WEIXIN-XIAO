@@ -9,8 +9,7 @@ function buildDynamicHistoryMatch(review) {
   const sourceMatch = matches.find((item) => item.id === review.matchId) ||
     historyMatches.find((item) => item.id === review.matchId)
   if (sourceMatch) {
-    return {
-      ...sourceMatch,
+    return Object.assign({}, sourceMatch, {
       dateText: review.dateText || sourceMatch.dateText,
       kickoff: review.kickoff || sourceMatch.kickoff,
       group: review.group || sourceMatch.group,
@@ -19,8 +18,8 @@ function buildDynamicHistoryMatch(review) {
       matchStatus: 'finished',
       statusText: '完赛',
       liveScore: review.score,
-      review: { ...(sourceMatch.review || {}), ...review }
-    }
+      review: Object.assign({}, sourceMatch.review || {}, review)
+    })
   }
   const analysis = {
     conclusion: '该场比赛来自实时完赛复盘缓存，数据库正式复盘更新后会显示完整分析。',

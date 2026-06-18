@@ -11,6 +11,18 @@
     </view>
   </view>
 
+  <view class="announcement-mask" wx:if="{{showAnnouncement}}">
+    <view class="announcement-card">
+      <view class="announcement-close" bindtap="closeAnnouncement">X</view>
+      <text class="announcement-title">重要公告</text>
+      <text class="announcement-body">此小程序是基于 GPT 5.5 模型及各种场内场外因素综合分析的自动化数据，仅作为参考，不能作为投注意见，请勿参与非法赌博。体育彩票为国内唯一的投注正规渠道。</text>
+      <view class="announcement-update">
+        <text class="announcement-update-title">本次版本更新</text>
+        <text class="announcement-update-text">加入必发交易量数据分析及场外因素分析。</text>
+      </view>
+    </view>
+  </view>
+
   <view class="warning-marquee">
     <text class="warning-track">⚠️ 理性观赛，远离违法赌博。本小程序内容仅供赛前信息参考，不提供任何投注服务。严禁利用预测内容参与任何形式的非法博彩。 ⚠️ 理性观赛，远离违法赌博。</text>
   </view>
@@ -26,8 +38,9 @@
     </view>
     <view class="hero-copy">
       <text class="hero-title">世界杯赛前播报</text>
-      <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键看完整分析。</text>
+      <text class="hero-subtitle">近 7 天赛程、赛前判断和比分倾向，一键查看</text>
       <text class="hero-version">{{databaseBadge}}</text>
+      <text class="hero-update">更新内容：加入必发成交量分析</text>
       <text class="hero-model">预测模型：GPT5.5</text>
     </view>
   </view>

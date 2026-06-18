@@ -4,6 +4,7 @@ const { readStore, readLiveScores, writeDatabaseSnapshot } = require('./store')
 const miniProgramData = require(path.resolve(__dirname, '..', '..', 'utils', 'matches.js'))
 const buildInfo = require(path.resolve(__dirname, '..', '..', 'utils', 'buildInfo.js'))
 const FINISHED_KEEP_MS = 60 * 60 * 1000
+const INCLUDE_BETFAIR_CACHE = process.env.INCLUDE_BETFAIR_CACHE === '1'
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value))
@@ -197,7 +198,7 @@ function mergeFinishedReviews(staticReviews, finishedFromLive) {
 function buildDatabaseSnapshot(options = {}) {
   const betfairStore = readStore()
   const liveScoreStore = options.liveScoreStore || readLiveScores()
-  const markets = betfairStore.markets || {}
+  const markets = INCLUDE_BETFAIR_CACHE ? (betfairStore.markets || {}) : {}
   const liveScores = liveScoreStore.scores || {}
   const matches = attachBetfairMarkets(applyLiveScores(clone(miniProgramData.matches || []), liveScores), markets)
   const baseUpcoming = attachBetfairMarkets(applyLiveScores(clone(miniProgramData.upcomingMatches || []), liveScores), markets)

@@ -88,6 +88,11 @@
     </view>
   </view>
 
+  <view class="betfair-card glass" wx:if="{{match.analysis && match.analysis.betfairImpact}}">
+    <text class="block-title">必发成交量影响</text>
+    <text class="betfair-impact-text">{{match.analysis.betfairImpact}}</text>
+  </view>
+
   <view class="conclusion glass">
     <text class="block-title">综合结论</text>
     <text class="conclusion-text">{{match.analysis.conclusion}}</text>
@@ -114,14 +119,9 @@
     <text class="body-line">{{match.away.cn}}：{{match.analysis.form.away}}</text>
   </view>
 
-  <view class="analysis-card glass">
-    <text class="block-title">伤停与预计阵容</text>
-    <text class="body-line">{{match.home.cn}}：{{match.analysis.news.home}}</text>
-    <text class="body-line">{{match.away.cn}}：{{match.analysis.news.away}}</text>
-  </view>
-
   <view class="analysis-card glass" wx:if="{{match.analysis.injuryImpact}}">
-    <text class="block-title">球员伤停信息及影响</text>
+    <text class="block-title">伤停及阵容影响</text>
+    <text class="reference-tag">公开参考：{{match.analysis.publicReference || '无公开参考信息'}}</text>
     <text class="body-line">{{match.home.cn}}：{{match.analysis.injuryImpact.home}}</text>
     <text class="body-line">{{match.away.cn}}：{{match.analysis.injuryImpact.away}}</text>
   </view>

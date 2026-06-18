@@ -1,5 +1,14 @@
 # Betfair Server
 
+当前项目策略：Betfair 盘口/交易量优先在本地 Codex 预测流程中使用用户当次提供的新 SSOID 拉取，分析结论写入 `utils/matches.js` 后再发布。云服务器默认不维护长期 Betfair SSOID，也不自动同步 Betfair 盘口；只负责 `/api/database/latest` 数据库快照和实时比分 LIVE 更新。
+
+如以后确需恢复服务器 Betfair 同步，需要显式设置：
+
+```bash
+BETFAIR_SYNC_ENABLED=1
+INCLUDE_BETFAIR_CACHE=1
+```
+
 这个目录用于部署到轻量云服务器。小程序前端仍然通过微信开发者工具上传；服务器只负责 Betfair 会话续期、盘口交易量同步和缓存 API。
 
 ## 服务器要求

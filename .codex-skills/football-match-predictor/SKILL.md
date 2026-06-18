@@ -127,6 +127,11 @@ Weight handling rules:
 
 Betfair exchange data usage:
 
+- For this project, Betfair should be fetched during local Codex prediction runs with the fresh SSOID provided by the user for that run.
+- During every daily database refresh, all matches kicking off within the next 48 hours from the current Beijing time must include Betfair exchange analysis when a valid SSOID is available.
+- For those next-48-hour matches, add a short `analysis.betfairImpact` sentence that explains how traded volume, back/lay probability, and delayed/thin data affected the pick. This sentence should be shown near the top of the detail page before the longer market cards.
+- Do not rely on the cloud server to maintain a long-lived Betfair SSOID or to keep Betfair market sync alive by default; the server may be blocked by Betfair/Cloudflare and should not be treated as the authoritative Betfair source.
+- After local Betfair analysis, write the calibrated conclusion into `utils/matches.js` and the generated database snapshot. Never persist the SSOID, App Key, account token, certificate, or secret into Git or mini program frontend code.
 - Treat Betfair as a market-sentiment and liquidity signal, not a betting recommendation.
 - Use only read-only market data: market catalogue, market book, back/lay prices, last traded price, total matched, in-play status, and delayed-data flag.
 - Normalize best back/lay midpoint prices into implied home/draw/away probabilities after removing overround.

@@ -2,13 +2,17 @@ const { syncBetfairMarkets } = require('./syncOnce')
 const { buildDatabaseSnapshot } = require('./buildDatabaseSnapshot')
 const { refreshLiveScoreSnapshot } = require('./liveScoreRefresh')
 
+const BETFAIR_SYNC_ENABLED = process.env.BETFAIR_SYNC_ENABLED === '1'
+
 async function dailyRefresh() {
-  let betfairStatus = 'skipped'
-  try {
-    await syncBetfairMarkets()
-    betfairStatus = 'synced'
-  } catch (error) {
-    betfairStatus = `failed: ${error.message}`
+  let betfairStatus = 'disabled'
+  if (BETFAIR_SYNC_ENABLED) {
+    try {
+      await syncBetfairMarkets()
+      betfairStatus = 'synced'
+    } catch (error) {
+      betfairStatus = `failed: ${error.message}`
+    }
   }
 
   let snapshot = buildDatabaseSnapshot()

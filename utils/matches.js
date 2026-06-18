@@ -1522,11 +1522,14 @@ const betfairMarketSnapshot = {
   'england-croatia-20260617': { marketId: '1.251399725', totalMatched: 125012, delayed: true, odds: { home: 1.775, draw: 3.925, away: 5.55 }, probability: { home: 56, draw: 26, away: 18 } },
   'portugal-congodr-20260617': { marketId: '1.256138762', totalMatched: 197777, delayed: true, odds: { home: 1.32, draw: 6.1, away: 13.25 }, probability: { home: 76, draw: 16, away: 8 } },
   'uzbekistan-colombia-20260617': { marketId: '1.251384486', totalMatched: 52049, delayed: true, odds: { home: 10.75, draw: 5.05, away: 1.405 }, probability: { home: 9, draw: 20, away: 71 } },
-  'switzerland-bosnia-20260618': { marketId: '1.257503620', totalMatched: 29113, delayed: true, odds: { home: 1.615, draw: 4.25, away: 6.8 }, probability: { home: 62, draw: 23, away: 15 } },
-  'canada-qatar-20260618': { marketId: '1.257503759', totalMatched: 45280, delayed: true, odds: { home: 1.315, draw: 6.1, away: 12.75 }, probability: { home: 76, draw: 16, away: 8 } },
-  'mexico-korea-20260618': { marketId: '1.257503897', totalMatched: 104161, delayed: true, odds: { home: 2.09, draw: 3.525, away: 4.25 }, probability: { home: 48, draw: 28, away: 24 } },
-  'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 102064, delayed: true, odds: { home: 1.125, draw: 13.5, away: 24.5 }, probability: { home: 89, draw: 7, away: 4 } },
-  'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 72421, delayed: true, odds: { home: 5.85, draw: 3.775, away: 1.765 }, probability: { home: 17, draw: 26, away: 57 } }
+  'czechia-southafrica-20260618': { marketId: '1.258056757', totalMatched: 712840, delayed: true, odds: { home: 1.89, draw: 3.7, away: 5 }, probability: { home: 53, draw: 27, away: 20 } },
+  'switzerland-bosnia-20260618': { marketId: '1.257503620', totalMatched: 372878, delayed: true, odds: { home: 1.6, draw: 4.4, away: 6.8 }, probability: { home: 63, draw: 23, away: 15 } },
+  'canada-qatar-20260618': { marketId: '1.257503759', totalMatched: 296097, delayed: true, odds: { home: 1.32, draw: 6.2, away: 13.5 }, probability: { home: 76, draw: 16, away: 8 } },
+  'mexico-korea-20260618': { marketId: '1.257503897', totalMatched: 196168, delayed: true, odds: { home: 2.14, draw: 3.4, away: 4.2 }, probability: { home: 47, draw: 29, away: 24 } },
+  'usa-australia-20260619': { marketId: '1.251401910', totalMatched: 477727, delayed: true, odds: { home: 1.65, draw: 4.7, away: 5.5 }, probability: { home: 61, draw: 21, away: 18 } },
+  'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 115400, delayed: true, odds: { home: 5.8, draw: 3.75, away: 1.77 }, probability: { home: 17, draw: 27, away: 56 } },
+  'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 144370, delayed: true, odds: { home: 1.14, draw: 12.5, away: 26 }, probability: { home: 88, draw: 8, away: 4 } },
+  'turkey-paraguay-20260619': { marketId: '1.258055656', totalMatched: 66641, delayed: true, odds: { home: 2.12, draw: 3.5, away: 4.2 }, probability: { home: 47, draw: 29, away: 24 } }
 }
 
 const predictionDiscipline = {
@@ -1549,14 +1552,14 @@ const predictionDiscipline = {
   'portugal-congodr-20260617': { result: '葡萄牙胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '葡萄牙进攻点多，刚果民主共和国反击有身体优势但防线横移压力大', order: '葡萄牙胜 > 葡萄牙-1 > 3-4球' },
   'ghana-panama-20260617': { result: '加纳胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '加纳前场冲击力更好，但巴拿马对抗和定位球会制造波动', order: '加纳胜 > 平局保护 > 2-3球' },
   'uzbekistan-colombia-20260617': { result: '哥伦比亚胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '客胜方向清晰，不设置胜平负备选', handicap: '哥伦比亚边路和前场个人能力更强，但乌兹别克斯坦低位组织会压低上限', order: '哥伦比亚胜 > 哥伦比亚-0.75 > 2-3球' },
-  'czechia-southafrica-20260618': { result: '捷克胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '捷克胜主选，平局作低权重备选', handicap: '南非受停赛和防线轮换影响，捷克定位球与高点优势更容易转化为胜势', order: '捷克胜 > 平局保护 > 2-3球' },
-  'switzerland-bosnia-20260618': { result: '瑞士胜', resultBackup: '', score: '1-0', backup: '2-0', total: '1-2球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '瑞士结构稳定但节奏偏谨慎，波黑若回收防线，大胜概率低于赢球概率', order: '瑞士胜 > 小2.5 > 1-2球' },
-  'canada-qatar-20260618': { result: '加拿大胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '加拿大速度和主场环境更有利，卡塔尔组织性不差但防线回追会吃压力', order: '加拿大胜 > 加拿大-0.75谨慎 > 2-3球' },
-  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜为主，平局低权重保护', handicap: '墨西哥高压和主场海拔有优势，但韩国反击速度会限制深盘信心', order: '墨西哥胜 > 平局保护 > 2-3球' },
-  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-1.5 > 3-4球' },
-  'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: 'Betfair客胜约57%，市场资金更支持摩洛哥，平局作为低比分保护', handicap: '摩洛哥防守和反击质量更好，苏格兰身体对抗能拖慢比赛，客胜优先但一球差更合理', order: '摩洛哥胜 > 平局保护 > 1-2球' },
-  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '主胜略优，平局低权重保护', handicap: '土耳其创造力更强，但巴拉圭对抗和定位球会让比赛保持悬念', order: '土耳其胜 > 平局保护 > 2-3球' },
-  'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '主胜方向清晰，不设置胜平负备选', handicap: '美国高节奏压迫能制造更多机会，澳大利亚定位球有威胁但阵地战创造力有限', order: '美国胜 > 美国-0.75 > 2-3球' }
+  'czechia-southafrica-20260618': { result: '捷克胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '捷克胜主选，平局低权重保护', handicap: '参考捷克-0.25到-0.5；捷克定位球和高点占优，但南非反击仍有威胁，赢球优先，不追深盘', order: '捷克胜 > 平局保护 > 2-3球' },
+  'switzerland-bosnia-20260618': { result: '瑞士胜', resultBackup: '', score: '1-0', backup: '2-0', total: '1-2球', oneXtwo: '瑞士胜方向清晰，不设置胜平负备选', handicap: '参考瑞士-0.75；瑞士结构稳定，波黑中卫伤情压低客队上限，瑞士赢球强于穿深盘', order: '瑞士胜 > 小2.5 > 1-2球' },
+  'canada-qatar-20260618': { result: '加拿大胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '加拿大胜方向清晰，不设置胜平负备选', handicap: '参考加拿大-1；加拿大速度和主场环境优势明显，但Davies出场时间仍需控制，主胜可保留，穿盘谨慎', order: '加拿大胜 > 加拿大-1谨慎 > 2-3球' },
+  'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '墨西哥胜主选，平局低权重保护', handicap: '参考墨西哥-0.25；主场和海拔有利，但Montes停赛、Quiñones伤情疑问削弱深盘信心', order: '墨西哥胜 > 平局保护 > 2-3球' },
+  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '巴西胜方向极强，不设置胜平负备选', handicap: '参考巴西-2；巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-2 > 3-4球' },
+  'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: '摩洛哥胜主选，平局低比分保护', handicap: '参考摩洛哥-0.5到-0.75；摩洛哥防守和反击质量更好，苏格兰身体对抗会拖慢节奏', order: '摩洛哥胜 > 平局保护 > 1-2球' },
+  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '土耳其胜主选，平局低权重保护', handicap: '参考土耳其-0.25；土耳其创造力更强，但巴拉圭对抗和定位球会让比赛保持悬念，主胜只适合浅盘', order: '土耳其胜 > 平局保护 > 2-3球' },
+  'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '美国胜方向清晰，不设置胜平负备选', handicap: '参考美国-0.75到-1；美国高节奏压迫能制造更多机会，澳大利亚定位球有威胁，穿深盘谨慎', order: '美国胜 > 美国-0.75 > 2-3球' }
 }
 
 const coachStyleNotes = {
@@ -1584,12 +1587,28 @@ const coachStyleNotes = {
 
 const injuryImpactNotes = {
   'mexico-korea-20260618': {
-    home: '墨西哥首轮出现红牌停赛风险，相关球员下一场无缘出战，赛前需要核对官方停赛名单。若缺口在中后场，墨西哥高位压迫后的回追保护会下降，主胜方向保留，但不宜把盘口追得过深。',
-    away: '韩国目前更关键的是锋线与前腰健康度。若核心攻击手首发，反击速度会放大墨西哥身后空间，因此平局只作为低权重保护，不在首页展示。'
+    home: 'Cesar Montes 首轮染红停赛，墨西哥中卫高点、定位球防守和回追保护下降；Edson Alvarez 预计回撤中卫，Erik Lira 留在后腰保护。Julian Quinones 首战进球后因不适被换下，预计可出场但需赛前确认，因此墨西哥主胜保留，亚盘只看浅让。',
+    away: 'Kim Tae-Hyeon 和 Bae Jun-Ho 已恢复合练，可作为后防和前场轮换补充；韩国核心仍是 Son Heung-Min、Lee Kang-in 和 Hwang In-beom 的转换速度。无人机事件未直接影响训练内容，但增加赛前干扰，平局仅作低权重保护。'
   },
   'czechia-southafrica-20260618': {
-    home: '捷克暂无明确新增停赛输入，主要看中卫和高中锋健康度。若高点齐整，定位球和二点球优势会提升。',
-    away: '南非首轮有红牌停赛影响，下一场相关球员无法出战，防线轮换和中场拦截会受影响。速度反击仍有威胁，但阵型完整度下降，所以本场以平局主选，捷克胜作为低权重备选。'
+    home: '捷克暂无公开新增红牌停赛，Ladislav Krejci 等高点完整时，定位球和二点球优势会更明显；首战暴露边路回追问题，仍需避免被南非速度点反击。',
+    away: 'Sphephelo "Yaya" Sithole 和 Themba Zwane 首轮染红，本场停赛。Sithole 缺阵削弱中场拦截和二次落点保护，Zwane 缺阵降低前场持球和反击衔接，南非需要轮换中轴，阵型完整度下降。'
+  },
+  'switzerland-bosnia-20260618': {
+    home: '瑞士赛前更需要确认中前场轮换和边路体能，整体暂无足以改变主胜方向的重大伤停。球队结构稳定，领先后更可能降低节奏管理比赛。',
+    away: 'Nidal Celik 训练中受伤并被 Arjan Malic 补招替换，Sead Kolasinac 首战末段带伤离场仍需赛前确认。波黑中卫和左侧防守若轮换，瑞士定位球、二次进攻和边路传中会更有威胁。'
+  },
+  'canada-qatar-20260618': {
+    home: 'Alphonso Davies 已恢复训练并被确认可出场，但此前腿筋伤后久未比赛，预计仍需控制出场时间；若不能首发或只能替补，加拿大左路爆点会下降，但主场、速度和身体强度仍支撑主胜。',
+    away: '卡塔尔组织性不差，但面对加拿大纵深冲击和主场节奏，边后卫回追压力较大。若加拿大早进球，卡塔尔被迫压上后会让2-3球区间更稳。'
+  },
+  'brazil-haiti-20260619': {
+    home: 'Neymar 右小腿伤势仍未恢复到完整合练，本场不宜按首发处理；Gabriel Magalhaes、Bruno Guimaraes 和 Raphinha 曾单独训练，需赛前确认负荷。即便 Neymar 缺阵，Vinicius Junior、Raphinha、Luiz Henrique 和 Matheus Cunha 仍足以支撑巴西强势进攻。',
+    away: '海地暂无公开新增红牌停赛或明确伤停姓名，预计继续低位防守。若 Johnny Placide 和中卫线顶不住连续传中与二次进攻，比分上限会被放大。'
+  },
+  'usa-australia-20260619': {
+    home: 'Christian Pulisic 小腿受撞后被列为每日观察，若无法首发，Sebastian Berhalter 可能补位，美国前场一对一和最后一传会下降；若 Pulisic 正常出场，美国高压和边路推进仍是主胜基础。',
+    away: '澳大利亚暂无公开新增红牌停赛姓名，Harry Souttar、Alessandro Circati 和定位球体系仍是主要抵抗点。若美国早段压迫成功，澳大利亚阵地战创造力不足会被放大。'
   },
   'haiti-scotland-20260613': {
     home: '海地需要确认锋线速度点和边翼卫身体状态；若主力速度点缺阵，反击威胁会明显下降。',
@@ -1607,6 +1626,15 @@ const injuryImpactNotes = {
     home: '卡塔尔暂无确认核心停赛，重点看门将和中卫组合稳定性。若防线轮换，被瑞士压迫后出球风险较高。',
     away: '瑞士中轴线经验充足，若主力后腰和中卫齐整，客胜与低比分方向更稳。'
   }
+}
+
+const publicReferenceNotes = {
+  'czechia-southafrica-20260618': '南非 Sithole、Zwane 红牌停赛',
+  'switzerland-bosnia-20260618': '波黑 Nidal Celik 伤缺，Kolasinac 伤情待确认',
+  'canada-qatar-20260618': 'Alphonso Davies 可出场但需控制负荷',
+  'mexico-korea-20260618': '韩国训练无人机事件；墨西哥 Montes 停赛',
+  'brazil-haiti-20260619': 'Neymar 小腿伤势仍未完整合练',
+  'usa-australia-20260619': 'Christian Pulisic 小腿伤情每日观察'
 }
 
 function getDefaultInjuryImpact(match) {
@@ -1721,6 +1749,15 @@ function getBetfairMarketText(match) {
   const market = getBetfairMarket(match)
   if (!market) return ''
   return `Betfair交易所参考：成交量约${Math.round((market.totalMatched || 0) / 1000)}K，胜/平/负归一化概率${market.probability.home}%/${market.probability.draw}%/${market.probability.away}%${market.delayed ? '，数据带延迟' : ''}`
+}
+
+function getBetfairImpactText(match) {
+  const market = getBetfairMarket(match)
+  if (!market || !market.probability) return ''
+  const matchedK = Math.round((market.totalMatched || 0) / 1000)
+  const liquidityText = matchedK >= 300 ? '成交量较高' : matchedK >= 120 ? '成交量中等' : '成交量偏薄'
+  const backup = match.pick && match.pick.resultBackup ? `，但${match.pick.resultBackup}保护仍要保留` : ''
+  return `必发影响：${liquidityText}，约${matchedK}K成交；胜/平/负归一化为${market.probability.home}%/${market.probability.draw}%/${market.probability.away}%，对${match.pick.result}形成校准${backup}${market.delayed ? '。当前数据带延迟，只作为赛前权重参考。' : '。'}`
 }
 
 function getStrengthScores(match) {
@@ -1894,11 +1931,9 @@ matches.forEach((match) => {
   const altitudeValue = parseInt(match.altitude, 10)
   match.altitudeLevel = Number.isNaN(altitudeValue) ? 'unknown' : altitudeValue < 100 ? 'low' : altitudeValue < 500 ? 'mid' : altitudeValue < 1500 ? 'high' : 'extreme'
   applyPredictionRule(match)
-  const betfairText = getBetfairMarketText(match)
-  if (betfairText) {
-    match.analysis.market.oneXtwo = `${match.analysis.market.oneXtwo}。${betfairText}`
-  }
+  match.analysis.betfairImpact = getBetfairImpactText(match)
   match.analysis.injuryImpact = injuryImpactNotes[match.id] || getDefaultInjuryImpact(match)
+  match.analysis.publicReference = publicReferenceNotes[match.id] || '无公开参考信息'
   if (coachStyleNotes[match.id]) {
     match.analysis.tactics = `${match.analysis.tactics} ${coachStyleNotes[match.id]}`
   }
@@ -1968,8 +2003,8 @@ function isTotalCorrect(score, totalText) {
 function inferTotalPickFromScores(scoreMain, scoreBackup) {
   const totals = [getScoreTotal(scoreMain), getScoreTotal(scoreBackup)].filter((value) => value !== null)
   if (!totals.length) return ''
-  const min = Math.min(...totals)
-  const max = Math.max(...totals)
+  const min = Math.min.apply(Math, totals)
+  const max = Math.max.apply(Math, totals)
   return min === max ? `${min}球` : `${min}-${max}球`
 }
 
@@ -2025,8 +2060,7 @@ const finishedMatches = finishedReviewSource.map((item) => {
   const scoreWeight = getPredictionWeight(item.scoreMainCorrect, item.scoreBackupCorrect)
   const totalCorrect = typeof item.totalCorrect === 'boolean' ? item.totalCorrect : isTotalCorrect(item.score, totalPick)
   const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + (totalCorrect ? 100 : 0) * 0.25
-  return {
-    ...item,
+  return Object.assign({}, item, {
     totalPick,
     totalCorrect,
     resultMainShort: getShortResult(item.resultMain, item.home, item.away),
@@ -2042,7 +2076,7 @@ const finishedMatches = finishedReviewSource.map((item) => {
     percent: formatPercentValue(percentValue),
     percentLevel: getPercentLevel(percentValue),
     endedAtMs: sortKeyToLocalMs(item.endedAtSort)
-  }
+  })
 }).sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
 
 const finishedMatchIds = finishedMatches.map((item) => item.matchId).filter(Boolean)
@@ -2095,13 +2129,16 @@ const recentFinishedHomeMatches = finishedMatches.filter((review) => {
   return Date.now() - review.endedAtMs <= 60 * 60 * 1000
 }).slice(0, 10).map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
-  return match && { ...match, matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: review.endedAtMs, review }
+  return match && Object.assign({}, match, { matchStatus: 'finished', statusText: '完赛', liveScore: review.score, phaseText: '全场结束', finishDetectedAt: review.endedAtMs, review })
 }).filter(Boolean)
 const historyMatches = finishedMatches.map((review) => {
   const match = matches.find((item) => item.id === review.matchId) || makeHistoryFallback(review)
-  return match && { ...match, review }
+  return match && Object.assign({}, match, { review })
 }).filter(Boolean).slice(0, 10)
-const reviewSuccessValue = finishedMatches.length ? finishedMatches.reduce((sum, item) => sum + Number(item.percentValue ?? parseFloat(item.percent) ?? 0), 0) / finishedMatches.length : 0
+const reviewSuccessValue = finishedMatches.length ? finishedMatches.reduce((sum, item) => {
+  const value = item.percentValue !== undefined && item.percentValue !== null ? item.percentValue : parseFloat(item.percent)
+  return sum + Number(value || 0)
+}, 0) / finishedMatches.length : 0
 const reviewSuccessRate = `${reviewSuccessValue.toFixed(1)}%`
 const reviewSummary = `${finishedMatches.length} 场已复盘`
 

@@ -15,16 +15,15 @@ function buildHistoryMatch(review) {
     matches.find((item) => item.id === review.matchId) ||
     historyMatches.find((item) => item.id === review.matchId)
   const sourceReview = sourceMatch && sourceMatch.review ? sourceMatch.review : null
-  const nextReview = { ...(sourceReview || {}), ...review }
+  const nextReview = Object.assign({}, sourceReview || {}, review)
   if (sourceMatch) {
-    return {
-      ...sourceMatch,
+    return Object.assign({}, sourceMatch, {
       dateText: nextReview.dateText || sourceMatch.dateText,
       kickoff: nextReview.kickoff || sourceMatch.kickoff,
       group: nextReview.group || sourceMatch.group,
       venue: nextReview.venue || sourceMatch.venue,
       review: nextReview
-    }
+    })
   }
   return {
     id: review.matchId || review.id,

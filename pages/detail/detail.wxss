@@ -166,6 +166,7 @@
 }
 
 .conclusion,
+.betfair-card,
 .analysis-card {
   margin-top: 14rpx;
   padding: 18rpx;
@@ -309,7 +310,22 @@
   color: #111;
 }
 
+.reference-tag {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 12rpx;
+  padding: 6rpx 14rpx;
+  border: 1rpx solid rgba(214, 170, 76, 0.28);
+  border-radius: 8rpx;
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(214, 170, 76, 0.1);
+  font-size: 20rpx;
+  line-height: 1.35;
+  box-sizing: border-box;
+}
+
 .conclusion-text,
+.betfair-impact-text,
 .body-line {
   display: block;
   color: rgba(255, 255, 255, 0.86);
