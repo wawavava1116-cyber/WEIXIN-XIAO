@@ -3,11 +3,13 @@ const { readStore, readDatabaseSnapshot } = require('./store')
 const { syncBetfairMarkets } = require('./syncOnce')
 const { keepAlive, certLogin } = require('./betfairClient')
 const { buildDatabaseSnapshot } = require('./buildDatabaseSnapshot')
+const { refreshLiveScoreSnapshot } = require('./liveScoreRefresh')
 
 const PORT = Number(process.env.PORT || 8787)
 const HOST = process.env.HOST || '0.0.0.0'
 const CORS_ALLOW_ORIGIN = process.env.CORS_ALLOW_ORIGIN || '*'
 const SYNC_INTERVAL_MS = Number(process.env.BETFAIR_SYNC_INTERVAL_MS || 300000)
+const LIVE_SCORE_INTERVAL_MS = Number(process.env.LIVE_SCORE_SYNC_INTERVAL_MS || 60000)
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, {
@@ -104,6 +106,23 @@ async function handleRequest(req, res) {
     return
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/live-scores/sync') {
+    const body = await getRequestBody(req)
+    let matchIds = []
+    if (body) {
+      try {
+        const parsed = JSON.parse(body)
+        matchIds = Array.isArray(parsed.matchIds) ? parsed.matchIds : []
+      } catch (error) {
+        sendJson(res, 400, { ok: false, error: 'INVALID_JSON' })
+        return
+      }
+    }
+    const result = await refreshLiveScoreSnapshot(matchIds.length ? matchIds : undefined)
+    sendJson(res, 200, result)
+    return
+  }
+
   sendJson(res, 404, { ok: false, error: 'NOT_FOUND' })
 }
 
@@ -123,4 +142,15 @@ if (SYNC_INTERVAL_MS > 0) {
       console.error(`[betfair-sync] ${error.message}`)
     })
   }, SYNC_INTERVAL_MS)
+}
+
+if (LIVE_SCORE_INTERVAL_MS > 0) {
+  refreshLiveScoreSnapshot().catch((error) => {
+    console.error(`[live-score-sync] ${error.message}`)
+  })
+  setInterval(() => {
+    refreshLiveScoreSnapshot().catch((error) => {
+      console.error(`[live-score-sync] ${error.message}`)
+    })
+  }, LIVE_SCORE_INTERVAL_MS)
 }

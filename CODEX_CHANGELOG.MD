@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-18 13:08 - 服务器快照增加实时比分动态覆盖
+
+- 环境：公司电脑 Codex
+- 目的：让轻量云服务器在每天 12:15 拉取 Git 完整更新之外，持续抓取进行中和已结束比赛状态，并动态覆盖 `/api/database/latest` 缓存，避免用户看到 12 点静态快照。
+- 涉及文件：`server/src/liveScoresClient.js`、`server/src/liveScoreRefresh.js`、`server/src/buildDatabaseSnapshot.js`、`server/src/index.js`、`server/src/dailyRefresh.js`、`server/src/store.js`、`server/package.json`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增服务器端 ESPN 实时比分抓取；新增 `live-scores` 刷新脚本和 `POST /api/live-scores/sync`；服务启动后默认每 60 秒刷新比分并重写数据库快照；完赛比赛会从服务器 `upcomingMatches` 移入 `recentFinishedHomeMatches`，并补入动态复盘结果。
+- 数据库/赛程/复盘：未修改静态预测内容；服务器运行态缓存会按实时比分动态变化，第二天拉 Git 后再以最新静态数据库为基础继续覆盖。
+- 云函数：未修改微信云函数；需要重新部署轻量云服务器服务。
+- 验证：已运行服务端语法检查、小程序主要 JS 语法检查和 `npm run live-scores`；本地生成 20 条实时比分覆盖、8 场未赛、12 场首页近期完赛、24 条复盘。
+- 后续注意：服务器未配置 Betfair 环境变量时，Betfair 同步仍会失败但不影响实时比分和数据库快照；微信小程序正式读取服务器仍需 HTTPS 域名和 request 合法域名配置。
+
 ## 2026-06-18 12:31 - 配置方案 B 每日预测更新链路
 
 - 环境：公司电脑 Codex

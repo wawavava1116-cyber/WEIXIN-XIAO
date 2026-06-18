@@ -4,6 +4,7 @@ const path = require('path')
 const DATA_DIR = path.resolve(__dirname, '..', 'data')
 const DATA_FILE = path.join(DATA_DIR, 'betfair-markets.json')
 const DATABASE_FILE = path.join(DATA_DIR, 'match-database.json')
+const LIVE_SCORES_FILE = path.join(DATA_DIR, 'live-scores.json')
 
 function ensureDataDir() {
   fs.mkdirSync(DATA_DIR, { recursive: true })
@@ -63,6 +64,25 @@ module.exports = {
       generatedAt: new Date().toISOString()
     }
     fs.writeFileSync(DATABASE_FILE, JSON.stringify(payload, null, 2))
+    return payload
+  },
+  readLiveScores() {
+    try {
+      return JSON.parse(fs.readFileSync(LIVE_SCORES_FILE, 'utf8'))
+    } catch (error) {
+      return {
+        updatedAt: '',
+        scores: {}
+      }
+    }
+  },
+  writeLiveScores(scores) {
+    ensureDataDir()
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      scores: scores || {}
+    }
+    fs.writeFileSync(LIVE_SCORES_FILE, JSON.stringify(payload, null, 2))
     return payload
   }
 }
