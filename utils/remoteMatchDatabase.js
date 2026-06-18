@@ -43,6 +43,7 @@ function refreshRemoteDatabase(onReady, onComplete) {
   wx.request({
     url: `${apiBaseUrl.replace(/\/$/, '')}/api/database/latest`,
     method: 'GET',
+    timeout: 3500,
     success(response) {
       const database = normalizeDatabase(response.data)
       if (database) {
