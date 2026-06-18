@@ -4,11 +4,11 @@
 
 - 环境：公司电脑 Codex
 - 目的：将小程序远程数据库和服务器 API 地址切换到已解析的正式域名 `www.ag-shield.com`。
-- 涉及文件：`utils/serverConfig.js`、`CODEX_CHANGELOG.MD`
-- 主要改动：把 `apiBaseUrl` 配置为 `https://www.ag-shield.com`；后续小程序启动会优先读取该域名下的 `/api/database/latest`。
+- 涉及文件：`utils/serverConfig.js`、`server/scripts/update-from-git.sh`、`CODEX_CHANGELOG.MD`
+- 主要改动：把 `apiBaseUrl` 配置为 `https://www.ag-shield.com`；后续小程序启动会优先读取该域名下的 `/api/database/latest`；服务器自动拉取脚本安装依赖时不生成未跟踪的 `package-lock.json`。
 - 数据库/赛程/复盘：未修改预测或复盘内容；服务器运行态快照仍由实时比分动态覆盖。
 - 云函数：未修改微信云函数；服务器需要配置 HTTPS 证书。
-- 验证：已确认 `www.ag-shield.com` 解析到 `82.156.36.10`，HTTP `/health` 正常；待完成 HTTPS 证书配置和小程序 JS 检查。
+- 验证：已确认 `www.ag-shield.com` 解析到 `82.156.36.10`，HTTPS `/health` 和 `/api/database/latest` 正常；已运行小程序相关 JS 检查。
 - 后续注意：需要在微信公众平台后台把 `https://www.ag-shield.com` 添加为 request 合法域名，并重新上传小程序版本。
 
 ## 2026-06-18 13:08 - 服务器快照增加实时比分动态覆盖

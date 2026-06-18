@@ -11,7 +11,7 @@ git checkout "$BRANCH"
 git pull --ff-only origin "$BRANCH"
 
 cd "$APP_DIR/server"
-npm install --omit=dev
+npm install --omit=dev --package-lock=false
 npm run check
 npm run daily
 
