@@ -242,6 +242,8 @@ When writing or updating analysis text, use concise Chinese:
 ## Mini Program Specific Rules
 
 - Homepage should show only the main result pick, not the backup result pick.
+- Before every daily refresh, determine the current Beijing date first. The prediction database must cover all World Cup matches in the rolling seven-calendar-day Beijing-time window starting today. For example, on Beijing date June 18, the static/remote prediction window should cover June 18 through June 25 Beijing time, after finished matches are archived.
+- Do not let the prediction window remain anchored to an older fixture date. If the last upcoming match is earlier than today + 7 calendar days, add the missing fixtures and predictions before publishing.
 - Detail page may show backup result and backup score.
 - Finished matches stay on homepage for at most 1 hour after final whistle.
 - Finished matches should always remain in review and history pages.
