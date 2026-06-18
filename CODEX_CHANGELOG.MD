@@ -1,5 +1,49 @@
 # Codex 项目变更日志
 
+## 2026-06-18 12:31 - 配置方案 B 每日预测更新链路
+
+- 环境：公司电脑 Codex
+- 目的：按用户选择的方案 B，建立“Codex 定时更新预测并推送 Git，服务器定时拉取并发布快照”的流程。
+- 涉及文件：`server/scripts/update-from-git.sh`、`server/README.md`、`README.MD`、`TODO.MD`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增服务器拉取 Git 并执行 `npm run daily` 的脚本；文档补充服务器 12:15 cron 配置；创建 Codex 每天 12:00 自动任务，负责读取 Skill、更新未来 7 天赛程预测、归类复盘、提交并推送 `origin/master`。
+- 数据库/赛程/复盘：本次未直接修改比赛数据；自动任务将在后续运行时更新。
+- 云函数：未修改微信云函数；服务器需要部署 `server/` 并配置 cron。
+- 验证：已运行主要小程序 JS、服务器 JS 和 JSON 配置检查。
+- 后续注意：服务器需先 clone 当前 Git 仓库到 `/opt/worldcup-mini`，配置 `.env`、PM2、HTTPS 和 cron；微信公众平台需添加服务器 request 合法域名。
+
+## 2026-06-18 12:23 - 增加服务器数据库快照和小程序远程读取
+
+- 环境：公司电脑 Codex
+- 目的：让轻量云服务器每天生成小程序可读取的数据库快照，为后续每天 12 点自动更新赛程、预测、复盘和历史场次打基础。
+- 涉及文件：`server/src/buildDatabaseSnapshot.js`、`server/src/dailyRefresh.js`、`server/src/index.js`、`server/src/store.js`、`server/package.json`、`server/README.md`、`utils/remoteMatchDatabase.js`、`pages/index/index.js`、`pages/detail/detail.js`、`pages/history/history.js`、`README.MD`、`TODO.MD`、`AGENTS.MD`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增 `/api/database/latest` 接口；新增 `npm run snapshot` 和 `npm run daily`；首页、详情页、历史页优先读取服务器数据库缓存，服务器不可用时回退本地静态 `utils/matches.js`；文档补充每天 12 点 cron 配置。
+- 数据库/赛程/复盘：未修改静态预测内容；服务器快照当前由本地静态数据库生成并合并 Betfair 缓存。
+- 云函数：未修改微信云函数；服务器部署后需要配置 HTTPS 域名和小程序 request 合法域名。
+- 验证：已运行小程序和服务器 JS 语法检查、JSON 配置解析；已运行 `node server/src/buildDatabaseSnapshot.js`，生成 30 场总比赛、20 场未赛、12 场复盘的快照。
+- 后续注意：真正自动补足未来 7 天比赛并生成预测文本，还需要接入赛程抓取和预测生成/人工审核任务；当前已完成发布通道和前端读取通道。
+
+## 2026-06-18 12:20 - 预测 Skill 明确 Betfair 权重和缺失分摊规则
+
+- 环境：公司电脑 Codex
+- 目的：按用户给定权重表调整预测 Skill，新增必发买卖、资金流、临场异动 9% 权重，并明确缺失 Betfair 数据时的权重分摊方式。
+- 涉及文件：`.codex-skills/football-match-predictor/SKILL.md`、`CODEX_CHANGELOG.MD`
+- 主要改动：将赛前概率模型表述改为加权证据模型；保留推荐权重表；新增 Betfair 不可用时把 9% 平均分摊到其他九项的 fallback 权重。
+- 数据库/赛程/复盘：未修改比赛数据。
+- 云函数：未修改云函数；不需要重新部署。
+- 验证：已检查 Skill 中推荐权重、fallback 权重和 Betfair 数据缺失规则。
+- 后续注意：以后重跑预测时，如果 Betfair 数据缺失，需要在风险点里说明“必发数据缺失/较薄/延迟”，不能默认为中性支持。
+
+## 2026-06-18 12:12 - 增加轻量云服务器 Betfair 同步服务准备
+
+- 环境：公司电脑 Codex
+- 目的：为已购买的轻量云服务器准备 Betfair 交易量同步服务，小程序前端继续由微信上传，Betfair 密钥和 SSOID 只放服务器。
+- 涉及文件：`.gitignore`、`server/`、`utils/serverConfig.js`、`utils/remoteBetfairMarkets.js`、`README.MD`、`TODO.MD`、`AGENTS.MD`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增无数据库依赖的 Node.js 服务，支持 `keepAlive`、`certlogin`、`listMarketCatalogue`、`listMarketBook`、JSON 缓存和 API 输出；新增服务器部署说明、环境变量模板、比赛映射配置和小程序端远程 Betfair 数据读取工具。
+- 数据库/赛程/复盘：未修改 `utils/matches.js` 静态预测数据；本地测试生成的 `server/data/` 已加入忽略。
+- 云函数：未修改微信云函数；服务器部署后需要单独重启/部署 `server/` 服务。
+- 验证：已运行小程序主要 JS 语法检查、服务器 JS 语法检查、JSON 配置解析；用当前有效 Betfair SSOID 测试同步，除已过时的乌兹别克斯坦场次外，其余配置目标可匹配到 Betfair 市场。
+- 后续注意：上线前需要给服务器配置 HTTPS 域名，并在微信公众平台添加 request 合法域名；再把域名写入 `utils/serverConfig.js` 的 `apiBaseUrl`。
+
 ## 2026-06-15 15:40 - 历史复盘迷你图恢复为轻量图表
 
 - 环境：公司电脑 Codex

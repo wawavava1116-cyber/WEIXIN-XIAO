@@ -23,6 +23,9 @@
 │   ├── brand/
 │   └── flags/
 ├── cloudfunctions/liveScores/
+├── server/
+│   ├── config/targets.json
+│   └── src/
 ├── pages/
 │   ├── index/
 │   ├── detail/
@@ -44,6 +47,7 @@
 - 小程序 AppID：见 `project.config.json`
 - 云开发能力：需要启用，用于 `liveScores` 云函数
 - 云函数运行时：Node.js
+- 轻量云服务器：可选，用于 Betfair 交易量同步服务
 
 ## 导入项目
 
@@ -61,6 +65,78 @@
 4. 部署完成后重新预览小程序。
 
 实时比分来自公开 scoreboard 接口。前端每 10 秒调用一次云函数，云函数会返回比赛状态、实时比分、比赛时间、阶段、北京时间开赛时间和排序时间戳。
+
+## 部署 Betfair 交易量服务器
+
+小程序前端不能保存 Betfair App Key、SSOID、账号密码或证书。Betfair 交易量同步应部署在轻量云服务器：
+
+```text
+server/
+```
+
+推荐服务器：
+
+- Ubuntu 22.04 LTS 或 24.04 LTS
+- Node.js 18+
+- Nginx + HTTPS 域名
+
+部署入口：
+
+```bash
+cd server
+cp .env.example .env
+npm run check
+npm start
+```
+
+`.env` 中填写：
+
+```bash
+BETFAIR_APP_KEY=你的 App Key
+BETFAIR_SESSION_TOKEN=当前有效 SSOID
+```
+
+长期稳定运行时，改用证书登录：
+
+```bash
+BETFAIR_USERNAME=你的 Betfair 用户名
+BETFAIR_PASSWORD=你的 Betfair 密码
+BETFAIR_CERT_PATH=/etc/betfair/client-2048.crt
+BETFAIR_KEY_PATH=/etc/betfair/client-2048.key
+```
+
+服务器接口：
+
+```text
+GET  /health
+GET  /api/database/latest
+GET  /api/betfair/markets
+POST /api/betfair/keepalive
+POST /api/betfair/sync
+```
+
+上线后需要：
+
+1. 给服务器 API 配置 HTTPS 域名。
+2. 在微信公众平台后台添加 request 合法域名。
+3. 把域名写入 `utils/serverConfig.js` 的 `apiBaseUrl`。
+4. 不要提交 `.env`、`.crt`、`.key`、`server/data/`。
+
+服务器可以通过 `npm run daily` 每天生成数据库快照。生产环境建议用 cron 在北京时间中午 12 点执行：
+
+```cron
+0 12 * * * cd /opt/worldcup-mini/server && /usr/bin/npm run daily >> /var/log/worldcup-betfair-daily.log 2>&1
+```
+
+小程序端通过 `utils/remoteMatchDatabase.js` 读取 `/api/database/latest`。服务器不可用时，小程序自动回退到包内 `utils/matches.js` 静态数据。
+
+如果采用“方案 B”，Codex 每天先更新并推送 Git，服务器再拉取发布。服务器可使用：
+
+```bash
+server/scripts/update-from-git.sh
+```
+
+建议服务器 cron 设为 Codex 任务之后 10-15 分钟执行。
 
 ## 数据更新方式
 

@@ -32,6 +32,8 @@
 - `utils/liveMatchScores.js`：前端调用实时比分云函数并合并到比赛列表。
 - `utils/liveTeamStats.js`：球队排名和身价的可选实时覆盖逻辑。
 - `cloudfunctions/liveScores/index.js`：公开比分接口抓取、状态转换、北京时间转换。
+- `server/`：轻量云服务器 Betfair 同步服务，负责 keepAlive、盘口交易量同步和缓存 API。
+- `utils/remoteMatchDatabase.js`：小程序端读取轻量服务器 `/api/database/latest` 数据库快照。
 - `pages/index/`：首页、今日焦点、近 7 天比赛、复盘入口。
 - `pages/detail/`：单场比赛详情。
 - `pages/history/`：历史场次和日期筛选。
@@ -74,7 +76,10 @@
 - 尽量保持微信小程序原生写法，不引入大型框架。
 - 任何人或任何 Codex 对小程序做出修改，并准备提交或上传到 Git 前，必须在 `CODEX_CHANGELOG.MD` 顶部追加一条变更日志，写清楚时间、目的、涉及文件、主要改动、数据/复盘影响、云函数是否要重新部署、验证结果和后续注意事项。
 - 修改 `cloudfunctions/liveScores` 后，需要提醒用户重新上传并部署云函数。
+- 修改 `server/` 后，需要提醒用户重新部署轻量云服务器服务。
+- 修改远程数据库结构后，需要同步检查首页、详情页、历史页是否仍能读取服务器快照。
 - 不要提交 `cloudfunctions/liveScores/node_modules/`。
+- 不要提交 `.env`、Betfair 证书、私钥、`server/data/`。
 - 修改资源图片后检查小程序包体积。
 - 修改页面样式后注意手机端文字不要挤压、遮挡或溢出。
 - 修改时间或赛程后必须运行本地数据检查，确认首页顺序正确。

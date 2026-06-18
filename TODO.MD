@@ -3,6 +3,9 @@
 ## 立即关注
 
 - 重新部署 `cloudfunctions/liveScores` 云函数，确保手机端拿到最新的比赛时间、实时比分、阶段和排序字段。
+- 在轻量云服务器部署 `server/` Betfair 同步服务，并配置 HTTPS 域名。
+- 在微信公众平台后台添加服务器 request 合法域名，再填写 `utils/serverConfig.js` 的 `apiBaseUrl`。
+- 在服务器配置 cron：方案 B 下建议每天北京时间 12:15 执行 `server/scripts/update-from-git.sh`，拉取 Codex 推送后的 Git 并生成 `/api/database/latest` 数据库快照。
 - 在微信开发者工具中预览首页，确认比赛排序为北京时间升序。
 - 确认首页完赛比赛只保留 1 小时，超过后仅出现在复盘和历史场次。
 - 上传前检查小程序包体积，避免超过微信上传限制。
@@ -29,6 +32,20 @@
 - 给云函数增加错误日志和接口来源标记。
 - 增加云函数返回字段校验，避免前端被异常数据覆盖。
 - 研究是否需要云端定时任务缓存比分，降低用户端频繁请求。
+
+## Betfair 交易量
+
+- 先用 `BETFAIR_SESSION_TOKEN + keepAlive` 跑通服务器同步。
+- 长期方案改为证书登录 `certlogin`，避免手动更新 SSOID。
+- 补全 `server/config/targets.json` 的比赛映射，确保 Betfair 队名能匹配小程序 `matchId`。
+- 小程序端接入 `utils/remoteBetfairMarkets.js` 前，必须先确认服务器 HTTPS 和 request 合法域名配置完成。
+- Betfair 密钥、证书、账号密码只允许放服务器 `.env` 或安全目录，不能进前端和 Git。
+
+## 远程数据库
+
+- `server/src/buildDatabaseSnapshot.js` 当前会把本地静态 `utils/matches.js` 打包成服务器快照，并合并 Betfair 缓存。
+- 真正“每天自动补充新比赛并生成预测文本”还需要接入预测生成任务；可以选择 OpenAI API、Codex 定时任务或人工审核后写入服务器快照。
+- 小程序首页、详情页、历史页已支持优先读取服务器缓存；服务器不可用时回退本地静态数据。
 
 ## 页面体验
 

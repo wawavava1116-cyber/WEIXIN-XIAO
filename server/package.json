@@ -1,0 +1,17 @@
+{
+  "name": "worldcup-betfair-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Betfair market sync service for the World Cup mini program.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "sync": "node src/syncOnce.js",
+    "snapshot": "node src/buildDatabaseSnapshot.js",
+    "daily": "node src/dailyRefresh.js",
+    "check": "node -c src/index.js && node -c src/betfairClient.js && node -c src/store.js && node -c src/targets.js && node -c src/syncOnce.js && node -c src/buildDatabaseSnapshot.js && node -c src/dailyRefresh.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

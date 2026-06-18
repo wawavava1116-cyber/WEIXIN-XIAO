@@ -1,12 +1,18 @@
 const { matches, historyMatches, finishedMatches } = require('../../utils/matches')
 const { getDatabaseBadge } = require('../../utils/buildInfo')
 const { getDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
+const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 const ALL_DATE_LABEL = '全部'
 
 function buildHistoryMatch(review) {
   if (!review || !review.matchId) return null
-  const sourceMatch = matches.find((item) => item.id === review.matchId) ||
+  const remoteDatabase = getRemoteDatabaseSync()
+  const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
+  const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
+  const sourceMatch = remoteMatches.find((item) => item.id === review.matchId) ||
+    remoteHistoryMatches.find((item) => item.id === review.matchId) ||
+    matches.find((item) => item.id === review.matchId) ||
     historyMatches.find((item) => item.id === review.matchId)
   const sourceReview = sourceMatch && sourceMatch.review ? sourceMatch.review : null
   const nextReview = { ...(sourceReview || {}), ...review }
@@ -41,7 +47,10 @@ function buildHistoryMatch(review) {
 }
 
 function buildHistoryMatches() {
-  const staticReviews = finishedMatches.filter(Boolean)
+  const remoteDatabase = getRemoteDatabaseSync()
+  const staticReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+    ? remoteDatabase.finishedMatches.filter(Boolean)
+    : finishedMatches.filter(Boolean)
   return mergeReviewLists(staticReviews, getDynamicReviews(), 0)
     .map(buildHistoryMatch)
     .filter(Boolean)
@@ -71,7 +80,7 @@ Page({
   },
 
   onShow() {
-    this.refreshHistoryMatches()
+    refreshRemoteDatabase(null, () => this.refreshHistoryMatches())
   },
 
   refreshHistoryMatches() {

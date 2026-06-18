@@ -84,7 +84,7 @@ Collect enough evidence for each section before deciding:
 
 ### Pre-match Probability Algorithm
 
-When generating `analysis.probability`, use market-implied data first. The probability model must be built before final picks and must not be reverse-engineered from `pick.result`, `pick.score`, or `pick.backup`.
+When generating `analysis.probability`, build a weighted evidence model before final picks. Market-implied data remains important, but it must be calibrated against football factors such as scoring efficiency, injuries, form, coach structure, and context. Do not reverse-engineer probabilities from `pick.result`, `pick.score`, or `pick.backup`.
 
 Evidence priority:
 
@@ -107,6 +107,23 @@ Recommended factor weights for database refreshes:
 | Head-to-head | 3% |
 | Venue / weather / travel / home-away context | 5% |
 | Betfair back-lay book / traded volume / late market movement | 9% |
+
+Weight handling rules:
+
+- Use the table above as the default model whenever all source categories are available.
+- If Betfair exchange data is unavailable, stale, too thin, not matched to the fixture, or access fails, remove the 9% Betfair factor and redistribute it evenly across the other nine factors.
+- The no-Betfair fallback weights are:
+  - Correct-score odds: 13%.
+  - Goal efficiency / scoring rate / clean-sheet rate: 18%.
+  - 1X2 / Asian handicap / over-under market: 17%.
+  - Squad injuries and suspensions: 14%.
+  - Ranking / competition level / squad market value: 8%.
+  - Recent form: 11%.
+  - Coach style and tactical structure: 9%.
+  - Head-to-head: 4%.
+  - Venue / weather / travel / home-away context: 6%.
+- If another major source category is also unavailable, redistribute that category's weight across the remaining available factors in proportion to their current weights, and state the missing source in the risk notes.
+- Do not silently treat missing Betfair data as neutral market support. Missing Betfair data means lower confidence, not zero market movement.
 
 Betfair exchange data usage:
 

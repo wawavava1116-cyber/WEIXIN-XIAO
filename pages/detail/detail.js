@@ -2,6 +2,7 @@ const { matches, historyMatches } = require('../../utils/matches')
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getDynamicReviews } = require('../../utils/reviewCache')
+const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 function buildDynamicHistoryMatch(review) {
   if (!review || !review.matchId) return null
@@ -100,8 +101,16 @@ Page({
   },
 
   onLoad(options) {
-    const primaryMatches = options.source === 'history' ? historyMatches : matches
-    const fallbackMatches = options.source === 'history' ? matches : historyMatches
+    refreshRemoteDatabase()
+    const remoteDatabase = getRemoteDatabaseSync()
+    const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
+    const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
+    const primaryMatches = options.source === 'history'
+      ? historyMatches.concat(remoteHistoryMatches)
+      : matches.concat(remoteMatches)
+    const fallbackMatches = options.source === 'history'
+      ? matches.concat(remoteMatches)
+      : historyMatches.concat(remoteHistoryMatches)
     const dynamicReview = getDynamicReviews().find((item) => item.matchId === options.id || item.id === options.id)
     const baseMatch = primaryMatches.find((item) => item.id === options.id) ||
       fallbackMatches.find((item) => item.id === options.id)

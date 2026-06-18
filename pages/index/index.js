@@ -4,6 +4,7 @@ const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 const { getDatabaseBadge } = require('../../utils/buildInfo')
 const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
+const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
@@ -68,7 +69,12 @@ function cloneMatch(match) {
 }
 
 function getRefreshBaseMatches() {
-  return sortedUpcomingMatches.map(cloneMatch)
+  const remoteDatabase = getRemoteDatabaseSync()
+  const remoteUpcoming = remoteDatabase && Array.isArray(remoteDatabase.upcomingMatches)
+    ? remoteDatabase.upcomingMatches.concat(remoteDatabase.recentFinishedHomeMatches || [])
+    : null
+  const sourceMatches = remoteUpcoming && remoteUpcoming.length ? sortMatchesByTime(remoteUpcoming) : sortedUpcomingMatches
+  return sourceMatches.map(cloneMatch)
 }
 
 function getMatchDayValue(match) {
@@ -334,13 +340,17 @@ function buildReviewFromFinishedMatch(match) {
 }
 
 function mergeReviewMatches(staticReviews, matches) {
+  const remoteDatabase = getRemoteDatabaseSync()
+  const baseReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+    ? remoteDatabase.finishedMatches
+    : staticReviews
   const dynamicReviews = matches
     .filter((match) => match.matchStatus === 'finished' && match.liveScore)
     .map(buildReviewFromFinishedMatch)
   if (dynamicReviews.length) {
     saveDynamicReviews(dynamicReviews)
   }
-  return mergeReviewLists(staticReviews, getDynamicReviews())
+  return mergeReviewLists(baseReviews, getDynamicReviews())
     .map(decorateReviewItem)
 }
 
@@ -461,9 +471,11 @@ Page({
     clearStartupCaches()
     this.startStartupProgress()
     this.checkForAppUpdate()
-    this.refreshAll({
-      startup: true,
-      afterFinish: () => this.finishStartupProgress()
+    refreshRemoteDatabase(null, () => {
+      this.refreshAll({
+        startup: true,
+        afterFinish: () => this.finishStartupProgress()
+      })
     })
   },
 
