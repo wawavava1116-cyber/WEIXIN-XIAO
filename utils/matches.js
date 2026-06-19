@@ -1423,6 +1423,136 @@ matches.push(
     oneXtwo: '韩国胜主选，平局低权重保护',
     handicap: '韩国-0.25到-0.5',
     marketTotal: '2.25球'
+  }),
+  makeRollingMatch({
+    id: 'ecuador-germany-20260625',
+    group: 'E组',
+    venue: 'New York New Jersey Stadium',
+    home: 'ecuador',
+    away: 'germany',
+    result: '德国胜',
+    score: '1-2',
+    backup: '0-2',
+    total: '2-3球',
+    order: '德国胜 > 德国-0.75谨慎 > 2-3球',
+    homeForm: '厄瓜多尔身体强度和转换速度不差，但面对德国持续控球和肋部推进时，防线横移压力会很大。',
+    awayForm: '德国首轮大胜后进攻状态打开，若第二轮延续效率，末轮仍有争夺头名和保持节奏的动力。',
+    homeNews: '厄瓜多尔后腰屏障和边路回追是关键，若防线吃牌或轮换，禁区前沿保护会下降。',
+    awayNews: '德国锋线和前腰轮换需要赛前确认，即使部分轮换，阵容深度仍能支撑客胜方向。',
+    tactics: '厄瓜多尔会争取身体对抗和快速推进，德国更可能通过控球压迫、边路倒三角和二次进攻制造机会。',
+    risk: '德国若提前锁定出线后轮换，穿盘信心下降；厄瓜多尔定位球和反击仍有一球空间。',
+    oneXtwo: '德国胜方向更清晰，不设置胜平负备选',
+    handicap: '德国-0.75附近，赢球优先，穿深盘看首发强度',
+    marketTotal: '2.5球附近，倾向2-3球'
+  }),
+  makeRollingMatch({
+    id: 'curacao-ivorycoast-20260625',
+    group: 'E组',
+    venue: 'Philadelphia Stadium',
+    home: 'curacao',
+    away: 'ivoryCoast',
+    result: '科特迪瓦胜',
+    resultBackup: '平局',
+    score: '1-2',
+    backup: '1-1',
+    total: '2-3球',
+    order: '科特迪瓦胜 > 平局保护 > 2-3球',
+    homeForm: '库拉索首轮防线承压明显，若第二轮仍无法改善出球，末轮会继续被高强度冲击。',
+    awayForm: '科特迪瓦身体对抗、边路速度和禁区冲击更强，末轮若仍需积分，主动性会更足。',
+    homeNews: '库拉索门将和中卫组合需要高水平发挥，定位球防守是主要隐患。',
+    awayNews: '科特迪瓦需关注锋线可用性和边锋体能；若攻击手齐整，客胜支撑更强。',
+    tactics: '库拉索低位防守争取反击，科特迪瓦用身体和边路爆点持续压迫，比赛后段体能差距可能放大。',
+    risk: '科特迪瓦若临门一脚效率不高，平局会抬头；库拉索反击和定位球是主要冷门入口。',
+    oneXtwo: '科特迪瓦胜主选，平局作为低权重保护',
+    handicap: '科特迪瓦-0.5到-0.75，赢球优先，不追过深',
+    marketTotal: '2.25/2.5球，倾向2-3球'
+  }),
+  makeRollingMatch({
+    id: 'japan-sweden-20260625',
+    group: 'F组',
+    venue: 'Dallas Stadium',
+    home: 'japan',
+    away: 'sweden',
+    result: '平局',
+    resultBackup: '瑞典胜',
+    score: '1-1',
+    backup: '1-2',
+    total: '2-3球',
+    order: '平局 > 瑞典胜 > 2-3球',
+    homeForm: '日本技术推进和转换速度稳定，面对高大球队时需要避免定位球和二点球连续丢失。',
+    awayForm: '瑞典首轮进攻效率很高，高点、定位球和禁区终结是明确优势，但面对日本控球会被拉开移动。',
+    homeNews: '日本旅欧攻击手和边后卫体能决定推进质量，若中场完整，平局支撑较强。',
+    awayNews: '瑞典锋线高点和中卫健康是核心，若主力中轴齐整，客胜备选价值上升。',
+    tactics: '日本控球拆解，瑞典争高点和定位球，比赛很可能在技术流与身体流之间形成拉锯。',
+    risk: '瑞典定位球、早段进球会改变节奏；日本若久攻不下，后场身高劣势会被放大。',
+    oneXtwo: '平局主选，瑞典胜作为身体和定位球优势的备选',
+    handicap: '瑞典0到-0.25谨慎，日本受让方向有韧性',
+    marketTotal: '2.25/2.5球，倾向2-3球'
+  }),
+  makeRollingMatch({
+    id: 'tunisia-netherlands-20260625',
+    group: 'F组',
+    venue: 'Kansas City Stadium',
+    home: 'tunisia',
+    away: 'netherlands',
+    result: '荷兰胜',
+    score: '0-2',
+    backup: '1-2',
+    total: '2-3球',
+    order: '荷兰胜 > 荷兰-0.75 > 2-3球',
+    homeForm: '突尼斯若前两轮承压，末轮会更重视防守密度，但进攻端创造力仍偏有限。',
+    awayForm: '荷兰控球推进和边翼卫参与度更高，若仍需抢分，阵地战压制会持续。',
+    homeNews: '突尼斯中卫和后腰体能是关键，若防线轮换，禁区前保护会下降。',
+    awayNews: '荷兰中轴和边翼卫健康时，推进层次更完整，客胜方向更稳。',
+    tactics: '突尼斯压低阵型等待定位球和反击，荷兰通过边路宽度与肋部传切持续制造机会。',
+    risk: '荷兰若轮换或提前出线，比分上限降低；突尼斯定位球和低位消耗会拖慢节奏。',
+    oneXtwo: '荷兰胜方向清晰，不设置胜平负备选',
+    handicap: '荷兰-0.75附近，赢球优先，穿盘谨慎',
+    marketTotal: '2.25/2.5球，倾向2-3球'
+  }),
+  makeRollingMatch({
+    id: 'turkey-usa-20260625',
+    group: 'D组',
+    venue: 'Los Angeles Stadium',
+    home: 'turkey',
+    away: 'usa',
+    result: '美国胜',
+    resultBackup: '平局',
+    score: '1-2',
+    backup: '1-1',
+    total: '2-3球',
+    order: '美国胜 > 平局保护 > 2-3球',
+    homeForm: '土耳其创造力强，但首轮防守转换暴露问题，面对美国速度和压迫会继续承压。',
+    awayForm: '美国主场环境、体能和前场压迫优势明显，若核心攻击手恢复，末轮仍有头名竞争动力。',
+    homeNews: '土耳其前腰和后腰保护需要赛前确认，若中场屏障不稳，美国反击会很直接。',
+    awayNews: '美国需继续关注 Pulisic 小腿情况；若无法首发，客胜仍在但平局保护要保留。',
+    tactics: '土耳其控球创造机会，美国用高压和边路速度打转换，比赛节奏可能较开放。',
+    risk: '美国核心伤情、土耳其定位球和中前场个人能力会增加波动。',
+    oneXtwo: '美国胜主选，平局作为伤情和末轮轮换保护',
+    handicap: '美国-0.25到-0.5，赢球优先，不追深盘',
+    marketTotal: '2.5球附近，倾向2-3球'
+  }),
+  makeRollingMatch({
+    id: 'paraguay-australia-20260625',
+    group: 'D组',
+    venue: 'San Francisco Bay Area Stadium',
+    home: 'paraguay',
+    away: 'australia',
+    result: '澳大利亚胜',
+    resultBackup: '平局',
+    score: '1-2',
+    backup: '1-1',
+    total: '2-3球',
+    order: '澳大利亚胜 > 平局保护 > 2-3球',
+    homeForm: '巴拉圭对抗和定位球稳定，但首轮大比分失利后防线需要修复，末轮若必须抢分会留下空间。',
+    awayForm: '澳大利亚首轮赢球提升信心，身体对抗、定位球和团队纪律能支撑不败方向。',
+    homeNews: '巴拉圭中卫和防守型中场健康决定抗压下限，若主力屏障不齐，禁区前沿会暴露。',
+    awayNews: '澳大利亚高点前锋和中卫组合是核心，若保持完整，客胜备选价值较高。',
+    tactics: '巴拉圭直接推进和定位球制造冲击，澳大利亚争二点球并用边路传中打消耗。',
+    risk: '双方身体对抗强，红黄牌和定位球可能改变走势；澳大利亚若满足出线条件，进攻主动性可能下降。',
+    oneXtwo: '澳大利亚胜主选，平局作为低比分保护',
+    handicap: '澳大利亚0到-0.25，受让不败逻辑更稳，客胜只作浅盘',
+    marketTotal: '2.25/2.5球，倾向2-3球'
   })
 )
 
@@ -1478,7 +1608,13 @@ const matchMeta = {
   'scotland-brazil-20260624': { dateText: '6月25日 周四', kickoff: '06:00', scheduleAt: '2026-06-25T06:00:00+08:00', weatherIcon: '⛈️', weather: '29℃' },
   'morocco-haiti-20260624': { dateText: '6月25日 周四', kickoff: '06:00', scheduleAt: '2026-06-25T06:00:00+08:00', weatherIcon: '☁️', weather: '28℃' },
   'czechia-mexico-20260624': { dateText: '6月25日 周四', kickoff: '09:00', scheduleAt: '2026-06-25T09:00:00+08:00', weatherIcon: '☀️', weather: '24℃' },
-  'southafrica-korea-20260624': { dateText: '6月25日 周四', kickoff: '09:00', scheduleAt: '2026-06-25T09:00:00+08:00', weatherIcon: '☀️', weather: '26℃' }
+  'southafrica-korea-20260624': { dateText: '6月25日 周四', kickoff: '09:00', scheduleAt: '2026-06-25T09:00:00+08:00', weatherIcon: '☀️', weather: '26℃' },
+  'ecuador-germany-20260625': { dateText: '6月26日 周五', kickoff: '04:00', scheduleAt: '2026-06-26T04:00:00+08:00', weatherIcon: '☀️', weather: '25℃' },
+  'curacao-ivorycoast-20260625': { dateText: '6月26日 周五', kickoff: '04:00', scheduleAt: '2026-06-26T04:00:00+08:00', weatherIcon: '☁️', weather: '27℃' },
+  'japan-sweden-20260625': { dateText: '6月26日 周五', kickoff: '07:00', scheduleAt: '2026-06-26T07:00:00+08:00', weatherIcon: '☀️', weather: '31℃' },
+  'tunisia-netherlands-20260625': { dateText: '6月26日 周五', kickoff: '07:00', scheduleAt: '2026-06-26T07:00:00+08:00', weatherIcon: '☀️', weather: '29℃' },
+  'turkey-usa-20260625': { dateText: '6月26日 周五', kickoff: '10:00', scheduleAt: '2026-06-26T10:00:00+08:00', weatherIcon: '☀️', weather: '23℃' },
+  'paraguay-australia-20260625': { dateText: '6月26日 周五', kickoff: '10:00', scheduleAt: '2026-06-26T10:00:00+08:00', weatherIcon: '☀️', weather: '20℃' }
 }
 
 const venueAltitudes = {
@@ -1526,10 +1662,10 @@ const betfairMarketSnapshot = {
   'switzerland-bosnia-20260618': { marketId: '1.257503620', totalMatched: 372878, delayed: true, odds: { home: 1.6, draw: 4.4, away: 6.8 }, probability: { home: 63, draw: 23, away: 15 } },
   'canada-qatar-20260618': { marketId: '1.257503759', totalMatched: 296097, delayed: true, odds: { home: 1.32, draw: 6.2, away: 13.5 }, probability: { home: 76, draw: 16, away: 8 } },
   'mexico-korea-20260618': { marketId: '1.257503897', totalMatched: 196168, delayed: true, odds: { home: 2.14, draw: 3.4, away: 4.2 }, probability: { home: 47, draw: 29, away: 24 } },
-  'usa-australia-20260619': { marketId: '1.251401910', totalMatched: 477727, delayed: true, odds: { home: 1.65, draw: 4.7, away: 5.5 }, probability: { home: 61, draw: 21, away: 18 } },
-  'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 115400, delayed: true, odds: { home: 5.8, draw: 3.75, away: 1.77 }, probability: { home: 17, draw: 27, away: 56 } },
-  'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 144370, delayed: true, odds: { home: 1.14, draw: 12.5, away: 26 }, probability: { home: 88, draw: 8, away: 4 } },
-  'turkey-paraguay-20260619': { marketId: '1.258055656', totalMatched: 66641, delayed: true, odds: { home: 2.12, draw: 3.5, away: 4.2 }, probability: { home: 47, draw: 29, away: 24 } }
+  'usa-australia-20260619': { marketId: '1.251401910', totalMatched: 1305025, delayed: true, odds: { home: 1.65, draw: 4.6, away: 5.7 }, probability: { home: 61, draw: 22, away: 18 }, oddsMovement: { draw: 'steam', away: 'drift' } },
+  'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 347156, delayed: true, odds: { home: 5.9, draw: 3.7, away: 1.79 }, probability: { home: 17, draw: 27, away: 56 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'drift' } },
+  'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 288884, delayed: true, odds: { home: 1.12, draw: 12.5, away: 30 }, probability: { home: 89, draw: 8, away: 3 }, oddsMovement: { home: 'steam', away: 'drift' } },
+  'turkey-paraguay-20260619': { marketId: '1.258055656', totalMatched: 173758, delayed: true, odds: { home: 2.14, draw: 3.5, away: 4.1 }, probability: { home: 47, draw: 29, away: 25 }, oddsMovement: { home: 'drift', away: 'steam' } }
 }
 
 const predictionDiscipline = {
@@ -1556,10 +1692,16 @@ const predictionDiscipline = {
   'switzerland-bosnia-20260618': { result: '瑞士胜', resultBackup: '', score: '1-0', backup: '2-0', total: '1-2球', oneXtwo: '瑞士胜方向清晰，不设置胜平负备选', handicap: '参考瑞士-0.75；瑞士结构稳定，波黑中卫伤情压低客队上限，瑞士赢球强于穿深盘', order: '瑞士胜 > 小2.5 > 1-2球' },
   'canada-qatar-20260618': { result: '加拿大胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '加拿大胜方向清晰，不设置胜平负备选', handicap: '参考加拿大-1；加拿大速度和主场环境优势明显，但Davies出场时间仍需控制，主胜可保留，穿盘谨慎', order: '加拿大胜 > 加拿大-1谨慎 > 2-3球' },
   'mexico-korea-20260618': { result: '墨西哥胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '墨西哥胜主选，平局低权重保护', handicap: '参考墨西哥-0.25；主场和海拔有利，但Montes停赛、Quiñones伤情疑问削弱深盘信心', order: '墨西哥胜 > 平局保护 > 2-3球' },
-  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '巴西胜方向极强，不设置胜平负备选', handicap: '参考巴西-2；巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-2 > 3-4球' },
-  'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: '摩洛哥胜主选，平局低比分保护', handicap: '参考摩洛哥-0.5到-0.75；摩洛哥防守和反击质量更好，苏格兰身体对抗会拖慢节奏', order: '摩洛哥胜 > 平局保护 > 1-2球' },
-  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '土耳其胜主选，平局低权重保护', handicap: '参考土耳其-0.25；土耳其创造力更强，但巴拉圭对抗和定位球会让比赛保持悬念，主胜只适合浅盘', order: '土耳其胜 > 平局保护 > 2-3球' },
-  'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '美国胜方向清晰，不设置胜平负备选', handicap: '参考美国-0.75到-1；美国高节奏压迫能制造更多机会，澳大利亚定位球有威胁，穿深盘谨慎', order: '美国胜 > 美国-0.75 > 2-3球' }
+  'brazil-haiti-20260619': { result: '巴西胜', resultBackup: '', score: '4-0', backup: '3-0', total: '3-4球', oneXtwo: '巴西胜方向极强；必发成交放大且巴西赔率走低，主胜权重继续抬升，不设置胜平负备选', handicap: '参考巴西-2；巴西边路爆点和禁区终结优势很大，海地若无法持续低位防守，比分上限会被放大', order: '巴西胜 > 巴西-2 > 3-4球' },
+  'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: '摩洛哥胜主选，但必发成交上升时摩洛哥赔率从低走高，客胜权重下调，平局保护需要保留', handicap: '参考摩洛哥-0.5到-0.75；摩洛哥防守和反击质量更好，但赔率漂移后不追深盘', order: '摩洛哥胜 > 平局保护 > 1-2球' },
+  'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '土耳其胜主选，但必发成交放大时主胜赔率走高，主胜权重显著降低，平局保护上调', handicap: '参考土耳其-0.25；土耳其创造力更强，但赔率漂移和巴拉圭对抗会让比赛保持悬念，主胜只适合浅盘', order: '土耳其胜 > 平局保护 > 2-3球' },
+  'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '美国胜方向清晰；必发成交量高且主胜赔率稳定，澳大利亚赔率走高，主胜仍是主线', handicap: '参考美国-0.75到-1；美国高节奏压迫能制造更多机会，但Pulisic伤情让穿深盘谨慎', order: '美国胜 > 美国-0.75 > 2-3球' },
+  'ecuador-germany-20260625': { result: '德国胜', resultBackup: '', score: '1-2', backup: '0-2', total: '2-3球', oneXtwo: '德国胜方向清晰，不设置胜平负备选', handicap: '德国-0.75附近，赢球优先，穿深盘看首发强度', order: '德国胜 > 德国-0.75谨慎 > 2-3球' },
+  'curacao-ivorycoast-20260625': { result: '科特迪瓦胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '科特迪瓦胜主选，平局作为低权重保护', handicap: '科特迪瓦-0.5到-0.75，赢球优先，不追过深', order: '科特迪瓦胜 > 平局保护 > 2-3球' },
+  'japan-sweden-20260625': { result: '平局', resultBackup: '瑞典胜', score: '1-1', backup: '1-2', total: '2-3球', oneXtwo: '平局主选，瑞典胜作为身体和定位球优势的备选', handicap: '瑞典0到-0.25谨慎，日本受让方向有韧性', order: '平局 > 瑞典胜 > 2-3球' },
+  'tunisia-netherlands-20260625': { result: '荷兰胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '荷兰胜方向清晰，不设置胜平负备选', handicap: '荷兰-0.75附近，赢球优先，穿盘谨慎', order: '荷兰胜 > 荷兰-0.75 > 2-3球' },
+  'turkey-usa-20260625': { result: '美国胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '美国胜主选，平局作为伤情和末轮轮换保护', handicap: '美国-0.25到-0.5，赢球优先，不追深盘', order: '美国胜 > 平局保护 > 2-3球' },
+  'paraguay-australia-20260625': { result: '澳大利亚胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '澳大利亚胜主选，平局作为低比分保护', handicap: '澳大利亚0到-0.25，受让不败逻辑更稳，客胜只作浅盘', order: '澳大利亚胜 > 平局保护 > 2-3球' }
 }
 
 const coachStyleNotes = {
@@ -1716,7 +1858,12 @@ function getBetfairMarket(match) {
 function getBetfairEdge(match) {
   const market = getBetfairMarket(match)
   if (!market || !market.probability) return 0
-  return clamp((market.probability.home - market.probability.away) / 100, -0.9, 0.9)
+  const movement = market.oddsMovement || {}
+  const homeDriftPenalty = movement.home === 'drift' ? 0.08 : 0
+  const awayDriftPenalty = movement.away === 'drift' ? 0.08 : 0
+  const homeSteamBonus = movement.home === 'steam' ? 0.04 : 0
+  const awaySteamBonus = movement.away === 'steam' ? 0.04 : 0
+  return clamp((market.probability.home - market.probability.away) / 100 - homeDriftPenalty + awayDriftPenalty + homeSteamBonus - awaySteamBonus, -0.9, 0.9)
 }
 
 function getBetfairBlendWeight(match) {
@@ -1734,6 +1881,19 @@ function blendWithBetfairProbability(match, probability) {
   let home = Math.round(probability.home * (1 - weight) + market.probability.home * weight)
   let draw = Math.round(probability.draw * (1 - weight) + market.probability.draw * weight)
   let away = 100 - home - draw
+  const movement = market.oddsMovement || {}
+  if (movement.home === 'drift') {
+    const penalty = Math.min(5, Math.max(2, Math.round(weight * 7)))
+    home = Math.max(4, home - penalty)
+    draw += Math.ceil(penalty / 2)
+    away += Math.floor(penalty / 2)
+  }
+  if (movement.away === 'drift') {
+    const penalty = Math.min(5, Math.max(2, Math.round(weight * 7)))
+    away = Math.max(4, away - penalty)
+    draw += Math.ceil(penalty / 2)
+    home += Math.floor(penalty / 2)
+  }
   if (away < 4) {
     away = 4
     draw = 100 - home - away
@@ -1756,8 +1916,18 @@ function getBetfairImpactText(match) {
   if (!market || !market.probability) return ''
   const matchedK = Math.round((market.totalMatched || 0) / 1000)
   const liquidityText = matchedK >= 300 ? '成交量较高' : matchedK >= 120 ? '成交量中等' : '成交量偏薄'
+  const movement = market.oddsMovement || {}
+  const movementText = movement.home === 'drift'
+    ? `；${match.home.cn}成交放大但赔率走高，主胜权重下调`
+    : movement.away === 'drift'
+      ? `；${match.away.cn}成交放大但赔率走高，客胜权重下调`
+      : movement.home === 'steam'
+        ? `；${match.home.cn}赔率走低，主胜热度增强`
+        : movement.away === 'steam'
+          ? `；${match.away.cn}赔率走低，客胜热度增强`
+          : ''
   const backup = match.pick && match.pick.resultBackup ? `，但${match.pick.resultBackup}保护仍要保留` : ''
-  return `必发影响：${liquidityText}，约${matchedK}K成交；胜/平/负归一化为${market.probability.home}%/${market.probability.draw}%/${market.probability.away}%，对${match.pick.result}形成校准${backup}${market.delayed ? '。当前数据带延迟，只作为赛前权重参考。' : '。'}`
+  return `必发影响：${liquidityText}，约${matchedK}K成交；胜/平/负归一化为${market.probability.home}%/${market.probability.draw}%/${market.probability.away}%${movementText}，对${match.pick.result}形成校准${backup}${market.delayed ? '。当前数据带延迟，只作为赛前权重参考。' : '。'}`
 }
 
 function getStrengthScores(match) {
@@ -1941,6 +2111,10 @@ matches.forEach((match) => {
 })
 
 const finishedReviewSource = [
+  { id: 'mexico-korea-review', matchId: 'mexico-korea-20260618', homeTeam: 'mexico', awayTeam: 'korea', home: '墨西哥', away: '韩国', dateText: '6月19日 周五', kickoff: '09:00', group: 'A组', venue: 'Estadio Guadalajara', endedAtSort: 202606191100, score: '1-0', resultMain: '墨西哥胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'canada-qatar-review', matchId: 'canada-qatar-20260618', homeTeam: 'canada', awayTeam: 'qatar', home: '加拿大', away: '卡塔尔', dateText: '6月19日 周五', kickoff: '06:00', group: 'B组', venue: 'BC Place Vancouver', endedAtSort: 202606190800, score: '6-0', resultMain: '加拿大胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '2-0', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'switzerland-bosnia-review', matchId: 'switzerland-bosnia-20260618', homeTeam: 'switzerland', awayTeam: 'bosnia', home: '瑞士', away: '波黑', dateText: '6月19日 周五', kickoff: '03:00', group: 'B组', venue: 'Los Angeles Stadium', endedAtSort: 202606190500, score: '4-1', resultMain: '瑞士胜', resultBackup: '', scoreMain: '1-0', scoreBackup: '2-0', totalPick: '1-2球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'czechia-southafrica-review', matchId: 'czechia-southafrica-20260618', homeTeam: 'czechia', awayTeam: 'southAfrica', home: '捷克', away: '南非', dateText: '6月19日 周五', kickoff: '00:00', group: 'A组', venue: 'Atlanta Stadium', endedAtSort: 202606190200, score: '1-1', resultMain: '捷克胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: false, resultBackupCorrect: true, scoreMainCorrect: false, scoreBackupCorrect: true },
   { id: 'uzbekistan-colombia-review', matchId: 'uzbekistan-colombia-20260617', homeTeam: 'uzbekistan', awayTeam: 'colombia', home: '乌兹别克斯坦', away: '哥伦比亚', dateText: '6月18日 周四', kickoff: '10:00', group: 'K组', venue: 'Mexico City Stadium', endedAtSort: 202606181200, score: '1-3', resultMain: '哥伦比亚胜', resultBackup: '', scoreMain: '0-2', scoreBackup: '1-2', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
   { id: 'ghana-panama-review', matchId: 'ghana-panama-20260617', homeTeam: 'ghana', awayTeam: 'panama', home: '加纳', away: '巴拿马', dateText: '6月18日 周四', kickoff: '07:00', group: 'J组', venue: 'Miami Stadium', endedAtSort: 202606180900, score: '1-0', resultMain: '加纳胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
   { id: 'england-croatia-review', matchId: 'england-croatia-20260617', homeTeam: 'england', awayTeam: 'croatia', home: '英格兰', away: '克罗地亚', dateText: '6月18日 周四', kickoff: '04:00', group: 'L组', venue: 'Dallas Stadium', endedAtSort: 202606180600, score: '4-2', resultMain: '英格兰胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
