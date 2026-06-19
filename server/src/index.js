@@ -54,6 +54,7 @@ const LIVE_SCORE_INTERVAL_MS = Number(process.env.LIVE_SCORE_SYNC_INTERVAL_MS ||
 const BETFAIR_SYNC_ENABLED = process.env.BETFAIR_SYNC_ENABLED === '1'
 const WECHAT_APP_ID = process.env.WECHAT_APP_ID || process.env.WX_APP_ID || ''
 const WECHAT_APP_SECRET = process.env.WECHAT_APP_SECRET || process.env.WX_APP_SECRET || ''
+const WECHAT_API_TIMEOUT_MS = Number(process.env.WECHAT_API_TIMEOUT_MS || 10000)
 
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, {
@@ -122,7 +123,7 @@ function requireProfileUser(req, res) {
 
 function fetchJson(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, (response) => {
+    const request = https.get(url, { timeout: WECHAT_API_TIMEOUT_MS }, (response) => {
       let body = ''
       response.setEncoding('utf8')
       response.on('data', (chunk) => {
@@ -135,7 +136,13 @@ function fetchJson(url) {
           reject(error)
         }
       })
-    }).on('error', reject)
+    })
+    request.on('timeout', () => {
+      const error = new Error('WECHAT_API_TIMEOUT')
+      error.statusCode = 504
+      request.destroy(error)
+    })
+    request.on('error', reject)
   })
 }
 
@@ -152,7 +159,14 @@ async function exchangeWechatCode(code) {
     js_code: code,
     grant_type: 'authorization_code'
   })
-  const result = await fetchJson(`${apiUrl}?${params.toString()}`)
+  let result
+  try {
+    result = await fetchJson(`${apiUrl}?${params.toString()}`)
+  } catch (error) {
+    if (!error.statusCode) error.statusCode = 502
+    console.error('[wechat-login] request failed', error.message)
+    throw error
+  }
   if (!result || !result.openid) {
     const error = new Error(result && result.errmsg ? result.errmsg : 'WECHAT_LOGIN_FAILED')
     console.error('[wechat-login]', {

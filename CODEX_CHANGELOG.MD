@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-19 21:18 - 放宽微信资料保存超时并确认头像昵称必须手动选择
+- 环境：公司电脑 Codex + 手机端反馈
+- 目的：处理真机保存微信头像昵称时出现 `request:fail timeout` 的问题，同时确认微信官方当前不支持自动提取真实头像和昵称，只能通过原生 `chooseAvatar` 和 `type="nickname"` 由用户手动选择。
+- 涉及文件：`utils/userAuth.js`、`server/src/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：小程序端普通登录/保存请求超时从 5 秒放宽到 15 秒，头像上传超时从 8 秒放宽到 30 秒，并统一把网络失败转换为可读错误；服务端访问微信 `jscode2session` 增加 10 秒超时保护和失败日志，避免服务器请求长时间悬挂。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务。
+- 验证：已运行 `node -c utils/userAuth.js`、`node -c server/src/index.js`、`node -c pages/profile/profile.js`、`node -c pages/index/index.js` 和服务器 `npm run check`。
+- 后续注意：真机仍需用户点击选择微信头像和昵称；如果继续超时，优先检查微信后台 request/uploadFile 合法域名和服务器日志。
+
 ## 2026-06-19 20:52 - 调整头像昵称流程为先选择后登录保存
 
 - 环境：公司电脑 Codex + 手机端反馈

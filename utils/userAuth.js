@@ -4,6 +4,8 @@ const USER_TOKEN_KEY = 'worldcup_user_token'
 const USER_INFO_KEY = 'worldcup_user_info'
 const GUEST_ID_KEY = 'worldcup_guest_id'
 const PROFILE_CHOICE_KEY = 'worldcup_profile_choice_done'
+const REQUEST_TIMEOUT_MS = 15000
+const UPLOAD_TIMEOUT_MS = 30000
 
 function getApiBaseUrl() {
   return String(apiBaseUrl || '').replace(/\/$/, '')
@@ -63,7 +65,7 @@ function requestJson(path, data, token) {
       method: 'POST',
       data: data || {},
       header,
-      timeout: 5000,
+      timeout: REQUEST_TIMEOUT_MS,
       success(response) {
         const result = response.data || {}
         if (response.statusCode >= 200 && response.statusCode < 300 && result.ok !== false) {
@@ -73,7 +75,8 @@ function requestJson(path, data, token) {
         reject(new Error(result.error || `HTTP_${response.statusCode}`))
       },
       fail(error) {
-        reject(new Error(error && error.errMsg ? error.errMsg : 'REQUEST_NETWORK_FAILED'))
+        const message = error && error.errMsg ? error.errMsg : 'REQUEST_NETWORK_FAILED'
+        reject(new Error(message))
       }
     })
   })
@@ -146,7 +149,7 @@ function saveUserProfile(profile) {
         header: {
           Authorization: `Bearer ${token}`
         },
-        timeout: 8000,
+        timeout: UPLOAD_TIMEOUT_MS,
         success(response) {
           let result = {}
           try {
@@ -161,7 +164,10 @@ function saveUserProfile(profile) {
           }
           reject(new Error(result.error || 'UPLOAD_FAILED'))
         },
-        fail: reject
+        fail(error) {
+          const message = error && error.errMsg ? error.errMsg : 'UPLOAD_NETWORK_FAILED'
+          reject(new Error(message))
+        }
       })
     })
   }
