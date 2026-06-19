@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 20:08 - 按微信官方头像昵称能力调整资料完善入口
+
+- 环境：公司电脑 Codex + 微信官方/腾讯云头像昵称能力文档
+- 目的：按微信官方推荐方式拆分静默身份登录和头像昵称资料完善，避免把“登录”和“获取微信头像昵称”混为一谈。
+- 涉及文件：`pages/profile/profile.js`、`pages/profile/profile.wxml`、`pages/index/index.wxml`、`CODEX_CHANGELOG.MD`
+- 主要改动：个人信息页游客入口从“登录”改为“完善微信资料”；点击后先用 `wx.login` 静默建立微信身份，再使用 `button open-type="chooseAvatar"` 选择微信头像、`input type="nickname"` 选择或确认微信昵称；首页首次进入资料提示同步改为“选择微信头像和昵称”文案，并为昵称输入增加 `bindchange`。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器运行代码，不需要重新部署轻量云服务器。
+- 验证：已运行 `node -c pages/profile/profile.js`、`node -c pages/index/index.js`、`app.json`/页面 JSON 解析检查、`git diff --check`。
+- 后续注意：需要在真机上确认昵称输入框弹出的微信昵称候选项；开发者工具可能无法完全还原原生键盘表现。
+
 ## 2026-06-19 19:48 - 个人信息页增加游客登录入口
 
 - 环境：公司电脑 Codex

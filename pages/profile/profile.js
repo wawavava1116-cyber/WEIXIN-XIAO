@@ -13,7 +13,7 @@ function getProfile() {
     avatarUrl: user.avatarUrl || '',
     modeText: user.mode === 'wechat' ? '微信用户' : '游客用户',
     hasProfile: Boolean(user.hasProfile),
-    canLogin: user.mode !== 'wechat' || !user.hasProfile
+    canCompleteProfile: user.mode !== 'wechat' || !user.hasProfile
   }
 }
 
@@ -42,9 +42,9 @@ Page({
     }).catch(() => {})
   },
 
-  startWechatLogin() {
+  startProfileSetup() {
     if (this.data.savingProfile) return
-    wx.showLoading({ title: '正在登录' })
+    wx.showLoading({ title: '正在准备' })
     loginWithWechat()
       .then((session) => {
         wx.hideLoading()
@@ -58,7 +58,7 @@ Page({
       })
       .catch(() => {
         wx.hideLoading()
-        wx.showToast({ title: '微信登录暂不可用', icon: 'none' })
+        wx.showToast({ title: '微信身份暂不可用', icon: 'none' })
       })
   },
 
@@ -94,7 +94,7 @@ Page({
           savingProfile: false
         })
         this.refreshProfile()
-        wx.showToast({ title: '已登录', icon: 'success' })
+        wx.showToast({ title: '已保存', icon: 'success' })
       })
       .catch(() => {
         wx.hideLoading()

@@ -26,10 +26,10 @@
   <view class="profile-mask" wx:if="{{showUserProfilePrompt}}">
     <view class="profile-sheet">
       <view class="profile-sheet-handle"></view>
-      <text class="profile-title">使用微信资料进入？</text>
-      <text class="profile-body">可以选择使用微信头像和微信名，服务器会为你建立用户数据；也可以直接作为游客用户浏览。</text>
+      <text class="profile-title">完善头像和微信名？</text>
+      <text class="profile-body">服务器会先通过微信登录能力建立用户身份；头像和微信名使用微信原生能力选择，也可以直接作为游客用户浏览。</text>
       <view class="profile-actions">
-        <button class="profile-primary" bindtap="useWechatProfile">使用头像和微信名</button>
+        <button class="profile-primary" bindtap="useWechatProfile">完善微信资料</button>
         <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>
       </view>
     </view>
@@ -39,14 +39,14 @@
     <view class="profile-sheet">
       <view class="profile-sheet-handle"></view>
       <text class="profile-title">完善用户资料</text>
-      <text class="profile-body">请选择头像并填写微信名，用于保存你的用户数据。</text>
+      <text class="profile-body">请选择微信头像和昵称，用于保存你的用户数据。</text>
       <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
         <image wx:if="{{profileAvatarTempPath}}" class="avatar-preview" src="{{profileAvatarTempPath}}" mode="aspectFill"></image>
         <text wx:else class="avatar-placeholder">选择头像</text>
       </button>
-      <input class="nickname-input" type="nickname" placeholder="填写微信名" value="{{profileNickname}}" bindinput="onProfileNicknameInput" />
+      <input class="nickname-input" type="nickname" placeholder="选择或确认微信名" value="{{profileNickname}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
       <view class="profile-actions">
-        <button class="profile-primary" bindtap="saveWechatProfile">保存并进入</button>
+        <button class="profile-primary" bindtap="saveWechatProfile">保存资料</button>
         <button class="profile-secondary" bindtap="continueAsGuest">改用游客</button>
       </view>
     </view>
