@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 16:35 - 用 Figma 重新生成并放大底部导航图标
+
+- 环境：公司电脑 Codex + Figma
+- 目的：按用户反馈重新制作更精致的底部 tabBar 图标，并在确认后整体放大 20%。
+- 涉及文件：`assets/nav/home.png`、`assets/nav/home-active.png`、`assets/nav/schedule.png`、`assets/nav/schedule-active.png`、`assets/nav/prediction.png`、`assets/nav/prediction-active.png`、`assets/nav/profile.png`、`assets/nav/profile-active.png`、`CODEX_CHANGELOG.MD`
+- 主要改动：在 Figma 文件 `WorldCup Mini Program Tab Icons` 中生成 24px 网格线性图标方案，使用圆角端点、常态灰色和选中金色；导出为小程序 tabBar 使用的 81x81 透明 PNG，并按用户要求比初版放大约 20%。
+- 数据库/赛程/复盘：未修改比赛、预测或复盘数据。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器代码，不需要重新部署轻量云服务器。
+- 验证：已生成本地预览确认 4 组图标风格统一；已检查 `app.json` 可正常解析；8 个 PNG 单文件均小于 3KB。
+- 后续注意：需要在微信开发者工具中重新编译预览，重点看真机 tabBar 中图标大小、文字间距和选中态颜色。
+
 ## 2026-06-19 16:18 - 修复赛程页打开失败并重做底部导航图标
 
 - 环境：公司电脑 Codex
