@@ -6,6 +6,10 @@ const GUEST_ID_KEY = 'worldcup_guest_id'
 const PROFILE_CHOICE_KEY = 'worldcup_profile_choice_done'
 const REQUEST_TIMEOUT_MS = 15000
 const UPLOAD_TIMEOUT_MS = 30000
+const DEFAULT_WECHAT_NICKNAMES = {
+  '微信用户': true,
+  'WeChat User': true
+}
 
 function getApiBaseUrl() {
   return String(apiBaseUrl || '').replace(/\/$/, '')
@@ -131,6 +135,45 @@ function ensureWechatSession() {
   return loginWithWechat()
 }
 
+function isDefaultWechatAvatar(avatarUrl) {
+  const value = String(avatarUrl || '')
+  return !value || value.includes('default_avatar') || value.includes('/132') === false && value.includes('thirdwx.qlogo.cn') === false
+}
+
+function isDefaultWechatProfile(userInfo) {
+  const nickname = String(userInfo && userInfo.nickName ? userInfo.nickName : '').trim()
+  const avatarUrl = String(userInfo && userInfo.avatarUrl ? userInfo.avatarUrl : '').trim()
+  return !nickname || DEFAULT_WECHAT_NICKNAMES[nickname] || isDefaultWechatAvatar(avatarUrl)
+}
+
+function requestWechatProfile() {
+  return new Promise((resolve, reject) => {
+    if (!wx.getUserProfile) {
+      reject(new Error('WECHAT_PROFILE_API_UNAVAILABLE'))
+      return
+    }
+    wx.getUserProfile({
+      desc: '用于保存你的预测资料和排行榜头像昵称',
+      lang: 'zh_CN',
+      success(result) {
+        const userInfo = result && result.userInfo ? result.userInfo : null
+        if (!userInfo || isDefaultWechatProfile(userInfo)) {
+          reject(new Error('WECHAT_PROFILE_SELECTION_REQUIRED'))
+          return
+        }
+        resolve({
+          nickname: String(userInfo.nickName || '').trim(),
+          avatarUrl: userInfo.avatarUrl || ''
+        })
+      },
+      fail(error) {
+        const message = error && error.errMsg ? error.errMsg : 'WECHAT_PROFILE_AUTH_FAILED'
+        reject(new Error(message))
+      }
+    })
+  })
+}
+
 function saveUserProfile(profile) {
   const token = getStoredToken()
   if (!token) return Promise.reject(new Error('MISSING_TOKEN'))
@@ -202,6 +245,7 @@ module.exports = {
   ensureWechatSession,
   loginAsGuest,
   loginWithWechat,
+  requestWechatProfile,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone

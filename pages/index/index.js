@@ -8,6 +8,7 @@ const {
   getStoredUser,
   ensureWechatSession,
   loginAsGuest,
+  requestWechatProfile,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone
@@ -574,6 +575,33 @@ Page({
   },
 
   useWechatProfile() {
+    requestWechatProfile()
+      .then((profile) => {
+        wx.showLoading({ title: '正在保存' })
+        return ensureWechatSession().then(() => saveUserProfile(profile))
+      })
+      .then((session) => {
+        markProfileChoiceDone()
+        wx.hideLoading()
+        this.setData({
+          userInfo: session.user || this.data.userInfo,
+          showUserProfilePrompt: false,
+          showUserProfileForm: false,
+          showAnnouncement: false
+        })
+        wx.showToast({ title: '已保存', icon: 'success' })
+      })
+      .catch((error) => {
+        wx.hideLoading()
+        const message = error && error.message ? error.message : ''
+        if (message && message !== 'WECHAT_PROFILE_SELECTION_REQUIRED' && !message.includes('getUserProfile:fail')) {
+          wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+        }
+        this.showManualProfileForm()
+      })
+  },
+
+  showManualProfileForm() {
     const user = getStoredUser() || {}
     this.setData({
       showUserProfilePrompt: false,

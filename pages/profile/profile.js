@@ -2,6 +2,7 @@ const {
   ensureWechatSession,
   getStoredUser,
   markProfileChoiceDone,
+  requestWechatProfile,
   saveUserProfile
 } = require('../../utils/userAuth')
 const { fetchPredictionDashboard, hasPredictionProfile } = require('../../utils/userPredictions')
@@ -44,8 +45,38 @@ Page({
 
   startProfileSetup() {
     if (this.data.savingProfile) return
+    this.setData({ savingProfile: true })
+    requestWechatProfile()
+      .then((profile) => {
+        wx.showLoading({ title: '正在保存' })
+        return ensureWechatSession().then(() => saveUserProfile(profile))
+      })
+      .then(() => {
+        markProfileChoiceDone()
+        wx.hideLoading()
+        this.setData({
+          showProfileForm: false,
+          profileNickname: '',
+          profileAvatarTempPath: '',
+          savingProfile: false
+        })
+        this.refreshProfile()
+        wx.showToast({ title: '已保存', icon: 'success' })
+      })
+      .catch((error) => {
+        wx.hideLoading()
+        const message = error && error.message ? error.message : ''
+        if (message && message !== 'WECHAT_PROFILE_SELECTION_REQUIRED' && !message.includes('getUserProfile:fail')) {
+          wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+        }
+        this.showManualProfileForm()
+      })
+  },
+
+  showManualProfileForm() {
     const user = getStoredUser() || {}
     this.setData({
+      savingProfile: false,
       profile: getProfile(),
       showProfileForm: true,
       profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : '',

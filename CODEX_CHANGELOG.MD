@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-19 21:36 - 资料登录入口优先调用微信原生头像昵称授权页
+- 环境：公司电脑 Codex + 手机端截图反馈
+- 目的：按用户提供的微信原生界面示例，调整“完善微信资料”流程，点击后优先调起微信自己的昵称头像授权/选择界面，而不是直接进入小程序自定义资料表单。
+- 涉及文件：`utils/userAuth.js`、`pages/index/index.js`、`pages/profile/profile.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增 `requestWechatProfile()` 调用微信 `wx.getUserProfile` 原生授权页；首页首次资料提示和个人信息页登录按钮优先走微信原生授权，授权返回真实头像昵称后再静默登录并保存到服务器；如果微信只返回“微信用户”或默认头像，则自动回退到现有 `chooseAvatar` + `type="nickname"` 手动选择面板。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改 `server/` 代码，不需要重新部署轻量云服务器服务。
+- 验证：已运行 `node -c utils/userAuth.js`、`node -c pages/profile/profile.js`、`node -c pages/index/index.js`。
+- 后续注意：微信新版本可能仍会限制 `wx.getUserProfile` 返回真实头像昵称；这种情况下会自动进入兜底选择面板，属于微信能力限制。
+
 ## 2026-06-19 21:18 - 放宽微信资料保存超时并确认头像昵称必须手动选择
 - 环境：公司电脑 Codex + 手机端反馈
 - 目的：处理真机保存微信头像昵称时出现 `request:fail timeout` 的问题，同时确认微信官方当前不支持自动提取真实头像和昵称，只能通过原生 `chooseAvatar` 和 `type="nickname"` 由用户手动选择。
