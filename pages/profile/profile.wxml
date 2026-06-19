@@ -1,0 +1,22 @@
+<view class="safe-page profile-page">
+  <view class="profile-hero glass">
+    <view class="profile-avatar">
+      <image wx:if="{{profile.avatarUrl}}" src="{{profile.avatarUrl}}" mode="aspectFill"></image>
+      <text wx:else>人</text>
+    </view>
+    <view class="profile-copy">
+      <text class="profile-name">{{profile.nickname}}</text>
+      <text class="profile-mode">{{profile.modeText}}</text>
+    </view>
+  </view>
+
+  <view class="profile-card glass">
+    <text class="profile-card-title">账号状态</text>
+    <text class="profile-card-text">{{profile.hasProfile ? '已保存微信头像和微信名。' : '当前以游客身份浏览。首次进入首页时可选择保存微信头像和微信名。'}}</text>
+  </view>
+
+  <view class="profile-card glass">
+    <text class="profile-card-title">使用说明</text>
+    <text class="profile-card-text">用户数据仅用于区分游客和微信资料用户；赛程、预测和复盘内容不因账号状态改变。</text>
+  </view>
+</view>

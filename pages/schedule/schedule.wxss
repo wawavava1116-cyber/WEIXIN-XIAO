@@ -1,0 +1,100 @@
+.schedule-page {
+  padding-bottom: 28rpx;
+}
+
+.simple-hero {
+  padding: 26rpx 24rpx;
+  border: 2rpx solid rgba(214, 170, 76, 0.28);
+  border-radius: 22rpx;
+  background: #101010;
+}
+
+.simple-title {
+  display: block;
+  font-size: 46rpx;
+  line-height: 1.08;
+  font-weight: 1000;
+}
+
+.simple-subtitle,
+.simple-badge {
+  display: block;
+  margin-top: 8rpx;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 22rpx;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.simple-badge {
+  color: rgba(214, 170, 76, 0.86);
+  font-size: 18rpx;
+}
+
+.schedule-card {
+  display: block;
+  margin-top: 14rpx;
+  padding: 18rpx;
+  border-radius: 16rpx;
+  color: #fff;
+}
+
+.schedule-card-hover {
+  opacity: 0.92;
+  transform: scale(0.99);
+}
+
+.schedule-time,
+.schedule-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.schedule-time {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 20rpx;
+  font-weight: 900;
+}
+
+.schedule-teams {
+  margin-top: 16rpx;
+}
+
+.schedule-team {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  flex: 1;
+  min-width: 0;
+  font-size: 30rpx;
+  font-weight: 1000;
+}
+
+.schedule-team.right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.schedule-flag {
+  flex: none;
+  width: 44rpx;
+  height: 32rpx;
+}
+
+.schedule-vs {
+  flex: none;
+  color: #d6aa4c;
+  font-size: 20rpx;
+  font-weight: 1000;
+}
+
+.schedule-meta {
+  display: block;
+  margin-top: 12rpx;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 20rpx;
+  line-height: 1.35;
+  font-weight: 800;
+}

@@ -1,0 +1,28 @@
+<view class="safe-page schedule-page">
+  <view class="simple-hero">
+    <text class="simple-title">赛程</text>
+    <text class="simple-subtitle">按北京时间升序查看近 7 天比赛。</text>
+    <text class="simple-badge">{{databaseBadge}}</text>
+  </view>
+
+  <block wx:for="{{matches}}" wx:key="id">
+    <navigator class="schedule-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="schedule-card-hover">
+      <view class="schedule-time">
+        <text>{{item.dateText}} · {{item.kickoff}}</text>
+        <text>{{item.statusText}}</text>
+      </view>
+      <view class="schedule-teams">
+        <view class="schedule-team">
+          <image class="schedule-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+          <text>{{item.home.cn}}</text>
+        </view>
+        <text class="schedule-vs">VS</text>
+        <view class="schedule-team right">
+          <text>{{item.away.cn}}</text>
+          <image class="schedule-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+        </view>
+      </view>
+      <text class="schedule-meta">{{item.group}} · {{item.venue}}</text>
+    </navigator>
+  </block>
+</view>

@@ -1,0 +1,31 @@
+<view class="safe-page prediction-page">
+  <view class="simple-hero">
+    <text class="simple-title">预测</text>
+    <text class="simple-subtitle">集中查看胜平负、比分和进球倾向。</text>
+    <text class="simple-badge">{{databaseBadge}}</text>
+  </view>
+
+  <block wx:for="{{matches}}" wx:key="id">
+    <navigator class="prediction-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="prediction-card-hover">
+      <view class="prediction-head">
+        <text>{{item.dateText}} · {{item.kickoff}}</text>
+        <text>{{item.home.cn}} vs {{item.away.cn}}</text>
+      </view>
+      <view class="prediction-grid">
+        <view>
+          <text class="prediction-label">倾向</text>
+          <text class="prediction-value">{{item.pick.result}}</text>
+        </view>
+        <view>
+          <text class="prediction-label">比分</text>
+          <text class="prediction-value">{{item.pick.score}}</text>
+        </view>
+        <view>
+          <text class="prediction-label">进球</text>
+          <text class="prediction-value">{{item.pick.total}}</text>
+        </view>
+      </view>
+      <text class="prediction-risk" wx:if="{{item.risk}}">{{item.risk}}</text>
+    </navigator>
+  </block>
+</view>

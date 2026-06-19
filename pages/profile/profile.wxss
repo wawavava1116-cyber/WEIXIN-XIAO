@@ -1,0 +1,77 @@
+.profile-page {
+  padding-bottom: 28rpx;
+}
+
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx 24rpx;
+  border-radius: 22rpx;
+}
+
+.profile-avatar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 116rpx;
+  height: 116rpx;
+  overflow: hidden;
+  border: 2rpx solid rgba(214, 170, 76, 0.52);
+  border-radius: 50%;
+  color: #050505;
+  background: #d6aa4c;
+  font-size: 42rpx;
+  font-weight: 1000;
+}
+
+.profile-avatar image {
+  width: 116rpx;
+  height: 116rpx;
+}
+
+.profile-copy {
+  min-width: 0;
+}
+
+.profile-name {
+  display: block;
+  color: #fff;
+  font-size: 38rpx;
+  line-height: 1.15;
+  font-weight: 1000;
+}
+
+.profile-mode {
+  display: block;
+  margin-top: 8rpx;
+  color: rgba(214, 170, 76, 0.88);
+  font-size: 22rpx;
+  font-weight: 900;
+}
+
+.profile-card {
+  margin-top: 16rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+}
+
+.profile-card-title,
+.profile-card-text {
+  display: block;
+}
+
+.profile-card-title {
+  color: #d6aa4c;
+  font-size: 26rpx;
+  font-weight: 1000;
+}
+
+.profile-card-text {
+  margin-top: 10rpx;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 23rpx;
+  line-height: 1.48;
+  font-weight: 800;
+}

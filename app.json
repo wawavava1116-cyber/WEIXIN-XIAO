@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/schedule/schedule",
+    "pages/prediction/prediction",
+    "pages/profile/profile",
     "pages/favorites/favorites",
     "pages/history/history",
     "pages/detail/detail"
@@ -10,6 +13,38 @@
     "navigationBarBackgroundColor": "#050505",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#050505"
+  },
+  "tabBar": {
+    "color": "#969696",
+    "selectedColor": "#d6aa4c",
+    "backgroundColor": "#050505",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/nav/home.png",
+        "selectedIconPath": "assets/nav/home-active.png"
+      },
+      {
+        "pagePath": "pages/schedule/schedule",
+        "text": "赛程",
+        "iconPath": "assets/nav/schedule.png",
+        "selectedIconPath": "assets/nav/schedule-active.png"
+      },
+      {
+        "pagePath": "pages/prediction/prediction",
+        "text": "预测",
+        "iconPath": "assets/nav/prediction.png",
+        "selectedIconPath": "assets/nav/prediction-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "信息",
+        "iconPath": "assets/nav/profile.png",
+        "selectedIconPath": "assets/nav/profile-active.png"
+      }
+    ]
   },
   "style": "v2",
   "lazyCodeLoading": "requiredComponents",
