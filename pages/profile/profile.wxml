@@ -13,6 +13,16 @@
   <view class="profile-card glass">
     <text class="profile-card-title">账号状态</text>
     <text class="profile-card-text">{{profile.hasProfile ? '已保存微信头像和微信名。' : '当前以游客身份浏览。首次进入首页时可选择保存微信头像和微信名。'}}</text>
+    <button wx:if="{{profile.canLogin && !showProfileForm}}" class="profile-login-button" bindtap="startWechatLogin">登录</button>
+    <view wx:if="{{showProfileForm}}" class="wechat-profile-form">
+      <text class="profile-card-text">使用微信原生头像和昵称能力完善资料。</text>
+      <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image wx:if="{{profileAvatarTempPath}}" class="avatar-preview" src="{{profileAvatarTempPath}}" mode="aspectFill"></image>
+        <text wx:else class="avatar-placeholder">选择头像</text>
+      </button>
+      <input class="nickname-input" type="nickname" placeholder="填写微信名" value="{{profileNickname}}" bindinput="onProfileNicknameInput" />
+      <button class="profile-login-button" loading="{{savingProfile}}" bindtap="saveWechatProfile">保存登录</button>
+    </view>
   </view>
 
   <view class="profile-card glass">
