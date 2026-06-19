@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 08:33 - 新增微信用户与游客用户接口
+
+- 环境：公司电脑 Codex
+- 目的：按用户要求，在小程序进入时提示是否使用微信头像和微信名；选择同意则保存头像昵称并建立用户数据，选择否按游客用户进入。
+- 涉及文件：`server/src/index.js`、`server/src/userStore.js`、`server/package.json`、`server/.env.example`、`server/README.md`、`utils/userAuth.js`、`pages/index/index.js`、`pages/index/index.wxml`、`pages/index/index.wxss`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务器新增游客用户、微信 code 登录、用户资料保存和头像访问接口；用户数据写入 `server/data/users.json`，头像写入 `server/data/avatars/`；小程序首页启动完成后新增用户资料选择弹窗，支持使用微信头像/微信名或游客进入。
+- 数据库/赛程/复盘：未修改比赛数据、赛程、预测或复盘；不影响首页排序和历史复盘数据。
+- 云函数：未修改微信云函数，不需要重新上传云函数。
+- 服务器：修改了 `server/`，需要重新部署轻量云服务器服务；服务器 `.env` 需配置 `WECHAT_APP_ID`、`WECHAT_APP_SECRET`、`PUBLIC_BASE_URL`。
+- 验证：已运行首页 JS、用户工具、服务器入口和用户存储语法检查；已运行 `npm.cmd run check` 通过服务器检查。
+- 后续注意：小程序 request 合法域名需包含当前 `utils/serverConfig.js` 的 HTTPS 域名；微信 AppSecret 只能放服务器 `.env`，不要写入前端或 Git。
+
 ## 2026-06-18 18:45 - 修正公告关闭 X 的卡片内位置
 
 - 环境：公司电脑 Codex

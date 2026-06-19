@@ -34,6 +34,9 @@ npm start
 ```bash
 BETFAIR_APP_KEY=你的 App Key
 BETFAIR_SESSION_TOKEN=当前有效 SSOID
+WECHAT_APP_ID=你的小程序 AppID
+WECHAT_APP_SECRET=你的小程序 AppSecret
+PUBLIC_BASE_URL=https://你的服务器 HTTPS 域名
 ```
 
 长期稳定运行时，建议配置证书登录：
@@ -79,6 +82,28 @@ curl "http://127.0.0.1:8787/api/betfair/markets?matchIds=mexico-korea-20260618"
 ```bash
 curl "http://127.0.0.1:8787/api/database/latest"
 ```
+
+用户接口：
+
+```bash
+curl -X POST http://127.0.0.1:8787/api/users/guest \
+  -H "Content-Type: application/json" \
+  -d '{"guestId":"local-device-id"}'
+
+curl -X POST http://127.0.0.1:8787/api/auth/wechat-login \
+  -H "Content-Type: application/json" \
+  -d '{"code":"wx.login 返回的 code"}'
+```
+
+小程序端保存头像和微信名时会调用：
+
+```text
+POST /api/users/me/profile
+Authorization: Bearer <token>
+multipart/form-data: avatar, nickname
+```
+
+用户资料保存在 `server/data/users.json`，头像保存在 `server/data/avatars/`。这两个路径属于运行时数据，不要提交到 Git。
 
 生成数据库快照：
 
