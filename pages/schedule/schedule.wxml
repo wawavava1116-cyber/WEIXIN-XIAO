@@ -92,12 +92,10 @@
 
   <view class="bracket-section">
     <text class="section-title-text">淘汰赛图</text>
-    <scroll-view class="bracket-scroll" scroll-x enhanced show-scrollbar="{{false}}">
-      <view class="bracket-board glass">
+    <view class="bracket-board glass">
         <view class="bracket-rounds bracket-left-rounds">
           <block wx:for="{{bracket.leftRounds}}" wx:key="key">
             <view class="bracket-round bracket-round-{{item.matches.length}}">
-              <text class="bracket-round-title">{{item.label}}</text>
               <block wx:for="{{item.matches}}" wx:for-item="match" wx:key="id">
                 <view class="bracket-match-node">
                   <view class="bracket-team-row {{match.winnerSeed === match.home.seed ? 'winner-route' : ''}}">
@@ -170,7 +168,6 @@
         <view class="bracket-rounds bracket-right-rounds">
           <block wx:for="{{bracket.rightRounds}}" wx:key="key">
             <view class="bracket-round bracket-round-{{item.matches.length}}">
-              <text class="bracket-round-title">{{item.label}}</text>
               <block wx:for="{{item.matches}}" wx:for-item="match" wx:key="id">
                 <view class="bracket-match-node">
                   <view class="bracket-team-row right {{match.winnerSeed === match.home.seed ? 'winner-route' : ''}}">
@@ -193,7 +190,6 @@
             </view>
           </block>
         </view>
-      </view>
-    </scroll-view>
+    </view>
   </view>
 </view>

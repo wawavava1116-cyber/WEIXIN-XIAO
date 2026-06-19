@@ -656,3 +656,110 @@
   border-radius: 8rpx;
   background: #050505;
 }
+
+.bracket-board {
+  grid-template-columns: minmax(0, 1fr) 76rpx minmax(0, 1fr);
+  gap: 4rpx;
+  width: 100%;
+  min-height: 548rpx;
+  box-sizing: border-box;
+  padding: 10rpx 5rpx;
+  border-color: rgba(214, 170, 76, 0.24);
+  background: #141414;
+}
+
+.bracket-rounds {
+  gap: 3rpx;
+  height: 524rpx;
+}
+
+.bracket-round-title {
+  display: none;
+}
+
+.bracket-match-node {
+  gap: 1rpx;
+  padding: 1rpx;
+  border-radius: 4rpx;
+}
+
+.bracket-match-node::after {
+  right: -4rpx;
+  width: 4rpx;
+}
+
+.bracket-right-rounds .bracket-match-node::after {
+  left: -4rpx;
+  right: auto;
+}
+
+.bracket-round-8 .bracket-match-node {
+  min-height: 42rpx;
+}
+
+.bracket-round-4 .bracket-match-node {
+  min-height: 70rpx;
+}
+
+.bracket-round-2 .bracket-match-node {
+  min-height: 116rpx;
+}
+
+.bracket-round-1 .bracket-match-node {
+  min-height: 184rpx;
+}
+
+.bracket-team-row {
+  gap: 2rpx;
+  height: 18rpx;
+  padding: 1rpx 2rpx;
+  border-radius: 4rpx;
+  font-size: 9rpx;
+}
+
+.bracket-team-row image,
+.seed-box {
+  width: 15rpx;
+  height: 10rpx;
+}
+
+.seed-box {
+  border-width: 1rpx;
+  border-radius: 3rpx;
+}
+
+.bracket-score-line {
+  min-height: 14rpx;
+  gap: 1rpx;
+  font-size: 10rpx;
+}
+
+.small-score {
+  font-size: 9rpx;
+}
+
+.bracket-center {
+  min-height: 500rpx;
+}
+
+.medal-match {
+  width: 72rpx;
+}
+
+.medal-title {
+  margin-bottom: 4rpx;
+  font-size: 11rpx;
+}
+
+.medal-node {
+  min-height: 54rpx;
+  padding: 2rpx;
+  border-width: 1rpx;
+}
+
+.bracket-logo {
+  width: 34rpx;
+  height: 43rpx;
+  margin: 8rpx 0;
+  border-radius: 6rpx;
+}

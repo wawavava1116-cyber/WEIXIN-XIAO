@@ -51,10 +51,10 @@ const ABBR = {
 }
 
 const BRACKET_SEEDS = [
-  ['A1', 'B2'], ['C1', 'D2'], ['E1', 'F2'], ['G1', 'H2'],
-  ['I1', 'J2'], ['K1', 'L2'], ['A2', 'B1'], ['C2', 'D1'],
-  ['E2', 'F1'], ['G2', 'H1'], ['I2', 'J1'], ['K2', 'L1'],
-  ['A3', 'C3'], ['B3', 'D3'], ['E3', 'G3'], ['F3', 'H3']
+  ['1E', '3ABCDF'], ['1I', '3CDFGH'], ['2A', '2B'], ['1F', '2C'],
+  ['2K', '2L'], ['1H', '2J'], ['1D', '3BEFIJ'], ['1G', '3AEHIJ'],
+  ['1C', '2F'], ['2E', '2I'], ['1A', '3CEFHI'], ['1L', '3EHIJK'],
+  ['1J', '2H'], ['2D', '2G'], ['1B', '3EFGIJ'], ['1K', '3DEIJL']
 ]
 
 function cloneMatch(match) {
@@ -248,12 +248,14 @@ function buildQualifiedTeams(groups) {
     if (!groupComplete) return
     group.table.slice(0, 3).forEach((row) => {
       const seed = `${group.key}${row.rank}`
+      const reverseSeed = `${row.rank}${group.key}`
       result[seed] = {
         seed,
         abbr: row.abbr,
         flag: row.team.flag,
         confirmed: true
       }
+      result[reverseSeed] = Object.assign({}, result[seed], { seed: reverseSeed })
     })
   })
   return result
