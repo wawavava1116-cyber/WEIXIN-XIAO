@@ -268,20 +268,181 @@ function makeBracketTeam(seed, qualifiedTeams) {
   }
 }
 
-function buildBracket(groups) {
-  const qualifiedTeams = buildQualifiedTeams(groups)
-  const ties = BRACKET_SEEDS.map((pair, index) => ({
-    id: `r32-${index}`,
-    home: makeBracketTeam(pair[0], qualifiedTeams),
-    away: makeBracketTeam(pair[1], qualifiedTeams),
-    score: '',
-    extraScore: '',
-    penaltyScore: '',
-    winner: ''
-  }))
+function makeEmptyBracketTeam(seed) {
   return {
-    left: ties.slice(0, 8),
-    right: ties.slice(8)
+    seed,
+    abbr: seed,
+    flag: '',
+    confirmed: false
+  }
+}
+
+function makePendingWinner(seed) {
+  return makeEmptyBracketTeam(seed)
+}
+
+function makeBracketTeamFromTeam(team, fallbackSeed) {
+  if (!team) return makeEmptyBracketTeam(fallbackSeed)
+  return {
+    seed: team.key || team.cn || fallbackSeed,
+    abbr: getAbbr(team) || fallbackSeed,
+    flag: team.flag || '',
+    confirmed: true
+  }
+}
+
+function getBracketScoreParts(match) {
+  const score = match && match.score ? match.score : ''
+  return getScoreParts(score)
+}
+
+function getBracketWinner(match) {
+  if (!match) return null
+  if (match.winner === 'home' || match.winner === match.home.seed || match.winner === match.home.abbr) return match.home
+  if (match.winner === 'away' || match.winner === match.away.seed || match.winner === match.away.abbr) return match.away
+  const penaltyParts = getScoreParts(match.penaltyScore)
+  if (penaltyParts) return penaltyParts[0] > penaltyParts[1] ? match.home : match.away
+  const extraParts = getScoreParts(match.extraScore)
+  if (extraParts && extraParts[0] !== extraParts[1]) return extraParts[0] > extraParts[1] ? match.home : match.away
+  const scoreParts = getBracketScoreParts(match)
+  if (scoreParts && scoreParts[0] !== scoreParts[1]) return scoreParts[0] > scoreParts[1] ? match.home : match.away
+  return null
+}
+
+function getBracketLoser(match) {
+  const winner = getBracketWinner(match)
+  if (!winner) return null
+  return winner.seed === match.home.seed ? match.away : match.home
+}
+
+function makeBracketMatch(id, home, away, source = {}) {
+  const winner = getBracketWinner({ home, away, score: source.score || '', extraScore: source.extraScore || '', penaltyScore: source.penaltyScore || '', winner: source.winner || '' })
+  return {
+    id,
+    home,
+    away,
+    score: source.score || '',
+    extraScore: source.extraScore || '',
+    penaltyScore: source.penaltyScore || '',
+    winner: source.winner || '',
+    winnerSeed: winner ? winner.seed : ''
+  }
+}
+
+function getKnockoutRoundKey(match) {
+  const text = [
+    match.knockoutRound,
+    match.round,
+    match.stage,
+    match.phase,
+    match.group,
+    match.title
+  ].map((value) => String(value || '')).join(' ')
+  if (/3\s*-\s*4|三四|季军/.test(text)) return 'third'
+  if (/决赛|final/i.test(text)) return 'final'
+  if (/32|三十二/.test(text)) return '32'
+  if (/16|十六/.test(text)) return '16'
+  if (/8|八强|1\/4|quarter/i.test(text)) return '8'
+  if (/4|四强|半决赛|semi/i.test(text)) return '4'
+  return ''
+}
+
+function buildKnockoutSourceMap(sourceMatches, reviewMap) {
+  const result = { 32: [], 16: [], 8: [], 4: [], final: [], third: [] }
+  sourceMatches.forEach((match) => {
+    const roundKey = getKnockoutRoundKey(match)
+    if (!roundKey) return
+    const review = reviewMap[match.id] || match.review || {}
+    result[roundKey].push({
+      home: makeBracketTeamFromTeam(match.home, 'TBD'),
+      away: makeBracketTeamFromTeam(match.away, 'TBD'),
+      score: review.score || match.liveScore || '',
+      extraScore: review.extraScore || match.extraScore || '',
+      penaltyScore: review.penaltyScore || match.penaltyScore || '',
+      winner: review.winner || match.winner || '',
+      sortTime: match.sortTime || review.endedAtSort || 0
+    })
+  })
+  Object.keys(result).forEach((key) => {
+    result[key].sort((a, b) => (a.sortTime || 0) - (b.sortTime || 0))
+  })
+  return result
+}
+
+function mergeBracketSource(baseHome, baseAway, source) {
+  if (!source) return { home: baseHome, away: baseAway, source: {} }
+  return {
+    home: source.home || baseHome,
+    away: source.away || baseAway,
+    source
+  }
+}
+
+function buildNextRound(previousMatches, prefix, label, roundSources = []) {
+  const matches = []
+  for (let index = 0; index < previousMatches.length; index += 2) {
+    const leftWinner = getBracketWinner(previousMatches[index])
+    const rightWinner = getBracketWinner(previousMatches[index + 1])
+    const homeSeed = `${label}${Math.floor(index / 2) + 1}A`
+    const awaySeed = `${label}${Math.floor(index / 2) + 1}B`
+    const sourceMerge = mergeBracketSource(
+      leftWinner || makePendingWinner(homeSeed),
+      rightWinner || makePendingWinner(awaySeed),
+      roundSources[Math.floor(index / 2)]
+    )
+    matches.push(makeBracketMatch(
+      `${prefix}-${Math.floor(index / 2)}`,
+      sourceMerge.home,
+      sourceMerge.away,
+      sourceMerge.source
+    ))
+  }
+  return matches
+}
+
+function buildThirdPlaceMatch(semis, source) {
+  const sourceMerge = mergeBracketSource(
+    getBracketLoser(semis[0]) || makePendingWinner('L-SF1'),
+    getBracketLoser(semis[1]) || makePendingWinner('L-SF2'),
+    source
+  )
+  return makeBracketMatch('third-place', sourceMerge.home, sourceMerge.away, sourceMerge.source)
+}
+
+function buildBracket(groups, sourceMatches, reviewMap) {
+  const qualifiedTeams = buildQualifiedTeams(groups)
+  const knockoutSources = buildKnockoutSourceMap(sourceMatches, reviewMap)
+  const round32 = BRACKET_SEEDS.map((pair, index) => makeBracketMatch(
+    `r32-${index}`,
+    knockoutSources[32][index] ? knockoutSources[32][index].home : makeBracketTeam(pair[0], qualifiedTeams),
+    knockoutSources[32][index] ? knockoutSources[32][index].away : makeBracketTeam(pair[1], qualifiedTeams),
+    knockoutSources[32][index] || {}
+  ))
+  const round16 = buildNextRound(round32, 'r16', '16', knockoutSources[16])
+  const quarters = buildNextRound(round16, 'qf', '8', knockoutSources[8])
+  const semis = buildNextRound(quarters, 'sf', '4', knockoutSources[4])
+  const finalMerge = mergeBracketSource(
+    getBracketWinner(semis[0]) || makePendingWinner('F1'),
+    getBracketWinner(semis[1]) || makePendingWinner('F2'),
+    knockoutSources.final[0]
+  )
+  const finalMatch = makeBracketMatch('final', finalMerge.home, finalMerge.away, finalMerge.source)
+  const thirdPlace = buildThirdPlaceMatch(semis, knockoutSources.third[0])
+  return {
+    leftRounds: [
+      { key: 'l16', label: '16强', matches: round32.slice(0, 8) },
+      { key: 'l8', label: '8强', matches: round16.slice(0, 4) },
+      { key: 'l4', label: '4强', matches: quarters.slice(0, 2) },
+      { key: 'l2', label: '2强', matches: semis.slice(0, 1) }
+    ],
+    rightRounds: [
+      { key: 'r2', label: '2强', matches: semis.slice(1, 2) },
+      { key: 'r4', label: '4强', matches: quarters.slice(2, 4) },
+      { key: 'r8', label: '8强', matches: round16.slice(4, 8) },
+      { key: 'r16', label: '16强', matches: round32.slice(8, 16) }
+    ],
+    final: finalMatch,
+    thirdPlace
   }
 }
 
@@ -297,7 +458,7 @@ function buildPageData(sourceMatches, selectedGroupKey) {
     })),
     selectedGroup,
     groupMatches: selectedGroup ? buildGroupMatches(sourceMatches, selectedGroup.name, reviewMap) : [],
-    bracket: buildBracket(groups)
+    bracket: buildBracket(groups, sourceMatches, reviewMap)
   }
 }
 
