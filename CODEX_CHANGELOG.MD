@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 16:18 - 修复赛程页打开失败并重做底部导航图标
+
+- 环境：公司电脑 Codex
+- 目的：修复底部导航进入赛程页时报错无法打开的问题，并替换原先观感粗糙的 tabBar 图标。
+- 涉及文件：`pages/schedule/schedule.js`、`assets/nav/home.png`、`assets/nav/home-active.png`、`assets/nav/schedule.png`、`assets/nav/schedule-active.png`、`assets/nav/prediction.png`、`assets/nav/prediction-active.png`、`assets/nav/profile.png`、`assets/nav/profile-active.png`、`CODEX_CHANGELOG.MD`
+- 主要改动：赛程页远程复盘数据改为统一通过 `getSourceReviews()` 获取，避免 `sourceReviews is not defined` 在页面初始化时直接中断；重新制作首页、赛程、预测、信息 4 组透明 PNG 线性图标，常态灰色、选中金色。
+- 数据库/赛程/复盘：未修改比赛、预测或复盘数据。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器代码，不需要重新部署轻量云服务器。
+- 验证：已用本地 wx/Page 模拟加载赛程页，确认可生成 12 个分组并默认选中 A组；已运行 `node -c` 检查赛程页、首页、详情页和远程数据库工具；已检查新图标大小均小于 4KB。
+- 后续注意：需要在微信开发者工具中重新编译预览，重点确认 tabBar 图标清晰度和赛程页进入是否正常。
+
 ## 2026-06-19 16:05 - 小程序页面改为优先读取云服务器数据库
 
 - 环境：公司电脑 Codex

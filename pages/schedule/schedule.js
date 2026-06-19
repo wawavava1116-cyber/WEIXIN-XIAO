@@ -86,11 +86,15 @@ function getGroupNumber(groupName) {
   return code >= 65 && code <= 90 ? code - 64 : 99
 }
 
-function buildReviewMap(sourceMatches) {
+function getSourceReviews() {
   const remoteDatabase = getRemoteDatabaseSync()
-  const sourceReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+  return remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
     ? remoteDatabase.finishedMatches
     : finishedMatches
+}
+
+function buildReviewMap(sourceMatches) {
+  const sourceReviews = getSourceReviews()
   const result = sourceReviews.reduce((map, review) => {
     if (review.matchId) map[review.matchId] = review
     return map
@@ -156,6 +160,7 @@ function applyScoreToRows(home, away, scoreParts) {
 }
 
 function buildStandings(sourceMatches, reviewMap) {
+  const sourceReviews = getSourceReviews()
   const groups = {}
   const sourceIds = {}
   sourceMatches.forEach((match) => {
