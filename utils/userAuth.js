@@ -1,4 +1,4 @@
-const { apiBaseUrl } = require('./serverConfig')
+const { normalizeRequestError, requestServerApi } = require('./remoteApi')
 
 const USER_TOKEN_KEY = 'worldcup_user_token'
 const USER_INFO_KEY = 'worldcup_user_info'
@@ -6,10 +6,6 @@ const GUEST_ID_KEY = 'worldcup_guest_id'
 const PROFILE_CHOICE_KEY = 'worldcup_profile_choice_done'
 const REQUEST_TIMEOUT_MS = 15000
 const UPLOAD_TIMEOUT_MS = 30000
-
-function getApiBaseUrl() {
-  return String(apiBaseUrl || '').replace(/\/$/, '')
-}
 
 function getStoredUser() {
   try {
@@ -52,33 +48,12 @@ function getOrCreateGuestId() {
 }
 
 function requestJson(path, data, token) {
-  return new Promise((resolve, reject) => {
-    const baseUrl = getApiBaseUrl()
-    if (!baseUrl) {
-      reject(new Error('API_BASE_URL_MISSING'))
-      return
-    }
-    const header = { 'content-type': 'application/json' }
-    if (token) header.Authorization = `Bearer ${token}`
-    wx.request({
-      url: `${baseUrl}${path}`,
-      method: 'POST',
-      data: data || {},
-      header,
-      timeout: REQUEST_TIMEOUT_MS,
-      success(response) {
-        const result = response.data || {}
-        if (response.statusCode >= 200 && response.statusCode < 300 && result.ok !== false) {
-          resolve(result)
-          return
-        }
-        reject(new Error(result.error || `HTTP_${response.statusCode}`))
-      },
-      fail(error) {
-        const message = error && error.errMsg ? error.errMsg : 'REQUEST_NETWORK_FAILED'
-        reject(new Error(message))
-      }
-    })
+  return requestServerApi({
+    path,
+    method: 'POST',
+    data,
+    token,
+    timeout: REQUEST_TIMEOUT_MS
   })
 }
 
@@ -138,11 +113,15 @@ function ensureWechatSession() {
 function saveUserProfile(profile) {
   const token = getStoredToken()
   if (!token) return Promise.reject(new Error('MISSING_TOKEN'))
-  const baseUrl = getApiBaseUrl()
-  if (!baseUrl) return Promise.reject(new Error('API_BASE_URL_MISSING'))
 
   if (profile.avatarTempPath) {
     return new Promise((resolve, reject) => {
+      const { apiBaseUrl } = require('./serverConfig')
+      const baseUrl = String(apiBaseUrl || '').replace(/\/$/, '')
+      if (!baseUrl) {
+        reject(new Error('API_BASE_URL_MISSING'))
+        return
+      }
       wx.uploadFile({
         url: `${baseUrl}/api/users/me/profile`,
         filePath: profile.avatarTempPath,
@@ -170,7 +149,7 @@ function saveUserProfile(profile) {
         },
         fail(error) {
           const message = error && error.errMsg ? error.errMsg : 'UPLOAD_NETWORK_FAILED'
-          reject(new Error(message))
+          reject(new Error(normalizeRequestError(message)))
         }
       })
     })

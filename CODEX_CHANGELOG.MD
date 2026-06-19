@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 00:18 - 新增云函数代理并收敛登录网络错误提示
+- 环境：公司电脑 Codex + 手机端 `request:fail errcode:-101` 反馈
+- 目的：绕开 `www.ag-shield.com` 当前被腾讯云备案拦截导致的小程序网络层失败，同时避免真机保存昵称时直接弹出微信底层网络错误长串。
+- 涉及文件：`utils/remoteApi.js`、`utils/userAuth.js`、`utils/userPredictions.js`、`utils/remoteMatchDatabase.js`、`utils/remoteBetfairMarkets.js`、`cloudfunctions/apiProxy/`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增 `apiProxy` 云函数，白名单转发小程序所需的用户、预测、小组预测、远程数据库和 Betfair 接口到云服务器 IP；小程序端新增统一 `requestServerApi`，优先调用微信云函数代理，代理不可用时再回退到原域名请求；`errcode:-101`/`ERR_CONNECTION_RESET` 显示为“服务器连接失败(-101)”，超时显示为“服务器连接超时”，域名未配置显示为“服务器域名未配置”。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：新增 `cloudfunctions/apiProxy`，需要在微信开发者工具中右键该云函数并选择“上传并部署：云端安装依赖”。
+- 服务器：未修改 `server/` 代码；云端已确认服务和 Nginx 正常，且已临时放行服务器 80/443 防火墙入口。
+- 验证：已运行 `node -c utils/remoteApi.js`、`node -c utils/userAuth.js`、`node -c utils/userPredictions.js`、`node -c utils/remoteMatchDatabase.js`、`node -c utils/remoteBetfairMarkets.js`、`node -c cloudfunctions/apiProxy/index.js`、`node -c pages/index/index.js`、`node -c pages/profile/profile.js`。
+- 后续注意：`www.ag-shield.com` 当前会跳到腾讯云备案拦截页，域名恢复备案前小程序正式版应依赖 `apiProxy`；长期仍建议完成域名备案/解封，再把前端切回正式域名直连。
+
 ## 2026-06-19 23:44 - 登录流程回退为昵称选择加静默微信身份
 - 环境：公司电脑 Codex + 手机端 `request:fail errcode:-101` 反馈
 - 目的：减少登录链路中的不稳定环节；既然当前只需要昵称和微信身份 ID，就不再从普通页面使用 `functional-page-navigator` 功能页，改为直接展示昵称选择/填写面板，保存时用 `wx.login` 静默建立用户身份。

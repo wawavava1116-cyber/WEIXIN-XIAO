@@ -1,4 +1,4 @@
-const { apiBaseUrl } = require('./serverConfig')
+const { requestServerApi } = require('./remoteApi')
 
 const CACHE_KEY = 'worldcup_betfair_market_cache'
 const CACHE_TTL = 60 * 1000
@@ -41,21 +41,18 @@ function refreshBetfairMarkets(matches, onReady, onComplete) {
   const complete = () => {
     onComplete && onComplete()
   }
-  if (!apiBaseUrl) {
-    complete()
-    return
-  }
   const cached = getCachedMarkets()
   if (cached) {
     applyBetfairMarkets(matches, cached)
     onReady && onReady(matches)
   }
   const matchIds = matches.map((match) => match.id).join(',')
-  wx.request({
-    url: `${apiBaseUrl.replace(/\/$/, '')}/api/betfair/markets?matchIds=${encodeURIComponent(matchIds)}`,
-    method: 'GET',
-    success(response) {
-      const markets = normalizeMarkets(response.data)
+  requestServerApi({
+    path: `/api/betfair/markets?matchIds=${encodeURIComponent(matchIds)}`,
+    method: 'GET'
+  })
+    .then((data) => {
+      const markets = normalizeMarkets(data)
       if (!markets) {
         complete()
         return
@@ -64,9 +61,8 @@ function refreshBetfairMarkets(matches, onReady, onComplete) {
       applyBetfairMarkets(matches, markets)
       onReady && onReady(matches)
       complete()
-    },
-    fail: complete
-  })
+    })
+    .catch(complete)
 }
 
 module.exports = { refreshBetfairMarkets, applyBetfairMarkets }

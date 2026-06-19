@@ -1,5 +1,5 @@
-const { apiBaseUrl } = require('./serverConfig')
 const { getDatabaseBadge } = require('./buildInfo')
+const { requestServerApi } = require('./remoteApi')
 
 const CACHE_KEY = 'worldcup_remote_match_database'
 const CACHE_TTL = 10 * 60 * 1000
@@ -56,25 +56,21 @@ function refreshRemoteDatabase(onReady, onComplete) {
     if (fallbackTimer) clearTimeout(fallbackTimer)
     onComplete && onComplete()
   }
-  if (!apiBaseUrl) {
-    complete()
-    return
-  }
   fallbackTimer = setTimeout(complete, 4000)
-  wx.request({
-    url: `${apiBaseUrl.replace(/\/$/, '')}/api/database/latest`,
+  requestServerApi({
+    path: '/api/database/latest',
     method: 'GET',
-    timeout: 3500,
-    success(response) {
-      const database = normalizeDatabase(response.data)
+    timeout: 3500
+  })
+    .then((data) => {
+      const database = normalizeDatabase(data)
       if (database) {
         setRemoteDatabase(database)
         onReady && onReady(database)
       }
       complete()
-    },
-    fail: complete
-  })
+    })
+    .catch(complete)
 }
 
 module.exports = {
