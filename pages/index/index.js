@@ -582,6 +582,27 @@ Page({
     })
   },
 
+  oneTapWechatLogin() {
+    wx.showLoading({ title: '正在登录' })
+    ensureWechatSession()
+      .then((session) => {
+        markProfileChoiceDone()
+        wx.hideLoading()
+        this.setData({
+          userInfo: session.user || this.data.userInfo,
+          showUserProfilePrompt: false,
+          showUserProfileForm: false,
+          showAnnouncement: false
+        })
+        wx.showToast({ title: '登录成功', icon: 'success' })
+      })
+      .catch((error) => {
+        wx.hideLoading()
+        const message = error && error.message ? error.message : '登录失败'
+        wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+      })
+  },
+
   continueAsGuest() {
     markProfileChoiceDone()
     this.setData({

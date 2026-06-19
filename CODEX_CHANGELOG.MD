@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 09:20 - 登录改为微信一键建档，资料后置编辑
+- 环境：公司电脑 Codex + 微信小程序登录流程调整
+- 目的：让用户进入小程序时先通过微信一键登录建立服务器用户 ID，无需先选择头像昵称；系统自动分配灰色头像和“微信用户+随机编号”，用户后续点击头像或昵称再编辑资料。
+- 涉及文件：`utils/userAuth.js`、`pages/index/index.wxml`、`pages/index/index.js`、`pages/profile/profile.wxml`、`pages/profile/profile.js`、`pages/profile/profile.wxss`、`server/src/userStore.js`、`server/src/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务器微信登录时自动生成默认昵称；首页资料弹层改为“微信一键登录”；个人信息页头像和昵称变成编辑入口；头像通过 `chooseAvatar` 获取后压缩并经云函数代理以 base64 保存到服务器，避免直连当前被备案拦截的域名；昵称通过 `input type="nickname"` 或手动输入后更新同一用户档案。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容；用户档案会新增默认昵称字段。
+- 云函数：继续依赖 `cloudfunctions/apiProxy` 转发用户资料保存接口；如果尚未部署，需要上传并部署该云函数。
+- 服务器：修改了 `server/` 用户登录和头像保存逻辑，需要重新部署轻量云服务器服务。
+- 验证：已运行 `node -c utils/userAuth.js`、`node -c pages/index/index.js`、`node -c pages/profile/profile.js`、`node -c server/src/userStore.js`、`node -c server/src/index.js`、`node -c cloudfunctions/apiProxy/index.js` 和服务器 `npm run check`。
+- 后续注意：默认昵称也会被视为已完成微信用户档案，用户可以直接参与预测；如果要强制用户改名，可后续增加“默认昵称”提示，但不应阻断使用。
+
 ## 2026-06-20 00:18 - 新增云函数代理并收敛登录网络错误提示
 - 环境：公司电脑 Codex + 手机端 `request:fail errcode:-101` 反馈
 - 目的：绕开 `www.ag-shield.com` 当前被腾讯云备案拦截导致的小程序网络层失败，同时避免真机保存昵称时直接弹出微信底层网络错误长串。

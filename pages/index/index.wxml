@@ -26,6 +26,18 @@
   <view class="profile-mask" wx:if="{{showUserProfilePrompt}}">
     <view class="profile-sheet">
       <view class="profile-sheet-handle"></view>
+      <text class="profile-title">微信一键登录</text>
+      <text class="profile-body">点击后使用微信身份建立用户数据，系统会先分配灰色头像和“微信用户+随机编号”。之后可以在个人信息页点击头像或名称修改。</text>
+      <view class="profile-actions">
+        <button class="profile-primary" bindtap="oneTapWechatLogin">微信一键登录</button>
+        <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="profile-mask" wx:if="{{false}}">
+    <view class="profile-sheet">
+      <view class="profile-sheet-handle"></view>
       <text class="profile-title">选择微信昵称？</text>
       <text class="profile-body">服务器会用微信身份区分用户，昵称只用于预测记录和排行榜展示。也可以直接作为游客用户浏览。</text>
       <view class="profile-actions">

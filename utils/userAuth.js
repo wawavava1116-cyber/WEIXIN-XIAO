@@ -57,6 +57,51 @@ function requestJson(path, data, token) {
   })
 }
 
+function getAvatarMime(filePath) {
+  const lower = String(filePath || '').toLowerCase()
+  if (lower.indexOf('.png') >= 0) return 'image/png'
+  if (lower.indexOf('.webp') >= 0) return 'image/webp'
+  return 'image/jpeg'
+}
+
+function readFileBase64(filePath) {
+  return new Promise((resolve, reject) => {
+    if (!filePath || !wx.getFileSystemManager) {
+      reject(new Error('AVATAR_FILE_MISSING'))
+      return
+    }
+    wx.getFileSystemManager().readFile({
+      filePath,
+      encoding: 'base64',
+      success(result) {
+        resolve(result.data || '')
+      },
+      fail(error) {
+        reject(new Error(error && error.errMsg ? normalizeRequestError(error.errMsg) : 'AVATAR_READ_FAILED'))
+      }
+    })
+  })
+}
+
+function compressAvatar(filePath) {
+  return new Promise((resolve) => {
+    if (!filePath || !wx.compressImage) {
+      resolve(filePath)
+      return
+    }
+    wx.compressImage({
+      src: filePath,
+      quality: 72,
+      success(result) {
+        resolve(result.tempFilePath || filePath)
+      },
+      fail() {
+        resolve(filePath)
+      }
+    })
+  })
+}
+
 function createLocalGuestSession() {
   const user = {
     id: getOrCreateGuestId(),
@@ -90,7 +135,9 @@ function loginWithWechat() {
         }
         loginWithWechatCode(result.code).then(resolve).catch(reject)
       },
-      fail: reject
+      fail(error) {
+        reject(new Error(error && error.errMsg ? normalizeRequestError(error.errMsg) : 'WX_LOGIN_FAILED'))
+      }
     })
   })
 }
@@ -115,48 +162,24 @@ function saveUserProfile(profile) {
   if (!token) return Promise.reject(new Error('MISSING_TOKEN'))
 
   if (profile.avatarTempPath) {
-    return new Promise((resolve, reject) => {
-      const { apiBaseUrl } = require('./serverConfig')
-      const baseUrl = String(apiBaseUrl || '').replace(/\/$/, '')
-      if (!baseUrl) {
-        reject(new Error('API_BASE_URL_MISSING'))
-        return
-      }
-      wx.uploadFile({
-        url: `${baseUrl}/api/users/me/profile`,
-        filePath: profile.avatarTempPath,
-        name: 'avatar',
-        formData: {
-          nickname: profile.nickname || '微信用户'
-        },
-        header: {
-          Authorization: `Bearer ${token}`
-        },
+    return compressAvatar(profile.avatarTempPath)
+      .then((filePath) => readFileBase64(filePath).then((avatarData) => ({ filePath, avatarData })))
+      .then((avatar) => requestServerApi({
+        path: '/api/users/me/profile',
+        method: 'POST',
+        token,
         timeout: UPLOAD_TIMEOUT_MS,
-        success(response) {
-          let result = {}
-          try {
-            result = JSON.parse(response.data || '{}')
-          } catch (error) {
-            reject(error)
-            return
-          }
-          if (response.statusCode >= 200 && response.statusCode < 300 && result.ok !== false) {
-            resolve(saveSession({ token, user: result.user }))
-            return
-          }
-          reject(new Error(result.error || 'UPLOAD_FAILED'))
-        },
-        fail(error) {
-          const message = error && error.errMsg ? error.errMsg : 'UPLOAD_NETWORK_FAILED'
-          reject(new Error(normalizeRequestError(message)))
+        data: {
+          nickname: profile.nickname || '',
+          avatarData: avatar.avatarData,
+          avatarMime: getAvatarMime(avatar.filePath)
         }
-      })
-    })
+      }))
+      .then((result) => saveSession({ token, user: result.user }))
   }
 
   return requestJson('/api/users/me/profile', {
-    nickname: profile.nickname || '微信用户',
+    nickname: profile.nickname || '',
     avatarUrl: profile.avatarUrl || ''
   }, token).then((result) => saveSession({ token, user: result.user }))
 }
@@ -165,7 +188,7 @@ function shouldAskProfileChoice() {
   try {
     if (wx.getStorageSync(PROFILE_CHOICE_KEY)) return false
     const user = getStoredUser()
-    return !(user && user.hasProfile)
+    return !(user && user.mode === 'wechat')
   } catch (error) {
     return true
   }

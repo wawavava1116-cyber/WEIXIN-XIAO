@@ -22,6 +22,10 @@ function createId(prefix) {
   return `${prefix}_${crypto.randomBytes(16).toString('hex')}`
 }
 
+function createDefaultWechatNickname() {
+  return `微信用户${crypto.randomBytes(3).toString('hex').toUpperCase()}`
+}
+
 function safeText(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength)
 }
@@ -111,6 +115,8 @@ function upsertWechatUser(sessionData) {
     mode: 'wechat',
     openid,
     unionid: safeText(sessionData.unionid, 120) || current.unionid || '',
+    nickname: current.nickname || createDefaultWechatNickname(),
+    avatarUrl: current.avatarUrl || '',
     token,
     createdAt: current.createdAt || nowIso(),
     lastLoginAt: nowIso()
@@ -146,6 +152,23 @@ function saveAvatar(userId, file) {
   return `/api/users/avatars/${filename}`
 }
 
+function saveAvatarData(userId, avatarData, avatarMime) {
+  const data = safeText(avatarData, 8 * 1024 * 1024)
+  if (!data) return ''
+  ensureAvatarDir()
+  const mime = String(avatarMime || '').toLowerCase()
+  const safeMime = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].indexOf(mime) !== -1 ? mime : 'image/jpeg'
+  const extMap = {
+    'image/jpeg': '.jpg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp'
+  }
+  const filename = `${userId}_${Date.now()}_${crypto.randomBytes(5).toString('hex')}${extMap[safeMime] || '.jpg'}`
+  fs.writeFileSync(path.join(AVATAR_DIR, filename), Buffer.from(data, 'base64'))
+  return `/api/users/avatars/${filename}`
+}
+
 function updateUserProfile(token, profile) {
   const store = readUsersStore()
   const userId = store.tokenIndex[safeText(token, 120)]
@@ -178,6 +201,7 @@ module.exports = {
   upsertWechatUser,
   getUserByToken,
   saveAvatar,
+  saveAvatarData,
   updateUserProfile,
   getAvatarFile
 }

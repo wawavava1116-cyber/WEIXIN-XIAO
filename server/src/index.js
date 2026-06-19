@@ -12,6 +12,7 @@ const {
   upsertWechatUser,
   getUserByToken,
   saveAvatar,
+  saveAvatarData,
   updateUserProfile,
   getAvatarFile
 } = require('./userStore')
@@ -371,7 +372,16 @@ async function handleRequest(req, res) {
         return
       }
       nickname = parsed.nickname || ''
-      avatarUrl = parsed.avatarUrl || ''
+      if (parsed.avatarData) {
+        const currentUser = getUserByToken(token)
+        if (!currentUser) {
+          sendJson(res, 401, { ok: false, error: 'INVALID_TOKEN' })
+          return
+        }
+        avatarUrl = saveAvatarData(currentUser.id, parsed.avatarData, parsed.avatarMime)
+      } else {
+        avatarUrl = parsed.avatarUrl || ''
+      }
     }
     const user = updateUserProfile(token, {
       nickname,
