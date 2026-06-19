@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 16:47 - 放大 tabBar 图标并改预测入口名称
+
+- 环境：公司电脑 Codex + Figma
+- 目的：按用户截图红框，把底部导航图标有效尺寸继续放大，并把预测入口改为更明确的“我的预测”。
+- 涉及文件：`app.json`、`assets/nav/home.png`、`assets/nav/home-active.png`、`assets/nav/schedule.png`、`assets/nav/schedule-active.png`、`assets/nav/prediction.png`、`assets/nav/prediction-active.png`、`assets/nav/profile.png`、`assets/nav/profile-active.png`、`CODEX_CHANGELOG.MD`
+- 主要改动：将 8 个 tabBar PNG 的有效图形区域放大到接近红框标记大小；预测图标从拼图改为箭头射中标靶；底部导航第三项文案从“预测”改为“我的预测”；同步更新 Figma 文件中的图标画板。
+- 数据库/赛程/复盘：未修改比赛、预测或复盘数据。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器代码，不需要重新部署轻量云服务器。
+- 验证：已确认 `app.json` 可解析，第三个 tab 文案字符码为“我的预测”；已生成本地预览检查图标大小和标靶图标方向。
+- 后续注意：需要在微信开发者工具中重新编译预览，重点看真机底部导航里图标是否仍被微信 tabBar 固定尺寸压缩。
+
 ## 2026-06-19 16:35 - 用 Figma 重新生成并放大底部导航图标
 
 - 环境：公司电脑 Codex + Figma

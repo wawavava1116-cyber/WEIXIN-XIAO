@@ -34,7 +34,7 @@
       },
       {
         "pagePath": "pages/prediction/prediction",
-        "text": "预测",
+        "text": "我的预测",
         "iconPath": "assets/nav/prediction.png",
         "selectedIconPath": "assets/nav/prediction-active.png"
       },
