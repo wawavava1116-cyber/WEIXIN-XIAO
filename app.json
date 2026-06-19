@@ -3,6 +3,8 @@
     "pages/index/index",
     "pages/schedule/schedule",
     "pages/prediction/prediction",
+    "pages/predictionForm/predictionForm",
+    "pages/predictionResult/predictionResult",
     "pages/profile/profile",
     "pages/favorites/favorites",
     "pages/history/history",

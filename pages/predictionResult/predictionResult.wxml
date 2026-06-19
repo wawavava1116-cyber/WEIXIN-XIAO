@@ -1,0 +1,49 @@
+<view class="safe-page prediction-result-page">
+  <block wx:if="{{prediction}}">
+    <view class="result-hero glass">
+      <text class="result-kicker">MY WORLD CUP PICKS</text>
+      <text class="result-title">我的预测结果</text>
+      <view class="result-match">
+        <view class="result-team">
+          <image src="{{prediction.home.flag}}" mode="aspectFit"></image>
+          <text>{{prediction.home.abbr}}</text>
+        </view>
+        <view class="result-time">
+          <text>{{prediction.dateText}}</text>
+          <text>{{prediction.kickoff}}</text>
+        </view>
+        <view class="result-team right">
+          <text>{{prediction.away.abbr}}</text>
+          <image src="{{prediction.away.flag}}" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+
+    <view class="result-grid">
+      <view class="result-card glass">
+        <text class="result-label">胜平负</text>
+        <text class="result-value">{{prediction.picks.result}}</text>
+      </view>
+      <view class="result-card glass">
+        <text class="result-label">备选胜平负</text>
+        <text class="result-value">{{prediction.backupText}}</text>
+      </view>
+      <view class="result-card glass wide">
+        <text class="result-label">比分</text>
+        <text class="result-value">{{prediction.scoreText}}</text>
+      </view>
+      <view class="result-card glass wide">
+        <text class="result-label">进球数</text>
+        <text class="result-value">{{prediction.goalsText}}</text>
+      </view>
+    </view>
+
+    <view class="share-panel glass">
+      <text>可使用右上角菜单转发给朋友或分享到朋友圈</text>
+    </view>
+  </block>
+
+  <view class="empty-result glass" wx:else>
+    <text>没有找到这条预测结果</text>
+  </view>
+</view>

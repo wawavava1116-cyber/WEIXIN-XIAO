@@ -1,31 +1,37 @@
 <view class="safe-page prediction-page">
-  <view class="simple-hero">
-    <text class="simple-title">预测</text>
-    <text class="simple-subtitle">集中查看胜平负、比分和进球倾向。</text>
-    <text class="simple-badge">{{databaseBadge}}</text>
+  <view class="prediction-hero">
+    <image class="prediction-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+    <view class="prediction-hero-copy">
+      <text class="prediction-kicker">MY WORLD CUP PICKS</text>
+      <text class="prediction-title">我的预测</text>
+      <text class="prediction-badge">{{databaseBadge}}</text>
+    </view>
   </view>
 
-  <block wx:for="{{matches}}" wx:key="id">
-    <navigator class="prediction-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="prediction-card-hover">
-      <view class="prediction-head">
-        <text>{{item.dateText}} · {{item.kickoff}}</text>
-        <text>{{item.home.cn}} vs {{item.away.cn}}</text>
-      </view>
-      <view class="prediction-grid">
-        <view>
-          <text class="prediction-label">倾向</text>
-          <text class="prediction-value">{{item.pick.result}}</text>
-        </view>
-        <view>
-          <text class="prediction-label">比分</text>
-          <text class="prediction-value">{{item.pick.score}}</text>
-        </view>
-        <view>
-          <text class="prediction-label">进球</text>
-          <text class="prediction-value">{{item.pick.total}}</text>
-        </view>
-      </view>
-      <text class="prediction-risk" wx:if="{{item.risk}}">{{item.risk}}</text>
-    </navigator>
-  </block>
+  <view class="prediction-section">
+    <text class="section-title-text">今天和明天未开赛比赛</text>
+    <block wx:if="{{matches.length}}">
+      <block wx:for="{{matches}}" wx:key="id">
+        <navigator class="fixture-row glass" url="{{item.formPath}}" hover-class="fixture-hover">
+          <view class="fixture-team">
+            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+            <text>{{item.home.abbr}}</text>
+          </view>
+          <view class="fixture-time">
+            <text>{{item.dateText}}</text>
+            <text>{{item.kickoff}}</text>
+            <text wx:if="{{item.savedText}}" class="saved-text">{{item.savedText}}</text>
+          </view>
+          <view class="fixture-team right">
+            <text>{{item.away.abbr}}</text>
+            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+          </view>
+          <text class="fixture-arrow">></text>
+        </navigator>
+      </block>
+    </block>
+    <view class="empty-fixtures glass" wx:else>
+      <text>今天和明天暂无可预测的未开赛比赛</text>
+    </view>
+  </view>
 </view>

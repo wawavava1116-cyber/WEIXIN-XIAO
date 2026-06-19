@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 18:12 - 我的预测改为用户自选预测与可转发结果页
+
+- 环境：公司电脑 Codex
+- 目的：把“我的预测”从系统预测展示页改成用户自行预测入口，支持选择今天和明天未开赛比赛、填写预测并生成可分享结果。
+- 涉及文件：`app.json`、`utils/userPredictions.js`、`pages/prediction/prediction.js`、`pages/prediction/prediction.wxml`、`pages/prediction/prediction.wxss`、`pages/predictionForm/`、`pages/predictionResult/`、`CODEX_CHANGELOG.MD`
+- 主要改动：我的预测首页只展示北京时间今天和明天未开赛比赛，并复用赛程页国旗、三字母队名、日期时间和箭头样式；新增预测填写页，支持选择胜平负、可选备选胜平负、最多 2 个比分、1 个进球数区间；新增预测结果页，提交后展示用户选择，并启用转发给朋友和分享到朋友圈；本地保存最近用户预测，同时分享链接携带压缩后的预测数据，朋友打开后可直接查看结果。
+- 数据库/赛程/复盘：未修改比赛预测、复盘或赛程数据；仅使用现有本地/远程未赛列表做用户预测入口。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器代码，不需要重新部署轻量云服务器。
+- 验证：已运行 `pages/prediction`、`pages/predictionForm`、`pages/predictionResult` 和 `utils/userPredictions` 的 JS 语法检查；已检查 `app.json` 与新增页面 JSON 可解析。
+- 后续注意：需要在微信开发者工具中真机预览，重点检查结果页右上角菜单是否能正常转发给朋友和分享到朋友圈，以及分享落地页是否能直接展示预测结果。
+
 ## 2026-06-19 17:36 - 按真实赛程压缩淘汰赛对阵表
 
 - 环境：公司电脑 Codex
