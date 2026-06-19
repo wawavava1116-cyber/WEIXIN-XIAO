@@ -1,6 +1,6 @@
 const { upcomingMatches } = require('../../utils/matches')
 const { getRemoteDatabaseBadge, getRemoteMatchesSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
-const { getPrediction } = require('../../utils/userPredictions')
+const { fetchPredictionDashboard, getPrediction, hasPredictionProfile } = require('../../utils/userPredictions')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
 
 const DAY = 24 * 60 * 60 * 1000
@@ -51,21 +51,73 @@ function buildPredictionMatches() {
     })
 }
 
+function buildSubmittedPrediction(item) {
+  const picks = item.picks || {}
+  const scores = Array.isArray(picks.scores) ? picks.scores : []
+  return Object.assign({}, item, {
+    resultText: `${picks.result || '--'}${picks.backup ? ` / ${picks.backup}` : ''}`,
+    scoreText: `${scores[0] || '--'} / ${scores[1] || '--'}`,
+    goalsText: picks.goals || '--'
+  })
+}
+
 Page({
   data: {
     databaseBadge: getRemoteDatabaseBadge(),
-    matches: buildPredictionMatches()
+    canPredict: hasPredictionProfile(),
+    authMessage: '',
+    matches: buildPredictionMatches(),
+    submittedPredictions: [],
+    predictionStats: {
+      accuracy: '0.0%',
+      settledCount: 0,
+      rank: null,
+      totalUsers: 0
+    }
   },
 
   onShow() {
     refreshRemoteDatabase(null, () => this.refreshPredictions())
     this.refreshPredictions()
+    this.refreshDashboard()
   },
 
   refreshPredictions() {
     this.setData({
       databaseBadge: getRemoteDatabaseBadge(),
+      canPredict: hasPredictionProfile(),
       matches: buildPredictionMatches()
+    })
+  },
+
+  refreshDashboard() {
+    if (!hasPredictionProfile()) {
+      this.setData({
+        canPredict: false,
+        authMessage: '同意使用微信头像和微信名后才能提交预测，游客无法预测。',
+        submittedPredictions: [],
+        predictionStats: {
+          accuracy: '0.0%',
+          settledCount: 0,
+          rank: null,
+          totalUsers: 0
+        }
+      })
+      return
+    }
+    fetchPredictionDashboard().then((result) => {
+      this.setData({
+        canPredict: true,
+        authMessage: '',
+        submittedPredictions: (result.predictions || []).slice(0, 10).map(buildSubmittedPrediction),
+        predictionStats: result.stats || {}
+      })
+    }).catch((error) => {
+      this.setData({
+        authMessage: error && error.message === 'PROFILE_REQUIRED'
+          ? '同意使用微信头像和微信名后才能提交预测，游客无法预测。'
+          : '暂时无法读取云端预测档案'
+      })
     })
   }
 })

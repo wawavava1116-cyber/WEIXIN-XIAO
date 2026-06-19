@@ -1,6 +1,6 @@
 const { matches, upcomingMatches } = require('../../utils/matches')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
-const { savePrediction } = require('../../utils/userPredictions')
+const { hasPredictionProfile, submitPrediction } = require('../../utils/userPredictions')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
 
 const RESULT_OPTIONS = ['主胜', '平局', '客胜']
@@ -66,6 +66,15 @@ Page({
 
   onLoad(options) {
     this.matchId = options && options.id
+    if (!hasPredictionProfile()) {
+      wx.showModal({
+        title: '需要微信资料',
+        content: '只有同意使用微信头像和微信名的用户才能提交预测，游客无法预测。',
+        showCancel: false,
+        success: () => wx.navigateBack()
+      })
+      return
+    }
     this.loadMatch()
     refreshRemoteDatabase(null, () => this.loadMatch())
   },
@@ -137,8 +146,7 @@ Page({
       return
     }
 
-    const prediction = savePrediction({
-      id: `prediction-${match.id}`,
+    submitPrediction({
       matchId: match.id,
       dateText: match.dateText,
       kickoff: match.kickoff,
@@ -160,10 +168,15 @@ Page({
         scores: this.data.selectedScores,
         goals: this.data.selectedGoals
       }
-    })
-
-    wx.navigateTo({
-      url: `/pages/predictionResult/predictionResult?id=${prediction.id}`
+    }).then((result) => {
+      wx.navigateTo({
+        url: `/pages/predictionResult/predictionResult?id=${result.prediction.id}`
+      })
+    }).catch((error) => {
+      const message = error && error.message === 'PROFILE_REQUIRED'
+        ? '请先同意使用微信头像和微信名'
+        : '提交失败，请稍后再试'
+      wx.showToast({ title: message, icon: 'none' })
     })
   }
 })

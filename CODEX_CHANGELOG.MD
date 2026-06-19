@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 18:52 - 我的预测接入用户档案、云端排名和新命中率权重
+
+- 环境：公司电脑 Codex + football-match-predictor skill
+- 目的：让“我的预测”必须使用微信头像和微信名后才能提交，游客只能浏览不能预测；把用户预测迁移到云服务器用户档案，并增加近 10 次预测准确率和全站排名。
+- 涉及文件：`utils/userPredictions.js`、`pages/prediction/`、`pages/predictionForm/predictionForm.js`、`pages/index/index.js`、`utils/matches.js`、`server/src/index.js`、`server/src/userStore.js`、`server/src/predictionStore.js`、`server/src/buildDatabaseSnapshot.js`、`server/package.json`、`server/README.md`、`AGENTS.MD`、`.codex-skills/football-match-predictor/SKILL.md`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务器新增用户预测提交、读取和排行榜接口；预测接口要求 `mode=wechat` 且已有头像昵称，游客返回 `PROFILE_REQUIRED`；预测记录写入 `server/data/predictions.json`，按最新完赛复盘结算；我的预测页展示权限提示、云端“已经预测”列表、近 10 次准确率、全站排名和已结算场次；填写页提交改为走云端接口。
+- 数据库/赛程/复盘：未新增比赛或预测内容；复盘命中率权重统一改为胜平负 50%、比分 30%、进球数 20%，并同步到首页复盘、静态数据库复盘、服务器快照和用户预测排名。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务；运行时新增 `server/data/predictions.json`，不要提交 Git。
+- 验证：已运行小程序相关 JS 语法检查、服务器 `npm run check`、服务器预测存储语法检查；已确认复盘样例按新权重重新计算，例如墨西哥 1-0 韩国为 50%，捷克 1-1 南非为 60%。
+- 后续注意：服务器部署后需重新生成或读取最新数据库快照，微信端需要重新提交体验版/审核版才能使用新的云端预测档案和排名入口。
+
 ## 2026-06-19 18:24 - 统一赛程和我的预测列表箭头样式
 
 - 环境：公司电脑 Codex

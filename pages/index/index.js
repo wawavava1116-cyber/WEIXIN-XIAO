@@ -294,7 +294,7 @@ function decorateReviewItem(review) {
   const scoreWeight = getPredictionWeight(review.scoreMainCorrect, review.scoreBackupCorrect)
   const totalCorrect = typeof review.totalCorrect === 'boolean' ? review.totalCorrect : isTotalCorrect(review.score, totalPick)
   const totalWeight = totalCorrect ? 100 : 0
-  const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + totalWeight * 0.25
+  const percentValue = resultWeight * 0.5 + scoreWeight * 0.3 + totalWeight * 0.2
   return Object.assign({}, review, {
     totalPick,
     resultMainShort: getShortResult(review.resultMain, review.home, review.away),

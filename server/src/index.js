@@ -15,6 +15,7 @@ const {
   updateUserProfile,
   getAvatarFile
 } = require('./userStore')
+const { getPredictionDashboard, saveUserPrediction } = require('./predictionStore')
 
 const PORT = Number(process.env.PORT || 8787)
 const HOST = process.env.HOST || '0.0.0.0'
@@ -70,6 +71,24 @@ function getBearerToken(req) {
   const authorization = req.headers.authorization || ''
   const match = authorization.match(/^Bearer\s+(.+)$/i)
   return match ? match[1].trim() : ''
+}
+
+function requireProfileUser(req, res) {
+  const token = getBearerToken(req)
+  if (!token) {
+    sendJson(res, 401, { ok: false, error: 'MISSING_TOKEN' })
+    return null
+  }
+  const user = getUserByToken(token)
+  if (!user) {
+    sendJson(res, 401, { ok: false, error: 'INVALID_TOKEN' })
+    return null
+  }
+  if (user.mode !== 'wechat' || !user.nickname || !user.avatarUrl) {
+    sendJson(res, 403, { ok: false, error: 'PROFILE_REQUIRED' })
+    return null
+  }
+  return user
 }
 
 function fetchJson(url) {
@@ -316,6 +335,47 @@ async function handleRequest(req, res) {
       return
     }
     sendJson(res, 200, { ok: true, user })
+    return
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/users/me/predictions') {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    sendJson(res, 200, {
+      ok: true,
+      ...getPredictionDashboard(user, snapshot)
+    })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/users/me/predictions') {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const body = await getRequestBody(req)
+    let parsed = {}
+    try {
+      parsed = body ? JSON.parse(body) : {}
+    } catch (error) {
+      sendJson(res, 400, { ok: false, error: 'INVALID_JSON' })
+      return
+    }
+    const prediction = saveUserPrediction(user, parsed)
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    sendJson(res, 200, {
+      ok: true,
+      prediction,
+      ...getPredictionDashboard(user, snapshot)
+    })
+    return
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/predictions/rankings') {
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    sendJson(res, 200, {
+      ok: true,
+      ...getPredictionDashboard({ id: '' }, snapshot)
+    })
     return
   }
 

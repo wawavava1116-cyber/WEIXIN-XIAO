@@ -105,6 +105,17 @@ multipart/form-data: avatar, nickname
 
 用户资料保存在 `server/data/users.json`，头像保存在 `server/data/avatars/`。这两个路径属于运行时数据，不要提交到 Git。
 
+用户预测接口：
+
+```text
+GET  /api/users/me/predictions
+POST /api/users/me/predictions
+GET  /api/predictions/rankings
+Authorization: Bearer <token>
+```
+
+`/api/users/me/predictions` 只允许已经同意微信头像和微信名的微信用户使用，游客会返回 `PROFILE_REQUIRED`。预测记录保存到 `server/data/predictions.json`，服务端会按最新 `/api/database/latest` 里的完赛复盘结算近 10 次预测准确率和全站排名。命中率规则为：胜平负主选 100、备选 50；比分主选 100、备选 50；进球数命中 100；最终按胜平负 50%、比分 30%、进球数 20% 加权。
+
 生成数据库快照：
 
 ```bash

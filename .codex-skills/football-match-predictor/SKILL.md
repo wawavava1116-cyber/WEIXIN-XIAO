@@ -182,16 +182,16 @@ For finished matches, use this hit-rate system:
 - Result main pick hit: 100, result backup hit: 50, result miss: 0.
 - Score main pick hit: 100, score backup hit: 50, score miss: 0.
 - Total-goals range hit: 100, total-goals miss: 0. The range must be checked against the final score total. Example: `2-3球` misses `1-0` and `0-0`, but hits `1-1`, `2-1`, `2-0`, and `3-0`.
-- Final percent uses weighted scoring: result weight 37.5%, score weight 37.5%, total-goals weight 25%.
+- Final percent uses weighted scoring: result weight 50%, score weight 30%, total-goals weight 20%.
 - Review display should be compact: result as `胜（平）`, score as `1-1（2-1）`, and total goals as `进球数 2-3球`.
 - Correct items are green; missed items are red.
 
 Examples:
 
 - Result main hit + score main hit + total-goals hit = 100%.
-- Result main hit + score backup hit + total-goals hit = 81.25%.
-- Result backup hit + score miss + total-goals hit = 43.75%.
-- Result backup hit + score backup hit + total-goals hit = 62.5%.
+- Result main hit + score backup hit + total-goals hit = 85%.
+- Result backup hit + score miss + total-goals hit = 45%.
+- Result backup hit + score backup hit + total-goals hit = 60%.
 - Both miss = 0%.
 
 Color levels:

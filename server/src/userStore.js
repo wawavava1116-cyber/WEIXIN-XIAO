@@ -172,6 +172,7 @@ function getAvatarFile(filename) {
 
 module.exports = {
   AVATAR_DIR,
+  readUsersStore,
   publicUser,
   upsertGuest,
   upsertWechatUser,

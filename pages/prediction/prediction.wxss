@@ -78,6 +78,10 @@
   color: #fff;
 }
 
+.fixture-row.disabled {
+  opacity: 0.58;
+}
+
 .fixture-hover {
   opacity: 0.92;
   transform: scale(0.99);
@@ -132,4 +136,117 @@
   font-size: 22rpx;
   font-weight: 900;
   text-align: center;
+}
+
+.auth-panel {
+  margin-bottom: 12rpx;
+  padding: 18rpx;
+  border-radius: 14rpx;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 22rpx;
+  line-height: 1.45;
+  font-weight: 900;
+  text-align: center;
+}
+
+.stats-card {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
+}
+
+.stats-card > view {
+  min-width: 0;
+  padding: 12rpx 8rpx;
+  border-radius: 12rpx;
+  background: rgba(214, 170, 76, 0.1);
+  text-align: center;
+}
+
+.stats-label,
+.stats-value {
+  display: block;
+}
+
+.stats-label {
+  color: rgba(214, 170, 76, 0.86);
+  font-size: 18rpx;
+  font-weight: 1000;
+}
+
+.stats-value {
+  margin-top: 8rpx;
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 1.1;
+  font-weight: 1000;
+}
+
+.submitted-card {
+  display: block;
+  margin-top: 10rpx;
+  padding: 16rpx;
+  border-radius: 14rpx;
+  color: #fff;
+}
+
+.submitted-top,
+.submitted-teams,
+.submitted-picks {
+  display: flex;
+  align-items: center;
+}
+
+.submitted-top {
+  justify-content: space-between;
+  gap: 10rpx;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 19rpx;
+  font-weight: 900;
+}
+
+.settled-ok {
+  color: #39d97b;
+}
+
+.settled-pending {
+  color: rgba(214, 170, 76, 0.9);
+}
+
+.submitted-teams {
+  justify-content: center;
+  gap: 12rpx;
+  margin-top: 10rpx;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 1000;
+}
+
+.submitted-teams text:nth-child(2) {
+  color: rgba(214, 170, 76, 0.8);
+  font-size: 20rpx;
+}
+
+.submitted-picks {
+  justify-content: space-between;
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
+.submitted-picks text {
+  flex: 1;
+  min-width: 0;
+  padding: 9rpx 8rpx;
+  border-radius: 10rpx;
+  color: #050505;
+  background: rgba(214, 170, 76, 0.92);
+  font-size: 20rpx;
+  line-height: 1.15;
+  font-weight: 1000;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

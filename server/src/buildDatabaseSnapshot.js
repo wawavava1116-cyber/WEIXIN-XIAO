@@ -155,9 +155,9 @@ function buildReviewFromFinishedMatch(match) {
   const scoreBackupCorrect = match.liveScore === scoreBackup
   const totalCorrect = isTotalCorrect(match.liveScore, totalPick)
   const percentValue =
-    getPredictionWeight(resultMainCorrect, resultBackupCorrect) * 0.375 +
-    getPredictionWeight(scoreMainCorrect, scoreBackupCorrect) * 0.375 +
-    (totalCorrect ? 100 : 0) * 0.25
+    getPredictionWeight(resultMainCorrect, resultBackupCorrect) * 0.5 +
+    getPredictionWeight(scoreMainCorrect, scoreBackupCorrect) * 0.3 +
+    (totalCorrect ? 100 : 0) * 0.2
 
   return {
     id: `${match.id}-server-review`,
