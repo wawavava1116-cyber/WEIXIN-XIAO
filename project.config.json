@@ -30,6 +30,34 @@
       {
         "type": "folder",
         "value": ".codex-skills"
+      },
+      {
+        "type": "file",
+        "value": "AGENTS.MD"
+      },
+      {
+        "type": "file",
+        "value": "README.MD"
+      },
+      {
+        "type": "file",
+        "value": "TODO.MD"
+      },
+      {
+        "type": "file",
+        "value": "CODEX_CHANGELOG.MD"
+      },
+      {
+        "type": "file",
+        "value": "CODEX_HANDOFF_2026-06-14.MD"
+      },
+      {
+        "type": "file",
+        "value": "package.json"
+      },
+      {
+        "type": "file",
+        "value": "package-lock.json"
       }
     ],
     "include": []
