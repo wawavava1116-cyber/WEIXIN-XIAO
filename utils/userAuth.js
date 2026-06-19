@@ -117,13 +117,17 @@ function loginWithWechat() {
           reject(new Error('WX_LOGIN_NO_CODE'))
           return
         }
-        requestJson('/api/auth/wechat-login', { code: result.code })
-          .then((payload) => resolve(saveSession(payload)))
-          .catch(reject)
+        loginWithWechatCode(result.code).then(resolve).catch(reject)
       },
       fail: reject
     })
   })
+}
+
+function loginWithWechatCode(code) {
+  if (!code) return Promise.reject(new Error('WX_LOGIN_NO_CODE'))
+  return requestJson('/api/auth/wechat-login', { code })
+    .then(saveSession)
 }
 
 function ensureWechatSession() {
@@ -146,32 +150,23 @@ function isDefaultWechatProfile(userInfo) {
   return !nickname || DEFAULT_WECHAT_NICKNAMES[nickname] || isDefaultWechatAvatar(avatarUrl)
 }
 
-function requestWechatProfile() {
-  return new Promise((resolve, reject) => {
-    if (!wx.getUserProfile) {
-      reject(new Error('WECHAT_PROFILE_API_UNAVAILABLE'))
-      return
-    }
-    wx.getUserProfile({
-      desc: '用于保存你的预测资料和排行榜头像昵称',
-      lang: 'zh_CN',
-      success(result) {
-        const userInfo = result && result.userInfo ? result.userInfo : null
-        if (!userInfo || isDefaultWechatProfile(userInfo)) {
-          reject(new Error('WECHAT_PROFILE_SELECTION_REQUIRED'))
-          return
-        }
-        resolve({
-          nickname: String(userInfo.nickName || '').trim(),
-          avatarUrl: userInfo.avatarUrl || ''
-        })
-      },
-      fail(error) {
-        const message = error && error.errMsg ? error.errMsg : 'WECHAT_PROFILE_AUTH_FAILED'
-        reject(new Error(message))
-      }
-    })
-  })
+function getWechatProfileFromUserInfo(userInfo) {
+  if (!userInfo || isDefaultWechatProfile(userInfo)) {
+    return null
+  }
+  return {
+    nickname: String(userInfo.nickName || '').trim(),
+    avatarUrl: userInfo.avatarUrl || ''
+  }
+}
+
+function saveFunctionalWechatProfile(detail) {
+  const profile = getWechatProfileFromUserInfo(detail && detail.userInfo)
+  if (!profile) {
+    return Promise.reject(new Error('WECHAT_PROFILE_SELECTION_REQUIRED'))
+  }
+  return loginWithWechatCode(detail && detail.code)
+    .then(() => saveUserProfile(profile))
 }
 
 function saveUserProfile(profile) {
@@ -245,7 +240,8 @@ module.exports = {
   ensureWechatSession,
   loginAsGuest,
   loginWithWechat,
-  requestWechatProfile,
+  loginWithWechatCode,
+  saveFunctionalWechatProfile,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone

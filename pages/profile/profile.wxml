@@ -12,8 +12,19 @@
 
   <view class="profile-card glass">
     <text class="profile-card-title">账号状态</text>
-    <text class="profile-card-text">{{profile.hasProfile ? '已保存微信头像和微信名。' : '当前资料未完善。点击后先选择微信头像和昵称，保存时再建立微信身份。'}}</text>
-    <button wx:if="{{profile.canCompleteProfile && !showProfileForm}}" class="profile-login-button" bindtap="startProfileSetup">完善微信资料</button>
+    <text class="profile-card-text">{{profile.hasProfile ? '已保存微信头像和微信名。' : '当前资料未完善。点击后将打开微信提供的头像昵称选择页。'}}</text>
+    <functional-page-navigator
+      wx:if="{{profile.canCompleteProfile && !showProfileForm}}"
+      class="profile-functional-navigator"
+      name="loginAndGetUserInfo"
+      args="{{wechatProfileArgs}}"
+      version="release"
+      bind:success="onWechatProfileSuccess"
+      bind:fail="onWechatProfileFail"
+      bind:cancel="onWechatProfileCancel"
+    >
+      <button class="profile-login-button" loading="{{savingProfile}}">完善微信资料</button>
+    </functional-page-navigator>
     <view wx:if="{{showProfileForm}}" class="wechat-profile-form">
       <text class="profile-card-text">请选择微信头像和昵称。</text>
       <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">

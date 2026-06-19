@@ -2,7 +2,7 @@ const {
   ensureWechatSession,
   getStoredUser,
   markProfileChoiceDone,
-  requestWechatProfile,
+  saveFunctionalWechatProfile,
   saveUserProfile
 } = require('../../utils/userAuth')
 const { fetchPredictionDashboard, hasPredictionProfile } = require('../../utils/userPredictions')
@@ -23,6 +23,7 @@ Page({
     profile: getProfile(),
     medals: { gold: 0, silver: 0, bronze: 0 },
     showProfileForm: false,
+    wechatProfileArgs: { withCredentials: true, lang: 'zh_CN', timeout: 15000 },
     profileNickname: '',
     profileAvatarTempPath: '',
     savingProfile: false
@@ -43,14 +44,11 @@ Page({
     }).catch(() => {})
   },
 
-  startProfileSetup() {
+  onWechatProfileSuccess(event) {
     if (this.data.savingProfile) return
     this.setData({ savingProfile: true })
-    requestWechatProfile()
-      .then((profile) => {
-        wx.showLoading({ title: '正在保存' })
-        return ensureWechatSession().then(() => saveUserProfile(profile))
-      })
+    wx.showLoading({ title: '正在保存' })
+    saveFunctionalWechatProfile(event.detail || {})
       .then(() => {
         markProfileChoiceDone()
         wx.hideLoading()
@@ -71,6 +69,18 @@ Page({
         }
         this.showManualProfileForm()
       })
+  },
+
+  onWechatProfileFail(event) {
+    const message = event && event.detail && event.detail.errMsg ? event.detail.errMsg : ''
+    if (message && !message.includes('cancel')) {
+      wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+    }
+    this.showManualProfileForm()
+  },
+
+  onWechatProfileCancel() {
+    this.showManualProfileForm()
   },
 
   showManualProfileForm() {

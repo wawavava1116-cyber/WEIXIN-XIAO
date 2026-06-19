@@ -8,7 +8,7 @@ const {
   getStoredUser,
   ensureWechatSession,
   loginAsGuest,
-  requestWechatProfile,
+  saveFunctionalWechatProfile,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone
@@ -463,6 +463,7 @@ Page({
     showAnnouncement: false,
     showUserProfilePrompt: false,
     showUserProfileForm: false,
+    wechatProfileArgs: { withCredentials: true, lang: 'zh_CN', timeout: 15000 },
     userInfo: getStoredUser() || { mode: 'guest', nickname: '游客用户', avatarUrl: '' },
     profileNickname: '',
     profileAvatarTempPath: '',
@@ -574,12 +575,9 @@ Page({
     this.setData({ showAnnouncement: false })
   },
 
-  useWechatProfile() {
-    requestWechatProfile()
-      .then((profile) => {
-        wx.showLoading({ title: '正在保存' })
-        return ensureWechatSession().then(() => saveUserProfile(profile))
-      })
+  onWechatProfileSuccess(event) {
+    wx.showLoading({ title: '正在保存' })
+    saveFunctionalWechatProfile(event.detail || {})
       .then((session) => {
         markProfileChoiceDone()
         wx.hideLoading()
@@ -599,6 +597,18 @@ Page({
         }
         this.showManualProfileForm()
       })
+  },
+
+  onWechatProfileFail(event) {
+    const message = event && event.detail && event.detail.errMsg ? event.detail.errMsg : ''
+    if (message && !message.includes('cancel')) {
+      wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+    }
+    this.showManualProfileForm()
+  },
+
+  onWechatProfileCancel() {
+    this.showManualProfileForm()
   },
 
   showManualProfileForm() {

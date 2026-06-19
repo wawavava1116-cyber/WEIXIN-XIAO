@@ -247,6 +247,10 @@
   margin-top: 24rpx;
 }
 
+.profile-functional-navigator {
+  display: block;
+}
+
 .profile-primary,
 .profile-secondary,
 .avatar-picker {

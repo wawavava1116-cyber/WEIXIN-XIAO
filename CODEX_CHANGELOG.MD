@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-19 21:54 - 改用微信功能页插件方式获取头像昵称
+- 环境：公司电脑 Codex + 微信官方功能页文档
+- 目的：按用户指出的官方文档，将头像昵称获取入口从 `wx.getUserProfile` 改为 `functional-page-navigator` 的 `loginAndGetUserInfo` 功能页，调起微信原生“你的昵称、头像”选择界面。
+- 涉及文件：`utils/userAuth.js`、`pages/index/index.js`、`pages/index/index.wxml`、`pages/index/index.wxss`、`pages/profile/profile.js`、`pages/profile/profile.wxml`、`pages/profile/profile.wxss`、`CODEX_CHANGELOG.MD`
+- 主要改动：首页资料弹层和个人信息页登录按钮改为官方 `functional-page-navigator` 组件，传入 `withCredentials/lang/timeout` 参数并监听 `success/fail/cancel`；成功返回后使用功能页 `code` 建立微信身份，再保存返回的 `userInfo.nickName/avatarUrl`；取消或失败时回退到现有 `chooseAvatar` + `type="nickname"` 手动选择面板；移除页面入口对旧 `wx.getUserProfile` 的依赖。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改 `server/` 代码，不需要重新部署轻量云服务器服务。
+- 验证：已运行 `node -c utils/userAuth.js`、`node -c pages/index/index.js`、`node -c pages/profile/profile.js`。
+- 后续注意：微信官方文档说明 `functional-page-navigator` 仅在插件中有效，且功能页跳转不支持开发者工具调试，需要真机测试；如真机提示组件场景不支持，需要将该入口封装到插件组件内。
+
 ## 2026-06-19 21:36 - 资料登录入口优先调用微信原生头像昵称授权页
 - 环境：公司电脑 Codex + 手机端截图反馈
 - 目的：按用户提供的微信原生界面示例，调整“完善微信资料”流程，点击后优先调起微信自己的昵称头像授权/选择界面，而不是直接进入小程序自定义资料表单。
