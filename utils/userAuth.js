@@ -6,10 +6,6 @@ const GUEST_ID_KEY = 'worldcup_guest_id'
 const PROFILE_CHOICE_KEY = 'worldcup_profile_choice_done'
 const REQUEST_TIMEOUT_MS = 15000
 const UPLOAD_TIMEOUT_MS = 30000
-const DEFAULT_WECHAT_NICKNAMES = {
-  '微信用户': true,
-  'WeChat User': true
-}
 
 function getApiBaseUrl() {
   return String(apiBaseUrl || '').replace(/\/$/, '')
@@ -139,30 +135,6 @@ function ensureWechatSession() {
   return loginWithWechat()
 }
 
-function isDefaultWechatProfile(userInfo) {
-  const nickname = String(userInfo && userInfo.nickName ? userInfo.nickName : '').trim()
-  return !nickname || DEFAULT_WECHAT_NICKNAMES[nickname]
-}
-
-function getWechatProfileFromUserInfo(userInfo) {
-  if (!userInfo || isDefaultWechatProfile(userInfo)) {
-    return null
-  }
-  return {
-    nickname: String(userInfo.nickName || '').trim(),
-    avatarUrl: userInfo.avatarUrl || ''
-  }
-}
-
-function saveFunctionalWechatProfile(detail) {
-  const profile = getWechatProfileFromUserInfo(detail && detail.userInfo)
-  if (!profile) {
-    return Promise.reject(new Error('WECHAT_PROFILE_SELECTION_REQUIRED'))
-  }
-  return loginWithWechatCode(detail && detail.code)
-    .then(() => saveUserProfile(profile))
-}
-
 function saveUserProfile(profile) {
   const token = getStoredToken()
   if (!token) return Promise.reject(new Error('MISSING_TOKEN'))
@@ -235,7 +207,6 @@ module.exports = {
   loginAsGuest,
   loginWithWechat,
   loginWithWechatCode,
-  saveFunctionalWechatProfile,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone

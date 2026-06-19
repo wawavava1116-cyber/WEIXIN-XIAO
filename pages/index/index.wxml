@@ -29,17 +29,7 @@
       <text class="profile-title">选择微信昵称？</text>
       <text class="profile-body">服务器会用微信身份区分用户，昵称只用于预测记录和排行榜展示。也可以直接作为游客用户浏览。</text>
       <view class="profile-actions">
-        <functional-page-navigator
-          class="profile-functional-navigator"
-          name="loginAndGetUserInfo"
-          args="{{wechatProfileArgs}}"
-          version="release"
-          bind:success="onWechatProfileSuccess"
-          bind:fail="onWechatProfileFail"
-          bind:cancel="onWechatProfileCancel"
-        >
-          <button class="profile-primary">选择微信昵称</button>
-        </functional-page-navigator>
+        <button class="profile-primary" bindtap="showManualProfileForm">选择微信昵称</button>
         <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>
       </view>
     </view>

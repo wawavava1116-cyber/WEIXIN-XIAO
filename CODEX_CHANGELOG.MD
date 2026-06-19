@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-19 23:44 - 登录流程回退为昵称选择加静默微信身份
+- 环境：公司电脑 Codex + 手机端 `request:fail errcode:-101` 反馈
+- 目的：减少登录链路中的不稳定环节；既然当前只需要昵称和微信身份 ID，就不再从普通页面使用 `functional-page-navigator` 功能页，改为直接展示昵称选择/填写面板，保存时用 `wx.login` 静默建立用户身份。
+- 涉及文件：`utils/userAuth.js`、`pages/index/index.js`、`pages/index/index.wxml`、`pages/profile/profile.js`、`pages/profile/profile.wxml`、`CODEX_CHANGELOG.MD`
+- 主要改动：首页和个人信息页“选择微信昵称”按钮直接打开昵称输入面板；移除功能页组件的 success/fail/cancel 逻辑和 `saveFunctionalWechatProfile`；保存昵称时仍调用服务器 `/api/auth/wechat-login` 和 `/api/users/me/profile`，由服务器 openid/token 区分用户。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改 `server/` 代码，但排查过程中调整了线上 Nginx 连接参数并清空一次自动封禁链。
+- 验证：已运行 `node -c utils/userAuth.js`、`node -c pages/index/index.js`、`node -c pages/profile/profile.js`、`node -c utils/userPredictions.js` 和服务器 `npm run check`。
+- 后续注意：手机端如仍报 `errcode:-101`，重点排查公网 HTTPS/腾讯云安全组或证书链；该错误发生在网络层，不是昵称校验。
+
 ## 2026-06-19 23:26 - 用户资料权限改为只需要微信昵称
 - 环境：公司电脑 Codex + 用户登录流程调整
 - 目的：按用户要求取消头像必填，让服务器使用微信登录得到的 openid/token 区分每个用户，用户只需选择或填写昵称即可保存档案并参与预测。
