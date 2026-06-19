@@ -24,7 +24,8 @@
   </view>
 
   <view class="profile-mask" wx:if="{{showUserProfilePrompt}}">
-    <view class="profile-card">
+    <view class="profile-sheet">
+      <view class="profile-sheet-handle"></view>
       <text class="profile-title">使用微信资料进入？</text>
       <text class="profile-body">可以选择使用微信头像和微信名，服务器会为你建立用户数据；也可以直接作为游客用户浏览。</text>
       <view class="profile-actions">
@@ -35,7 +36,8 @@
   </view>
 
   <view class="profile-mask" wx:if="{{showUserProfileForm}}">
-    <view class="profile-card">
+    <view class="profile-sheet">
+      <view class="profile-sheet-handle"></view>
       <text class="profile-title">完善用户资料</text>
       <text class="profile-body">请选择头像并填写微信名，用于保存你的用户数据。</text>
       <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
@@ -50,6 +52,7 @@
     </view>
   </view>
 
+  <view class="home-content {{(showUserProfilePrompt || showUserProfileForm) ? 'home-content-blurred' : ''}}">
   <view class="warning-marquee">
     <text class="warning-track">⚠️ 理性观赛，远离违法赌博。本小程序内容仅供赛前信息参考，不提供任何投注服务。严禁利用预测内容参与任何形式的非法博彩。 ⚠️ 理性观赛，远离违法赌博。</text>
   </view>
@@ -205,4 +208,5 @@
       </view>
     </navigator>
   </block>
+  </view>
 </view>

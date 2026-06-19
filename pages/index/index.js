@@ -603,11 +603,11 @@ Page({
       .then((session) => {
         this.setData({
           userInfo: session.user || { mode: 'guest', nickname: '游客用户', avatarUrl: '' },
-          showAnnouncement: shouldShowAnnouncement()
+          showAnnouncement: false
         })
       })
       .catch(() => {
-        this.setData({ showAnnouncement: shouldShowAnnouncement() })
+        this.setData({ showAnnouncement: false })
       })
   },
 
@@ -638,7 +638,7 @@ Page({
         this.setData({
           userInfo: session.user || this.data.userInfo,
           showUserProfileForm: false,
-          showAnnouncement: shouldShowAnnouncement()
+          showAnnouncement: false
         })
         wx.showToast({ title: '已保存', icon: 'success' })
       })
