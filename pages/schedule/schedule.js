@@ -1,4 +1,5 @@
 const { matches, finishedMatches } = require('../../utils/matches')
+const { refreshLiveScores } = require('../../utils/liveMatchScores')
 
 const ABBR = {
   Argentina: 'ARG',
@@ -25,7 +26,7 @@ const ABBR = {
   Iraq: 'IRQ',
   Japan: 'JPN',
   Jordan: 'JOR',
-  Korea: 'KOR',
+  'Korea Republic': 'KOR',
   Mexico: 'MEX',
   Morocco: 'MAR',
   Netherlands: 'NED',
@@ -43,7 +44,6 @@ const ABBR = {
   Sweden: 'SWE',
   Switzerland: 'SUI',
   Tunisia: 'TUN',
-  Türkiye: 'TUR',
   Uruguay: 'URU',
   Uzbekistan: 'UZB',
   'United States': 'USA'
@@ -55,6 +55,14 @@ const BRACKET_SEEDS = [
   ['E2', 'F1'], ['G2', 'H1'], ['I2', 'J1'], ['K2', 'L1'],
   ['A3', 'C3'], ['B3', 'D3'], ['E3', 'G3'], ['F3', 'H3']
 ]
+
+function cloneMatch(match) {
+  return Object.assign({}, match, {
+    home: Object.assign({}, match.home),
+    away: Object.assign({}, match.away),
+    pick: match.pick ? Object.assign({}, match.pick) : match.pick
+  })
+}
 
 function getAbbr(team) {
   if (!team) return ''
@@ -77,11 +85,21 @@ function getGroupNumber(groupName) {
   return code >= 65 && code <= 90 ? code - 64 : 99
 }
 
-function buildReviewMap() {
-  return finishedMatches.reduce((result, review) => {
-    if (review.matchId) result[review.matchId] = review
-    return result
+function buildReviewMap(sourceMatches) {
+  const result = finishedMatches.reduce((map, review) => {
+    if (review.matchId) map[review.matchId] = review
+    return map
   }, {})
+  sourceMatches.forEach((match) => {
+    if (match.matchStatus === 'finished' && match.liveScore) {
+      result[match.id] = {
+        matchId: match.id,
+        score: match.liveScore,
+        endedAtSort: match.sortTime || Date.now()
+      }
+    }
+  })
+  return result
 }
 
 function getScoreParts(score) {
@@ -106,9 +124,37 @@ function makeEmptyStats(team, groupName) {
   }
 }
 
-function buildStandings(reviewMap) {
+function applyScoreToRows(home, away, scoreParts) {
+  if (!home || !away || !scoreParts) return
+  const homeGoals = scoreParts[0]
+  const awayGoals = scoreParts[1]
+  home.played += 1
+  away.played += 1
+  home.gf += homeGoals
+  home.ga += awayGoals
+  away.gf += awayGoals
+  away.ga += homeGoals
+  if (homeGoals > awayGoals) {
+    home.win += 1
+    away.loss += 1
+    home.points += 3
+  } else if (homeGoals < awayGoals) {
+    away.win += 1
+    home.loss += 1
+    away.points += 3
+  } else {
+    home.draw += 1
+    away.draw += 1
+    home.points += 1
+    away.points += 1
+  }
+}
+
+function buildStandings(sourceMatches, reviewMap) {
   const groups = {}
-  matches.forEach((match) => {
+  const sourceIds = {}
+  sourceMatches.forEach((match) => {
+    sourceIds[match.id] = true
     const groupName = match.group || '未分组'
     if (!groups[groupName]) groups[groupName] = {}
     ;[match.home, match.away].forEach((team) => {
@@ -117,36 +163,25 @@ function buildStandings(reviewMap) {
     })
   })
 
-  matches.forEach((match) => {
+  sourceMatches.forEach((match) => {
     const review = reviewMap[match.id]
     const scoreParts = review ? getScoreParts(review.score) : null
     if (!scoreParts) return
     const groupName = match.group || '未分组'
     const home = groups[groupName][match.home.key || match.home.cn]
     const away = groups[groupName][match.away.key || match.away.cn]
-    if (!home || !away) return
-    const homeGoals = scoreParts[0]
-    const awayGoals = scoreParts[1]
-    home.played += 1
-    away.played += 1
-    home.gf += homeGoals
-    home.ga += awayGoals
-    away.gf += awayGoals
-    away.ga += homeGoals
-    if (homeGoals > awayGoals) {
-      home.win += 1
-      away.loss += 1
-      home.points += 3
-    } else if (homeGoals < awayGoals) {
-      away.win += 1
-      home.loss += 1
-      away.points += 3
-    } else {
-      home.draw += 1
-      away.draw += 1
-      home.points += 1
-      away.points += 1
-    }
+    applyScoreToRows(home, away, scoreParts)
+  })
+
+  finishedMatches.forEach((review) => {
+    if (!review.matchId || sourceIds[review.matchId]) return
+    const scoreParts = getScoreParts(review.score)
+    if (!scoreParts) return
+    const groupName = review.group || '未分组'
+    if (!groups[groupName]) return
+    const home = groups[groupName][review.homeTeam] || groups[groupName][review.home]
+    const away = groups[groupName][review.awayTeam] || groups[groupName][review.away]
+    applyScoreToRows(home, away, scoreParts)
   })
 
   return Object.keys(groups)
@@ -176,14 +211,20 @@ function buildStandings(reviewMap) {
     })
 }
 
-function buildGroupMatches(groupName, reviewMap) {
-  return matches
-    .filter((match) => match.group === groupName && !reviewMap[match.id])
+function isFinishedMatch(match, reviewMap) {
+  return match.matchStatus === 'finished' || Boolean(reviewMap[match.id])
+}
+
+function buildGroupMatches(sourceMatches, groupName, reviewMap) {
+  return sourceMatches
+    .filter((match) => match.group === groupName && !isFinishedMatch(match, reviewMap))
     .sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
     .map((match) => ({
       id: match.id,
       dateText: match.dateText,
       kickoff: match.kickoff,
+      statusText: match.matchStatus === 'live' ? (match.statusText || match.phaseText || '进行中') : '',
+      isLive: match.matchStatus === 'live',
       home: Object.assign({}, match.home, { abbr: getAbbr(match.home) }),
       away: Object.assign({}, match.away, { abbr: getAbbr(match.away) }),
       hasPrediction: Boolean(match.pick && match.pick.result)
@@ -234,9 +275,9 @@ function buildBracket(groups) {
   }
 }
 
-function buildPageData(selectedGroupKey) {
-  const reviewMap = buildReviewMap()
-  const groups = buildStandings(reviewMap)
+function buildPageData(sourceMatches, selectedGroupKey) {
+  const reviewMap = buildReviewMap(sourceMatches)
+  const groups = buildStandings(sourceMatches, reviewMap)
   const selectedGroup = groups.find((group) => group.key === selectedGroupKey) || groups[0]
   return {
     groupTabs: groups.map((group) => ({
@@ -245,24 +286,73 @@ function buildPageData(selectedGroupKey) {
       active: selectedGroup && group.key === selectedGroup.key
     })),
     selectedGroup,
-    groupMatches: selectedGroup ? buildGroupMatches(selectedGroup.name, reviewMap) : [],
+    groupMatches: selectedGroup ? buildGroupMatches(sourceMatches, selectedGroup.name, reviewMap) : [],
     bracket: buildBracket(groups)
   }
 }
 
+function getBaseMatches() {
+  return matches.map(cloneMatch)
+}
+
 Page({
   data: Object.assign({
-    selectedGroupKey: 'A'
-  }, buildPageData('A')),
+    selectedGroupKey: 'A',
+    isRefreshing: false,
+    liveSyncText: '正在读取实时赛程'
+  }, buildPageData(getBaseMatches(), 'A')),
+
+  onLoad() {
+    this.sourceMatches = getBaseMatches()
+    this.refreshLiveSchedule()
+    this.scoreTimer = setInterval(() => {
+      this.refreshLiveSchedule({ silent: true })
+    }, 15000)
+  },
 
   onShow() {
     this.refreshPage(this.data.selectedGroupKey || 'A')
+    this.refreshLiveSchedule({ silent: true })
+  },
+
+  onUnload() {
+    if (this.scoreTimer) clearInterval(this.scoreTimer)
+  },
+
+  onPullDownRefresh() {
+    this.refreshLiveSchedule({ manual: true })
   },
 
   refreshPage(groupKey) {
+    const sourceMatches = this.sourceMatches && this.sourceMatches.length ? this.sourceMatches : getBaseMatches()
     this.setData(Object.assign({
       selectedGroupKey: groupKey
-    }, buildPageData(groupKey)))
+    }, buildPageData(sourceMatches, groupKey)))
+  },
+
+  refreshLiveSchedule(options = {}) {
+    const sourceMatches = getBaseMatches()
+    this.sourceMatches = sourceMatches
+    if (!options.silent) {
+      this.setData({
+        isRefreshing: true,
+        liveSyncText: '正在读取实时赛程'
+      })
+    }
+    refreshLiveScores(sourceMatches, (liveMatches) => {
+      this.sourceMatches = liveMatches
+      this.setData(Object.assign({
+        selectedGroupKey: this.data.selectedGroupKey || 'A'
+      }, buildPageData(liveMatches, this.data.selectedGroupKey || 'A')))
+    }, () => {
+      if (options.manual) wx.stopPullDownRefresh()
+      if (!options.silent) {
+        this.setData({
+          isRefreshing: false,
+          liveSyncText: '实时赛程已更新'
+        })
+      }
+    })
   },
 
   selectGroup(event) {

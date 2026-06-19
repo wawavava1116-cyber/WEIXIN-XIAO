@@ -76,6 +76,13 @@
   background: #d6aa4c;
 }
 
+.live-sync-bar {
+  margin: -4rpx 2rpx 14rpx;
+  color: rgba(214, 170, 76, 0.9);
+  font-size: 20rpx;
+  font-weight: 900;
+}
+
 .standings-card {
   padding: 14rpx;
   border-radius: 18rpx;
@@ -223,6 +230,10 @@
   line-height: 1.25;
   font-weight: 900;
   text-align: center;
+}
+
+.fixture-live-text {
+  color: #39d97b;
 }
 
 .fixture-arrow {

@@ -17,6 +17,10 @@
     </view>
   </scroll-view>
 
+  <view class="live-sync-bar" wx:if="{{isRefreshing}}">
+    <text>{{liveSyncText}}</text>
+  </view>
+
   <view class="standings-card glass">
     <view class="standings-head">
       <text>{{selectedGroup.name}}排名</text>
@@ -56,6 +60,7 @@
           <view class="fixture-time">
             <text>{{item.dateText}}</text>
             <text>{{item.kickoff}}</text>
+            <text wx:if="{{item.isLive}}" class="fixture-live-text">{{item.statusText}}</text>
           </view>
           <view class="fixture-team right">
             <text>{{item.away.abbr}}</text>
@@ -71,6 +76,7 @@
           <view class="fixture-time">
             <text>{{item.dateText}}</text>
             <text>{{item.kickoff}}</text>
+            <text wx:if="{{item.isLive}}" class="fixture-live-text">{{item.statusText}}</text>
           </view>
           <view class="fixture-team right">
             <text>{{item.away.abbr}}</text>
