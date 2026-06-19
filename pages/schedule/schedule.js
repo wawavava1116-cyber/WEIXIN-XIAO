@@ -280,8 +280,8 @@ function buildBracket(groups) {
     winner: ''
   }))
   return {
-    upper: ties.slice(0, 8),
-    lower: ties.slice(8)
+    left: ties.slice(0, 8),
+    right: ties.slice(8)
   }
 }
 

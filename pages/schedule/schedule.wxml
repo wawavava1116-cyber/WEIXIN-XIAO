@@ -66,7 +66,7 @@
             <text>{{item.away.abbr}}</text>
             <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
           </view>
-          <text class="fixture-arrow">&gt;</text>
+          <text class="fixture-arrow">></text>
         </navigator>
         <view wx:else class="fixture-row glass no-arrow">
           <view class="fixture-team">
@@ -93,50 +93,57 @@
   <view class="bracket-section">
     <text class="section-title-text">淘汰赛图</text>
     <view class="bracket-board glass">
-      <view class="bracket-half upper">
-        <block wx:for="{{bracket.upper}}" wx:key="id">
-          <view class="bracket-tie">
-            <view class="bracket-team top {{item.winner === item.home.seed ? 'winner-route' : ''}}">
-              <text>{{item.home.abbr}}</text>
-              <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
-              <view wx:else class="seed-box"></view>
+      <view class="bracket-side bracket-left">
+        <block wx:for="{{bracket.left}}" wx:key="id">
+          <view class="bracket-match">
+            <view class="bracket-pair">
+              <view class="bracket-team-row {{item.winner === item.home.seed ? 'winner-route' : ''}}">
+                <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
+                <view wx:else class="seed-box"></view>
+                <text>{{item.home.abbr}}</text>
+              </view>
+              <view class="bracket-team-row {{item.winner === item.away.seed ? 'winner-route' : ''}}">
+                <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
+                <view wx:else class="seed-box"></view>
+                <text>{{item.away.abbr}}</text>
+              </view>
             </view>
             <view class="bracket-score">
               <text>{{item.score || '-'}}</text>
               <text wx:if="{{item.extraScore}}" class="small-score">({{item.extraScore}})</text>
               <text wx:if="{{item.penaltyScore}}" class="small-score">({{item.penaltyScore}})</text>
-            </view>
-            <view class="bracket-team top {{item.winner === item.away.seed ? 'winner-route' : ''}}">
-              <text>{{item.away.abbr}}</text>
-              <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
-              <view wx:else class="seed-box"></view>
             </view>
           </view>
         </block>
       </view>
 
-      <view class="trophy-core">
-        <text class="trophy-icon">🏆</text>
-        <text>FINAL</text>
+      <view class="bracket-center">
+        <text class="champion-title">世界冠军</text>
+        <view class="champion-slot">?</view>
+        <image class="bracket-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+        <text class="final-label">决赛</text>
+        <view class="final-slot"></view>
       </view>
 
-      <view class="bracket-half lower">
-        <block wx:for="{{bracket.lower}}" wx:key="id">
-          <view class="bracket-tie">
-            <view class="bracket-team bottom {{item.winner === item.home.seed ? 'winner-route' : ''}}">
-              <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
-              <view wx:else class="seed-box"></view>
-              <text>{{item.home.abbr}}</text>
-            </view>
+      <view class="bracket-side bracket-right">
+        <block wx:for="{{bracket.right}}" wx:key="id">
+          <view class="bracket-match">
             <view class="bracket-score">
               <text>{{item.score || '-'}}</text>
               <text wx:if="{{item.extraScore}}" class="small-score">({{item.extraScore}})</text>
               <text wx:if="{{item.penaltyScore}}" class="small-score">({{item.penaltyScore}})</text>
             </view>
-            <view class="bracket-team bottom {{item.winner === item.away.seed ? 'winner-route' : ''}}">
-              <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
-              <view wx:else class="seed-box"></view>
-              <text>{{item.away.abbr}}</text>
+            <view class="bracket-pair">
+              <view class="bracket-team-row right {{item.winner === item.home.seed ? 'winner-route' : ''}}">
+                <text>{{item.home.abbr}}</text>
+                <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
+                <view wx:else class="seed-box"></view>
+              </view>
+              <view class="bracket-team-row right {{item.winner === item.away.seed ? 'winner-route' : ''}}">
+                <text>{{item.away.abbr}}</text>
+                <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
+                <view wx:else class="seed-box"></view>
+              </view>
             </view>
           </view>
         </block>
