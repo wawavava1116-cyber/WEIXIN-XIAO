@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 20:52 - 调整头像昵称流程为先选择后登录保存
+
+- 环境：公司电脑 Codex + 手机端反馈
+- 目的：修复手机端点击完善微信资料时被微信身份登录卡住的问题，让微信原生头像昵称选择先展示，保存资料时再静默建立微信身份并上传。
+- 涉及文件：`utils/userAuth.js`、`pages/index/index.js`、`pages/index/index.wxml`、`pages/profile/profile.js`、`pages/profile/profile.wxml`、`server/src/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增 `ensureWechatSession()`，仅在保存资料前保证微信身份；首页和个人信息页点击完善资料时直接展示 `chooseAvatar` 与 `type="nickname"`；请求失败时保留微信/网络真实错误提示；服务端记录微信登录失败的 `errcode/errmsg`，便于继续排查。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务。
+- 验证：已运行 `node -c pages/profile/profile.js`、`node -c pages/index/index.js`、`node -c utils/userAuth.js`、服务器 `npm run check`、页面 JSON 解析检查和 `git diff --check`。
+- 后续注意：如果手机端仍失败，直接看手机 toast 或服务器 PM2 日志中的 `[wechat-login] errcode`。
+
 ## 2026-06-19 20:34 - 服务端启动读取微信登录配置
 
 - 环境：公司电脑 Codex + 腾讯云服务器排查

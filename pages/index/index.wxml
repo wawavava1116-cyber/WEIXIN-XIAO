@@ -27,7 +27,7 @@
     <view class="profile-sheet">
       <view class="profile-sheet-handle"></view>
       <text class="profile-title">完善头像和微信名？</text>
-      <text class="profile-body">服务器会先通过微信登录能力建立用户身份；头像和微信名使用微信原生能力选择，也可以直接作为游客用户浏览。</text>
+      <text class="profile-body">头像和微信名使用微信原生能力选择；保存时会通过微信登录能力建立用户身份。也可以直接作为游客用户浏览。</text>
       <view class="profile-actions">
         <button class="profile-primary" bindtap="useWechatProfile">完善微信资料</button>
         <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>

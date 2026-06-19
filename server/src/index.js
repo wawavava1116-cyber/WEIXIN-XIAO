@@ -155,6 +155,10 @@ async function exchangeWechatCode(code) {
   const result = await fetchJson(`${apiUrl}?${params.toString()}`)
   if (!result || !result.openid) {
     const error = new Error(result && result.errmsg ? result.errmsg : 'WECHAT_LOGIN_FAILED')
+    console.error('[wechat-login]', {
+      errcode: result && result.errcode,
+      errmsg: result && result.errmsg
+    })
     error.statusCode = 502
     throw error
   }

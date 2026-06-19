@@ -70,9 +70,11 @@ function requestJson(path, data, token) {
           resolve(result)
           return
         }
-        reject(new Error(result.error || 'REQUEST_FAILED'))
+        reject(new Error(result.error || `HTTP_${response.statusCode}`))
       },
-      fail: reject
+      fail(error) {
+        reject(new Error(error && error.errMsg ? error.errMsg : 'REQUEST_NETWORK_FAILED'))
+      }
     })
   })
 }
@@ -115,6 +117,15 @@ function loginWithWechat() {
       fail: reject
     })
   })
+}
+
+function ensureWechatSession() {
+  const token = getStoredToken()
+  const user = getStoredUser()
+  if (token && user && user.mode === 'wechat') {
+    return Promise.resolve({ token, user })
+  }
+  return loginWithWechat()
 }
 
 function saveUserProfile(profile) {
@@ -182,6 +193,7 @@ function markProfileChoiceDone() {
 module.exports = {
   getStoredUser,
   getStoredToken,
+  ensureWechatSession,
   loginAsGuest,
   loginWithWechat,
   saveUserProfile,

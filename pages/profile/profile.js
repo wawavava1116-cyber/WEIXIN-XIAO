@@ -1,6 +1,6 @@
 const {
+  ensureWechatSession,
   getStoredUser,
-  loginWithWechat,
   markProfileChoiceDone,
   saveUserProfile
 } = require('../../utils/userAuth')
@@ -44,22 +44,13 @@ Page({
 
   startProfileSetup() {
     if (this.data.savingProfile) return
-    wx.showLoading({ title: '正在准备' })
-    loginWithWechat()
-      .then((session) => {
-        wx.hideLoading()
-        const user = session.user || {}
-        this.setData({
-          profile: getProfile(),
-          showProfileForm: true,
-          profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : '',
-          profileAvatarTempPath: ''
-        })
-      })
-      .catch(() => {
-        wx.hideLoading()
-        wx.showToast({ title: '微信身份暂不可用', icon: 'none' })
-      })
+    const user = getStoredUser() || {}
+    this.setData({
+      profile: getProfile(),
+      showProfileForm: true,
+      profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : '',
+      profileAvatarTempPath: ''
+    })
   },
 
   onChooseAvatar(event) {
@@ -83,7 +74,8 @@ Page({
     }
     this.setData({ savingProfile: true })
     wx.showLoading({ title: '正在保存' })
-    saveUserProfile({ nickname, avatarTempPath })
+    ensureWechatSession()
+      .then(() => saveUserProfile({ nickname, avatarTempPath }))
       .then(() => {
         markProfileChoiceDone()
         wx.hideLoading()
@@ -96,10 +88,11 @@ Page({
         this.refreshProfile()
         wx.showToast({ title: '已保存', icon: 'success' })
       })
-      .catch(() => {
+      .catch((error) => {
         wx.hideLoading()
         this.setData({ savingProfile: false })
-        wx.showToast({ title: '保存失败，请稍后再试', icon: 'none' })
+        const message = error && error.message ? error.message : '请检查域名或微信配置'
+        wx.showToast({ title: message.slice(0, 28), icon: 'none' })
       })
   }
 })

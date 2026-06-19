@@ -6,8 +6,8 @@ const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const {
   getStoredUser,
+  ensureWechatSession,
   loginAsGuest,
-  loginWithWechat,
   saveUserProfile,
   shouldAskProfileChoice,
   markProfileChoiceDone
@@ -574,22 +574,14 @@ Page({
   },
 
   useWechatProfile() {
-    wx.showLoading({ title: '正在登录' })
-    loginWithWechat()
-      .then((session) => {
-        wx.hideLoading()
-        this.setData({
-          showUserProfilePrompt: false,
-          showUserProfileForm: true,
-          userInfo: session.user || this.data.userInfo,
-          profileNickname: session.user && session.user.nickname && session.user.nickname !== '游客用户' ? session.user.nickname : ''
-        })
-      })
-      .catch(() => {
-        wx.hideLoading()
-        wx.showToast({ title: '微信登录暂不可用，已按游客进入', icon: 'none' })
-        this.continueAsGuest()
-      })
+    const user = getStoredUser() || {}
+    this.setData({
+      showUserProfilePrompt: false,
+      showUserProfileForm: true,
+      userInfo: user.mode ? user : this.data.userInfo,
+      profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : '',
+      profileAvatarTempPath: ''
+    })
   },
 
   continueAsGuest() {
@@ -630,7 +622,8 @@ Page({
       return
     }
     wx.showLoading({ title: '正在保存' })
-    saveUserProfile({ nickname, avatarTempPath })
+    ensureWechatSession()
+      .then(() => saveUserProfile({ nickname, avatarTempPath }))
       .then((session) => {
         markProfileChoiceDone()
         wx.hideLoading()
@@ -641,9 +634,10 @@ Page({
         })
         wx.showToast({ title: '已保存', icon: 'success' })
       })
-      .catch(() => {
+      .catch((error) => {
         wx.hideLoading()
-        wx.showToast({ title: '保存失败，请稍后再试', icon: 'none' })
+        const message = error && error.message ? error.message : '保存失败'
+        wx.showToast({ title: message.slice(0, 28), icon: 'none' })
       })
   },
 
