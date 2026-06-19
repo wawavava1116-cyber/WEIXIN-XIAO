@@ -68,8 +68,8 @@ Page({
     this.matchId = options && options.id
     if (!hasPredictionProfile()) {
       wx.showModal({
-        title: '需要微信资料',
-        content: '只有同意使用微信头像和微信名的用户才能提交预测，游客无法预测。',
+        title: '需要微信昵称',
+        content: '只有完成微信身份和昵称的用户才能提交预测，游客无法预测。',
         showCancel: false,
         success: () => wx.navigateBack()
       })
@@ -174,7 +174,7 @@ Page({
       })
     }).catch((error) => {
       const message = error && error.message === 'PROFILE_REQUIRED'
-        ? '请先同意使用微信头像和微信名'
+        ? '请先选择微信昵称'
         : '提交失败，请稍后再试'
       wx.showToast({ title: message, icon: 'none' })
     })

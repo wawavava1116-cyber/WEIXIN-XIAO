@@ -139,15 +139,9 @@ function ensureWechatSession() {
   return loginWithWechat()
 }
 
-function isDefaultWechatAvatar(avatarUrl) {
-  const value = String(avatarUrl || '')
-  return !value || value.includes('default_avatar') || value.includes('/132') === false && value.includes('thirdwx.qlogo.cn') === false
-}
-
 function isDefaultWechatProfile(userInfo) {
   const nickname = String(userInfo && userInfo.nickName ? userInfo.nickName : '').trim()
-  const avatarUrl = String(userInfo && userInfo.avatarUrl ? userInfo.avatarUrl : '').trim()
-  return !nickname || DEFAULT_WECHAT_NICKNAMES[nickname] || isDefaultWechatAvatar(avatarUrl)
+  return !nickname || DEFAULT_WECHAT_NICKNAMES[nickname]
 }
 
 function getWechatProfileFromUserInfo(userInfo) {

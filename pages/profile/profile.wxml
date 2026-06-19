@@ -12,7 +12,7 @@
 
   <view class="profile-card glass">
     <text class="profile-card-title">账号状态</text>
-    <text class="profile-card-text">{{profile.hasProfile ? '已保存微信头像和微信名。' : '当前资料未完善。点击后将打开微信提供的头像昵称选择页。'}}</text>
+    <text class="profile-card-text">{{profile.hasProfile ? '已保存微信昵称。' : '当前资料未完善。点击后将打开微信提供的昵称选择页；头像可不提供。'}}</text>
     <functional-page-navigator
       wx:if="{{profile.canCompleteProfile && !showProfileForm}}"
       class="profile-functional-navigator"
@@ -23,14 +23,10 @@
       bind:fail="onWechatProfileFail"
       bind:cancel="onWechatProfileCancel"
     >
-      <button class="profile-login-button" loading="{{savingProfile}}">完善微信资料</button>
+      <button class="profile-login-button" loading="{{savingProfile}}">选择微信昵称</button>
     </functional-page-navigator>
     <view wx:if="{{showProfileForm}}" class="wechat-profile-form">
-      <text class="profile-card-text">请选择微信头像和昵称。</text>
-      <button class="avatar-picker" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-        <image wx:if="{{profileAvatarTempPath}}" class="avatar-preview" src="{{profileAvatarTempPath}}" mode="aspectFill"></image>
-        <text wx:else class="avatar-placeholder">选择头像</text>
-      </button>
+      <text class="profile-card-text">请选择或填写微信昵称。</text>
       <input class="nickname-input" type="nickname" placeholder="选择或确认微信名" value="{{profileNickname}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
       <button class="profile-login-button" loading="{{savingProfile}}" bindtap="saveWechatProfile">保存资料</button>
     </view>
@@ -56,6 +52,6 @@
 
   <view class="profile-card glass">
     <text class="profile-card-title">使用说明</text>
-    <text class="profile-card-text">用户数据仅用于区分游客和微信资料用户；赛程、预测和复盘内容不因账号状态改变。</text>
+    <text class="profile-card-text">用户数据仅用于区分游客和微信昵称用户；赛程、预测和复盘内容不因账号状态改变。</text>
   </view>
 </view>

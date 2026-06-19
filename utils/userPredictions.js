@@ -10,7 +10,7 @@ function getApiBaseUrl() {
 
 function hasPredictionProfile() {
   const user = getStoredUser()
-  return Boolean(user && user.mode === 'wechat' && user.hasProfile)
+  return Boolean(user && user.mode === 'wechat' && user.nickname && user.hasProfile)
 }
 
 function requestPredictionApi(path, method, data) {

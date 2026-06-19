@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-19 23:26 - 用户资料权限改为只需要微信昵称
+- 环境：公司电脑 Codex + 用户登录流程调整
+- 目的：按用户要求取消头像必填，让服务器使用微信登录得到的 openid/token 区分每个用户，用户只需选择或填写昵称即可保存档案并参与预测。
+- 涉及文件：`utils/userAuth.js`、`utils/userPredictions.js`、`pages/index/index.js`、`pages/index/index.wxml`、`pages/profile/profile.js`、`pages/profile/profile.wxml`、`pages/prediction/`、`pages/predictionForm/`、`pages/predictionGroup/`、`server/src/index.js`、`server/src/userStore.js`、`server/README.md`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务端 `hasProfile` 和预测权限改为只校验微信用户昵称，不再要求 `avatarUrl`；首页和个人信息页兜底资料表单移除头像选择和头像必填校验，只保存昵称；功能页返回资料时只要昵称有效即可保存，头像为空也允许；预测和小组预测权限提示统一改为“完成微信身份和昵称”。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容；用户档案结构兼容旧头像字段，头像变为可选展示字段。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务。
+- 验证：已运行小程序相关 JS 语法检查、服务器 `npm run check`、`git diff --check`。
+- 后续注意：已存在的无头像但有昵称微信用户，在服务器重新部署后会自动被视为已完善资料。
+
 ## 2026-06-19 21:54 - 改用微信功能页插件方式获取头像昵称
 - 环境：公司电脑 Codex + 微信官方功能页文档
 - 目的：按用户指出的官方文档，将头像昵称获取入口从 `wx.getUserProfile` 改为 `functional-page-navigator` 的 `loginAndGetUserInfo` 功能页，调起微信原生“你的昵称、头像”选择界面。

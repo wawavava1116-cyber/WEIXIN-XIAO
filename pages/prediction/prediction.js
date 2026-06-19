@@ -129,7 +129,7 @@ Page({
     if (!hasPredictionProfile()) {
       this.setData({
         canPredict: false,
-        authMessage: '同意使用微信头像和微信名后才能提交预测，游客无法预测。',
+        authMessage: '完成微信身份和昵称后才能提交预测，游客无法预测。',
         submittedPredictions: [],
         groupSubmittedPredictions: [],
         predictionStats: {
@@ -155,7 +155,7 @@ Page({
     }).catch((error) => {
       this.setData({
         authMessage: error && error.message === 'PROFILE_REQUIRED'
-          ? '同意使用微信头像和微信名后才能提交预测，游客无法预测。'
+          ? '完成微信身份和昵称后才能提交预测，游客无法预测。'
           : '暂时无法读取云端预测档案'
       })
     })
@@ -189,7 +189,7 @@ Page({
 
   createGroup() {
     if (!hasPredictionProfile()) {
-      wx.showToast({ title: '请先同意使用微信头像和微信名', icon: 'none' })
+      wx.showToast({ title: '请先选择微信昵称', icon: 'none' })
       return
     }
     if (!this.data.selectedGroupMatchIds.length) {
@@ -212,7 +212,7 @@ Page({
       const group = result.group || {}
       wx.navigateTo({ url: `/pages/predictionGroup/predictionGroup?id=${group.id}` })
     }).catch((error) => {
-      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先同意微信资料' : '发起失败'
+      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先选择微信昵称' : '发起失败'
       wx.showToast({ title, icon: 'none' })
     })
   }

@@ -66,7 +66,7 @@ function publicUser(user) {
     mode: user.mode,
     nickname: user.nickname || '',
     avatarUrl: user.avatarUrl || '',
-    hasProfile: Boolean(user.nickname && user.avatarUrl),
+    hasProfile: Boolean(user.nickname),
     createdAt: user.createdAt,
     lastLoginAt: user.lastLoginAt,
     lastProfileUpdateAt: user.lastProfileUpdateAt || ''

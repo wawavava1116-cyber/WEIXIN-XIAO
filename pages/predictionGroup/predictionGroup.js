@@ -135,7 +135,7 @@ Page({
         members: decorateMembers(group)
       })
     }).catch((error) => {
-      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先同意微信资料' : '加入失败'
+      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先选择微信昵称' : '加入失败'
       wx.showToast({ title, icon: 'none' })
     })
   },
@@ -219,7 +219,7 @@ Page({
         members: decorateMembers(nextGroup)
       })
     }).catch((error) => {
-      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先同意微信资料' : '提交失败'
+      const title = error && error.message === 'PROFILE_REQUIRED' ? '请先选择微信昵称' : '提交失败'
       wx.showToast({ title, icon: 'none' })
     })
   },

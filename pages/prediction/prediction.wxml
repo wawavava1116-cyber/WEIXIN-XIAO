@@ -115,7 +115,7 @@
   <view class="prediction-section">
     <text class="section-title-text">发起预测小组</text>
     <view class="auth-panel glass" wx:if="{{!canPredict}}">
-      <text>同意使用微信头像和微信名后才能发起或加入预测小组。</text>
+      <text>完成微信身份和昵称后才能发起或加入预测小组。</text>
     </view>
     <view class="group-create glass" wx:else>
       <view class="group-size-row">

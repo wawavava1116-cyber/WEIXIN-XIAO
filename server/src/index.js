@@ -114,7 +114,7 @@ function requireProfileUser(req, res) {
     sendJson(res, 401, { ok: false, error: 'INVALID_TOKEN' })
     return null
   }
-  if (user.mode !== 'wechat' || !user.nickname || !user.avatarUrl) {
+  if (user.mode !== 'wechat' || !user.nickname) {
     sendJson(res, 403, { ok: false, error: 'PROFILE_REQUIRED' })
     return null
   }

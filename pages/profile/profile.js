@@ -25,7 +25,6 @@ Page({
     showProfileForm: false,
     wechatProfileArgs: { withCredentials: true, lang: 'zh_CN', timeout: 15000 },
     profileNickname: '',
-    profileAvatarTempPath: '',
     savingProfile: false
   },
 
@@ -55,7 +54,6 @@ Page({
         this.setData({
           showProfileForm: false,
           profileNickname: '',
-          profileAvatarTempPath: '',
           savingProfile: false
         })
         this.refreshProfile()
@@ -89,14 +87,7 @@ Page({
       savingProfile: false,
       profile: getProfile(),
       showProfileForm: true,
-      profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : '',
-      profileAvatarTempPath: ''
-    })
-  },
-
-  onChooseAvatar(event) {
-    this.setData({
-      profileAvatarTempPath: event.detail.avatarUrl || ''
+      profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : ''
     })
   },
 
@@ -108,22 +99,20 @@ Page({
 
   saveWechatProfile() {
     const nickname = String(this.data.profileNickname || '').trim()
-    const avatarTempPath = this.data.profileAvatarTempPath
-    if (!nickname || !avatarTempPath) {
-      wx.showToast({ title: '请先选择头像并填写微信名', icon: 'none' })
+    if (!nickname) {
+      wx.showToast({ title: '请先选择或填写微信名', icon: 'none' })
       return
     }
     this.setData({ savingProfile: true })
     wx.showLoading({ title: '正在保存' })
     ensureWechatSession()
-      .then(() => saveUserProfile({ nickname, avatarTempPath }))
+      .then(() => saveUserProfile({ nickname }))
       .then(() => {
         markProfileChoiceDone()
         wx.hideLoading()
         this.setData({
           showProfileForm: false,
           profileNickname: '',
-          profileAvatarTempPath: '',
           savingProfile: false
         })
         this.refreshProfile()

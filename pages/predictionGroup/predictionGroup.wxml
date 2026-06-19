@@ -8,7 +8,7 @@
         <text>{{statusText}}</text>
       </view>
       <button class="join-button" wx:if="{{canPredict && !group.currentUserJoined}}" bindtap="joinGroup">加入小组</button>
-      <text class="group-auth" wx:elif="{{!canPredict}}">同意使用微信头像和微信名后才能加入并预测</text>
+      <text class="group-auth" wx:elif="{{!canPredict}}">完成微信身份和昵称后才能加入并预测</text>
     </view>
 
     <view class="group-section">
