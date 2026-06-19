@@ -15,7 +15,17 @@ const {
   updateUserProfile,
   getAvatarFile
 } = require('./userStore')
-const { getPredictionDashboard, saveUserPrediction } = require('./predictionStore')
+const {
+  createPredictionGroup,
+  decorateGroup,
+  getGroupById,
+  getGroupDashboard,
+  getPredictionDashboard,
+  getUserMedals,
+  joinPredictionGroup,
+  saveGroupPredictions,
+  saveUserPrediction
+} = require('./predictionStore')
 
 const PORT = Number(process.env.PORT || 8787)
 const HOST = process.env.HOST || '0.0.0.0'
@@ -342,9 +352,14 @@ async function handleRequest(req, res) {
     const user = requireProfileUser(req, res)
     if (!user) return
     const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const dashboard = getPredictionDashboard(user, snapshot)
+    const groups = getGroupDashboard(user, snapshot)
+    const medals = getUserMedals(user, snapshot)
     sendJson(res, 200, {
       ok: true,
-      ...getPredictionDashboard(user, snapshot)
+      ...dashboard,
+      groups: groups.groups,
+      medals
     })
     return
   }
@@ -362,11 +377,74 @@ async function handleRequest(req, res) {
     }
     const prediction = saveUserPrediction(user, parsed)
     const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const dashboard = getPredictionDashboard(user, snapshot)
+    const groups = getGroupDashboard(user, snapshot)
+    const medals = getUserMedals(user, snapshot)
     sendJson(res, 200, {
       ok: true,
       prediction,
-      ...getPredictionDashboard(user, snapshot)
+      ...dashboard,
+      groups: groups.groups,
+      medals
     })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/prediction-groups') {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const body = await getRequestBody(req)
+    let parsed = {}
+    try {
+      parsed = body ? JSON.parse(body) : {}
+    } catch (error) {
+      sendJson(res, 400, { ok: false, error: 'INVALID_JSON' })
+      return
+    }
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const group = createPredictionGroup(user, parsed)
+    sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
+    return
+  }
+
+  if (req.method === 'GET' && url.pathname.startsWith('/api/prediction-groups/')) {
+    const user = getUserByToken(getBearerToken(req)) || { id: '' }
+    const groupId = decodeURIComponent(url.pathname.replace('/api/prediction-groups/', '').split('/')[0])
+    const group = getGroupById(groupId)
+    if (!group) {
+      sendJson(res, 404, { ok: false, error: 'GROUP_NOT_FOUND' })
+      return
+    }
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname.match(/^\/api\/prediction-groups\/[^/]+\/join$/)) {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const groupId = decodeURIComponent(url.pathname.split('/')[3])
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const group = joinPredictionGroup(user, groupId)
+    sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname.match(/^\/api\/prediction-groups\/[^/]+\/predictions$/)) {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const groupId = decodeURIComponent(url.pathname.split('/')[3])
+    const body = await getRequestBody(req)
+    let parsed = {}
+    try {
+      parsed = body ? JSON.parse(body) : {}
+    } catch (error) {
+      sendJson(res, 400, { ok: false, error: 'INVALID_JSON' })
+      return
+    }
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const group = saveGroupPredictions(user, groupId, parsed)
+    sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
     return
   }
 

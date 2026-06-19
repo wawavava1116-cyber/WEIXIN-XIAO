@@ -75,3 +75,47 @@
   line-height: 1.48;
   font-weight: 800;
 }
+
+.medal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+  margin-top: 14rpx;
+}
+
+.medal-cell {
+  min-width: 0;
+  padding: 14rpx 8rpx;
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.medal-cell text {
+  display: block;
+}
+
+.medal-cell text:first-child {
+  color: rgba(5, 5, 5, 0.72);
+  font-size: 19rpx;
+  font-weight: 1000;
+}
+
+.medal-cell text:last-child {
+  margin-top: 8rpx;
+  color: #050505;
+  font-size: 32rpx;
+  line-height: 1;
+  font-weight: 1000;
+}
+
+.medal-cell.gold {
+  background: #d6aa4c;
+}
+
+.medal-cell.silver {
+  background: #cfd6df;
+}
+
+.medal-cell.bronze {
+  background: #c98b52;
+}

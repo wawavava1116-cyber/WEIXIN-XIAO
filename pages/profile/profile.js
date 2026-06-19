@@ -1,4 +1,5 @@
 const { getStoredUser } = require('../../utils/userAuth')
+const { fetchPredictionDashboard, hasPredictionProfile } = require('../../utils/userPredictions')
 
 function getProfile() {
   const user = getStoredUser() || {}
@@ -12,10 +13,18 @@ function getProfile() {
 
 Page({
   data: {
-    profile: getProfile()
+    profile: getProfile(),
+    medals: { gold: 0, silver: 0, bronze: 0 }
   },
 
   onShow() {
     this.setData({ profile: getProfile() })
+    if (!hasPredictionProfile()) {
+      this.setData({ medals: { gold: 0, silver: 0, bronze: 0 } })
+      return
+    }
+    fetchPredictionDashboard().then((result) => {
+      this.setData({ medals: result.medals || { gold: 0, silver: 0, bronze: 0 } })
+    }).catch(() => {})
   }
 })

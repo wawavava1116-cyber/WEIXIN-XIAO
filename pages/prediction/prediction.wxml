@@ -89,8 +89,68 @@
         </navigator>
       </block>
     </block>
-    <view class="empty-fixtures glass" wx:elif="{{canPredict}}">
+    <block wx:if="{{canPredict && groupSubmittedPredictions.length}}">
+      <block wx:for="{{groupSubmittedPredictions}}" wx:key="id">
+        <navigator class="submitted-card group-submitted-card glass" url="{{item.path}}" hover-class="fixture-hover">
+          <view class="submitted-top">
+            <text>{{item.dateText}} · {{item.kickoff}}</text>
+            <text class="settled-pending">{{item.progressText}}</text>
+          </view>
+          <view class="submitted-teams">
+            <text>{{item.titleText}}</text>
+          </view>
+          <view class="submitted-picks">
+            <text>{{item.matchText}}</text>
+            <text>{{item.stateText}}</text>
+            <text>可修改</text>
+          </view>
+        </navigator>
+      </block>
+    </block>
+    <view class="empty-fixtures glass" wx:if="{{canPredict && !submittedPredictions.length && !groupSubmittedPredictions.length}}">
       <text>暂无已提交预测</text>
+    </view>
+  </view>
+
+  <view class="prediction-section">
+    <text class="section-title-text">发起预测小组</text>
+    <view class="auth-panel glass" wx:if="{{!canPredict}}">
+      <text>同意使用微信头像和微信名后才能发起或加入预测小组。</text>
+    </view>
+    <view class="group-create glass" wx:else>
+      <view class="group-size-row">
+        <block wx:for="{{groupSizeOptions}}" wx:key="value">
+          <button class="group-size-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectGroupSize">{{item.value}}人</button>
+        </block>
+      </view>
+      <text class="group-create-title">选择预测比赛</text>
+      <view class="group-match-list">
+        <block wx:for="{{groupMatchOptions}}" wx:key="id">
+          <view class="group-match-option {{item.selected ? 'selected' : ''}}" data-id="{{item.id}}" bindtap="toggleGroupMatch">
+            <text>{{item.home.abbr}} vs {{item.away.abbr}}</text>
+            <text>{{item.dateText}} {{item.kickoff}}</text>
+          </view>
+        </block>
+      </view>
+      <button class="group-create-button" bindtap="createGroup">发起小组预测</button>
+    </view>
+  </view>
+
+  <view class="prediction-section" wx:if="{{canPredict}}">
+    <text class="section-title-text">我的小组</text>
+    <block wx:if="{{groups.length}}">
+      <block wx:for="{{groups}}" wx:key="id">
+        <navigator class="group-card glass" url="/pages/predictionGroup/predictionGroup?id={{item.id}}" hover-class="fixture-hover">
+          <view class="group-card-top">
+            <text>{{item.size}}人预测小组</text>
+            <text>{{item.progressText}}</text>
+          </view>
+          <text class="group-card-sub">{{item.matches.length}} 场比赛 · {{item.allSettled ? '已结算' : (item.allPredicted ? '等待赛果' : '等待预测')}}</text>
+        </navigator>
+      </block>
+    </block>
+    <view class="empty-fixtures glass" wx:else>
+      <text>暂无参与的小组预测</text>
     </view>
   </view>
 </view>

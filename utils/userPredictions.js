@@ -47,6 +47,37 @@ function requestPredictionApi(path, method, data) {
   })
 }
 
+function requestPublicPredictionApi(path, method, data) {
+  return new Promise((resolve, reject) => {
+    const baseUrl = getApiBaseUrl()
+    const token = getStoredToken()
+    if (!baseUrl) {
+      reject(new Error('API_BASE_URL_MISSING'))
+      return
+    }
+    const header = {
+      'content-type': 'application/json'
+    }
+    if (token) header.Authorization = `Bearer ${token}`
+    wx.request({
+      url: `${baseUrl}${path}`,
+      method,
+      data: data || {},
+      header,
+      timeout: 5000,
+      success(response) {
+        const result = response.data || {}
+        if (response.statusCode >= 200 && response.statusCode < 300 && result.ok !== false) {
+          resolve(result)
+          return
+        }
+        reject(new Error(result.error || 'REQUEST_FAILED'))
+      },
+      fail: reject
+    })
+  })
+}
+
 function getPredictions() {
   try {
     const value = wx.getStorageSync(STORAGE_KEY)
@@ -93,6 +124,25 @@ function fetchPredictionDashboard() {
     })
 }
 
+function createPredictionGroup(payload) {
+  if (!hasPredictionProfile()) return Promise.reject(new Error('PROFILE_REQUIRED'))
+  return requestPredictionApi('/api/prediction-groups', 'POST', payload)
+}
+
+function fetchPredictionGroup(groupId) {
+  return requestPublicPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}`, 'GET')
+}
+
+function joinPredictionGroup(groupId) {
+  if (!hasPredictionProfile()) return Promise.reject(new Error('PROFILE_REQUIRED'))
+  return requestPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}/join`, 'POST')
+}
+
+function submitGroupPredictions(groupId, predictions) {
+  if (!hasPredictionProfile()) return Promise.reject(new Error('PROFILE_REQUIRED'))
+  return requestPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}/predictions`, 'POST', { predictions })
+}
+
 function getPrediction(id) {
   return getPredictions().find((item) => item.id === id) || null
 }
@@ -136,10 +186,14 @@ function decodePrediction(payload) {
 module.exports = {
   decodePrediction,
   encodePrediction,
+  createPredictionGroup,
   fetchPredictionDashboard,
+  fetchPredictionGroup,
   getPrediction,
   getPredictions,
   hasPredictionProfile,
+  joinPredictionGroup,
   savePrediction,
+  submitGroupPredictions,
   submitPrediction
 }

@@ -18,6 +18,10 @@ function createId() {
   return `pred_${crypto.randomBytes(12).toString('hex')}`
 }
 
+function createGroupId() {
+  return `grp_${crypto.randomBytes(10).toString('hex')}`
+}
+
 function safeText(value, maxLength) {
   return String(value || '').trim().slice(0, maxLength)
 }
@@ -27,10 +31,11 @@ function readPredictionStore() {
     const raw = fs.readFileSync(PREDICTIONS_FILE, 'utf8')
     const store = JSON.parse(raw)
     return {
-      predictions: Array.isArray(store.predictions) ? store.predictions : []
+      predictions: Array.isArray(store.predictions) ? store.predictions : [],
+      groups: Array.isArray(store.groups) ? store.groups : []
     }
   } catch (error) {
-    return { predictions: [] }
+    return { predictions: [], groups: [] }
   }
 }
 
@@ -38,6 +43,7 @@ function writePredictionStore(store) {
   ensureDataDir()
   const payload = {
     predictions: Array.isArray(store.predictions) ? store.predictions : [],
+    groups: Array.isArray(store.groups) ? store.groups : [],
     updatedAt: nowIso()
   }
   fs.writeFileSync(PREDICTIONS_FILE, JSON.stringify(payload, null, 2))
@@ -102,6 +108,114 @@ function saveUserPrediction(user, payload) {
   }
   writePredictionStore(store)
   return prediction
+}
+
+function normalizeGroupMatch(match) {
+  return {
+    matchId: safeText(match && (match.matchId || match.id), 120),
+    dateText: safeText(match && match.dateText, 40),
+    kickoff: safeText(match && match.kickoff, 20),
+    home: normalizeTeam(match && match.home),
+    away: normalizeTeam(match && match.away)
+  }
+}
+
+function createPredictionGroup(user, payload) {
+  const size = Number(payload && payload.size)
+  if ([2, 5, 10].indexOf(size) === -1) {
+    const err = new Error('INVALID_GROUP_SIZE')
+    err.statusCode = 400
+    throw err
+  }
+  const matches = Array.isArray(payload && payload.matches)
+    ? payload.matches.map(normalizeGroupMatch).filter((match) => match.matchId).slice(0, 12)
+    : []
+  if (!matches.length) {
+    const err = new Error('MISSING_GROUP_MATCHES')
+    err.statusCode = 400
+    throw err
+  }
+  const store = readPredictionStore()
+  const group = {
+    id: createGroupId(),
+    ownerId: user.id,
+    size,
+    matches,
+    members: [user.id],
+    predictions: {},
+    createdAt: nowIso()
+  }
+  store.groups.unshift(group)
+  writePredictionStore(store)
+  return group
+}
+
+function getGroupById(groupId) {
+  const store = readPredictionStore()
+  return store.groups.find((group) => group.id === groupId) || null
+}
+
+function joinPredictionGroup(user, groupId) {
+  const store = readPredictionStore()
+  const group = store.groups.find((item) => item.id === groupId)
+  if (!group) {
+    const err = new Error('GROUP_NOT_FOUND')
+    err.statusCode = 404
+    throw err
+  }
+  group.members = Array.isArray(group.members) ? group.members : []
+  if (group.members.indexOf(user.id) === -1) {
+    if (group.members.length >= group.size) {
+      const err = new Error('GROUP_FULL')
+      err.statusCode = 409
+      throw err
+    }
+    group.members.push(user.id)
+    group.updatedAt = nowIso()
+    writePredictionStore(store)
+  }
+  return group
+}
+
+function saveGroupPredictions(user, groupId, payload) {
+  const store = readPredictionStore()
+  const group = store.groups.find((item) => item.id === groupId)
+  if (!group) {
+    const err = new Error('GROUP_NOT_FOUND')
+    err.statusCode = 404
+    throw err
+  }
+  if ((group.members || []).indexOf(user.id) === -1) {
+    if ((group.members || []).length >= group.size) {
+      const err = new Error('GROUP_FULL')
+      err.statusCode = 409
+      throw err
+    }
+    group.members = (group.members || []).concat(user.id)
+  }
+  const byMatch = {}
+  const submitted = Array.isArray(payload && payload.predictions) ? payload.predictions : []
+  submitted.forEach((item) => {
+    const prediction = normalizePrediction(user, item)
+    const error = validatePrediction(prediction)
+    if (!error) byMatch[prediction.matchId] = prediction
+  })
+  const required = (group.matches || []).map((match) => match.matchId)
+  const complete = required.every((matchId) => byMatch[matchId])
+  if (!complete) {
+    const err = new Error('INCOMPLETE_GROUP_PREDICTIONS')
+    err.statusCode = 400
+    throw err
+  }
+  group.predictions = group.predictions || {}
+  group.predictions[user.id] = {
+    userId: user.id,
+    predictions: required.map((matchId) => byMatch[matchId]),
+    submittedAt: nowIso()
+  }
+  group.updatedAt = nowIso()
+  writePredictionStore(store)
+  return group
 }
 
 function getScoreParts(score) {
@@ -238,6 +352,94 @@ function buildUserSummaries(settledPredictions) {
     .map((item, index) => Object.assign({}, item, { rank: index + 1 }))
 }
 
+function getPublicUserMap(userIds) {
+  const usersStore = readUsersStore()
+  return userIds.reduce((map, userId) => {
+    map[userId] = publicUser(usersStore.users[userId]) || {
+      id: userId,
+      nickname: '微信用户',
+      avatarUrl: '',
+      hasProfile: false
+    }
+    return map
+  }, {})
+}
+
+function decorateGroup(group, currentUserId, snapshot) {
+  const reviewMap = buildReviewMap(snapshot)
+  const members = Array.isArray(group.members) ? group.members : []
+  const userMap = getPublicUserMap(members)
+  const predictionsByUser = group.predictions || {}
+  const doneMembers = members.filter((userId) => {
+    const entry = predictionsByUser[userId]
+    return entry && Array.isArray(entry.predictions) && entry.predictions.length >= (group.matches || []).length
+  })
+  const rows = members.map((userId) => {
+    const entry = predictionsByUser[userId]
+    const predictions = entry && Array.isArray(entry.predictions) ? entry.predictions.map((prediction) => settlePrediction(prediction, reviewMap)) : []
+    const settled = predictions.filter((prediction) => prediction.settled)
+    const accuracyValue = settled.length
+      ? settled.reduce((sum, item) => sum + Number(item.percentValue || 0), 0) / settled.length
+      : 0
+    const allSettled = predictions.length > 0 && predictions.every((prediction) => prediction.settled)
+    return {
+      userId,
+      user: userMap[userId],
+      done: doneMembers.indexOf(userId) !== -1,
+      submittedAt: entry && entry.submittedAt || '',
+      predictions,
+      settledCount: settled.length,
+      allSettled,
+      accuracyValue,
+      accuracy: formatPercent(accuracyValue)
+    }
+  })
+  const allPredicted = doneMembers.length >= group.size
+  const allSettled = allPredicted && rows.every((row) => row.allSettled)
+  let rankedRows = rows
+  if (allSettled) {
+    rankedRows = rows.slice().sort((a, b) => {
+      const diff = b.accuracyValue - a.accuracyValue
+      if (diff) return diff
+      return Date.parse(a.submittedAt || 0) - Date.parse(b.submittedAt || 0)
+    }).map((row, index) => {
+      const rank = group.size === 2 ? null : index + 1
+      const medal = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : ''
+      return Object.assign({}, row, { rank, medal })
+    })
+  }
+  return Object.assign({}, group, {
+    currentUserJoined: members.indexOf(currentUserId) !== -1,
+    currentUserDone: doneMembers.indexOf(currentUserId) !== -1,
+    doneCount: doneMembers.length,
+    progressText: `${doneMembers.length}/${group.size}`,
+    allPredicted,
+    allSettled,
+    members: rankedRows
+  })
+}
+
+function getGroupDashboard(user, snapshot) {
+  const store = readPredictionStore()
+  return {
+    groups: store.groups
+      .filter((group) => (group.members || []).indexOf(user.id) !== -1 || group.ownerId === user.id)
+      .map((group) => decorateGroup(group, user.id, snapshot))
+  }
+}
+
+function getUserMedals(user, snapshot) {
+  const store = readPredictionStore()
+  const medals = { gold: 0, silver: 0, bronze: 0 }
+  store.groups.forEach((group) => {
+    const decorated = decorateGroup(group, user.id, snapshot)
+    if (!decorated.allSettled || group.size === 2) return
+    const row = decorated.members.find((item) => item.userId === user.id)
+    if (row && row.medal && medals[row.medal] !== undefined) medals[row.medal] += 1
+  })
+  return medals
+}
+
 function getPredictionDashboard(user, snapshot) {
   const store = readPredictionStore()
   const reviewMap = buildReviewMap(snapshot)
@@ -259,6 +461,13 @@ function getPredictionDashboard(user, snapshot) {
 }
 
 module.exports = {
+  createPredictionGroup,
+  decorateGroup,
+  getGroupById,
+  getGroupDashboard,
+  getUserMedals,
   getPredictionDashboard,
+  joinPredictionGroup,
+  saveGroupPredictions,
   saveUserPrediction
 }

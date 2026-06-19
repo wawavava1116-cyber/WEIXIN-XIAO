@@ -16,6 +16,24 @@
   </view>
 
   <view class="profile-card glass">
+    <text class="profile-card-title">预测小组奖牌</text>
+    <view class="medal-grid">
+      <view class="medal-cell gold">
+        <text>金牌</text>
+        <text>{{medals.gold || 0}}</text>
+      </view>
+      <view class="medal-cell silver">
+        <text>银牌</text>
+        <text>{{medals.silver || 0}}</text>
+      </view>
+      <view class="medal-cell bronze">
+        <text>铜牌</text>
+        <text>{{medals.bronze || 0}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="profile-card glass">
     <text class="profile-card-title">使用说明</text>
     <text class="profile-card-text">用户数据仅用于区分游客和微信资料用户；赛程、预测和复盘内容不因账号状态改变。</text>
   </view>

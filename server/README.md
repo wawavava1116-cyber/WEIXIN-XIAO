@@ -116,6 +116,18 @@ Authorization: Bearer <token>
 
 `/api/users/me/predictions` 只允许已经同意微信头像和微信名的微信用户使用，游客会返回 `PROFILE_REQUIRED`。预测记录保存到 `server/data/predictions.json`，服务端会按最新 `/api/database/latest` 里的完赛复盘结算近 10 次预测准确率和全站排名。命中率规则为：胜平负主选 100、备选 50；比分主选 100、备选 50；进球数命中 100；最终按胜平负 50%、比分 30%、进球数 20% 加权。
 
+小组预测接口：
+
+```text
+POST /api/prediction-groups
+GET  /api/prediction-groups/:id
+POST /api/prediction-groups/:id/join
+POST /api/prediction-groups/:id/predictions
+Authorization: Bearer <token>（创建、加入、提交需要已同意头像昵称的微信用户）
+```
+
+小组预测同样写入 `server/data/predictions.json`。支持 2 人、5 人、10 人小组；小程序通过分享链接打开 `GET /api/prediction-groups/:id` 读取小组信息，加入和提交时再校验微信头像昵称授权。小组进度按 `已提交人数/小组人数` 返回；所有成员完成预测且比赛可结算后，5 人和 10 人小组按同一命中率规则发放金牌、银牌、铜牌，2 人小组不发排名奖牌。
+
 生成数据库快照：
 
 ```bash

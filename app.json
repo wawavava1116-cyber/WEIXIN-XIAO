@@ -5,6 +5,7 @@
     "pages/prediction/prediction",
     "pages/predictionForm/predictionForm",
     "pages/predictionResult/predictionResult",
+    "pages/predictionGroup/predictionGroup",
     "pages/profile/profile",
     "pages/favorites/favorites",
     "pages/history/history",

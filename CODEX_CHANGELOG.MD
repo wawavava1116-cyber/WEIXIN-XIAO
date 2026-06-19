@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 19:34 - 增加小组预测、邀请分享和奖牌档案
+
+- 环境：公司电脑 Codex
+- 目的：按用户要求给“我的预测”增加 2 人、5 人、10 人小组预测；支持选择可预测比赛后发起小组，通过小程序分享邀请朋友加入，并把小组预测放入“已经预测”详情栏中用“（小组预测）”区分。
+- 涉及文件：`app.json`、`utils/userPredictions.js`、`pages/prediction/`、`pages/predictionGroup/`、`pages/profile/`、`server/src/index.js`、`server/src/predictionStore.js`、`server/README.md`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务器新增小组预测创建、公开读取、加入、提交/修改接口；小程序新增小组预测详情页，支持填写和更新自己的小组预测；我的预测页新增发起小组区域，并在“已经预测”中展示已提交的小组预测，点击可回到详情页修改；个人信息页展示小组预测金银铜牌数量。
+- 数据库/赛程/复盘：未修改比赛赛程和系统预测内容；小组预测与用户预测一起写入服务器运行时 `server/data/predictions.json`，按胜平负 50%、比分 30%、进球数 20% 的规则结算。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务；分享落地读取小组详情依赖新的 `/api/prediction-groups/:id` 接口。
+- 验证：已运行 `node -c pages/prediction/prediction.js`、`node -c pages/predictionGroup/predictionGroup.js`、`node -c pages/profile/profile.js`、`node -c utils/userPredictions.js`；已运行服务器 `npm run check`、`app.json` 与新增页面 JSON 解析检查、`git diff --check`。
+- 后续注意：小程序端新增页面和交互，需要重新上传审核；服务器部署后再用体验版真机测试分享进入、加入小组、修改预测和个人信息奖牌展示。
+
 ## 2026-06-19 18:52 - 我的预测接入用户档案、云端排名和新命中率权重
 
 - 环境：公司电脑 Codex + football-match-predictor skill
