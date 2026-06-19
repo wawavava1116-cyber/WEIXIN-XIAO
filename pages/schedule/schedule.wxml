@@ -1,28 +1,140 @@
 <view class="safe-page schedule-page">
-  <view class="simple-hero">
-    <text class="simple-title">赛程</text>
-    <text class="simple-subtitle">按北京时间升序查看近 7 天比赛。</text>
-    <text class="simple-badge">{{databaseBadge}}</text>
+  <view class="schedule-hero">
+    <image class="schedule-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
+    <view class="schedule-hero-copy">
+      <text class="schedule-kicker">2026 FIFA WORLD CUP USA CANADA MEXICO</text>
+      <text class="schedule-title">2026世界杯完整赛程</text>
+    </view>
   </view>
 
-  <block wx:for="{{matches}}" wx:key="id">
-    <navigator class="schedule-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="schedule-card-hover">
-      <view class="schedule-time">
-        <text>{{item.dateText}} · {{item.kickoff}}</text>
-        <text>{{item.statusText}}</text>
-      </view>
-      <view class="schedule-teams">
-        <view class="schedule-team">
-          <image class="schedule-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
-          <text>{{item.home.cn}}</text>
+  <scroll-view class="group-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="group-tab-row">
+      <block wx:for="{{groupTabs}}" wx:key="key">
+        <view class="group-tab {{item.active ? 'group-tab-active' : ''}}" data-group="{{item.key}}" bindtap="selectGroup">
+          <text>{{item.key}}组</text>
         </view>
-        <text class="schedule-vs">VS</text>
-        <view class="schedule-team right">
-          <text>{{item.away.cn}}</text>
-          <image class="schedule-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+      </block>
+    </view>
+  </scroll-view>
+
+  <view class="standings-card glass">
+    <view class="standings-head">
+      <text>{{selectedGroup.name}}排名</text>
+      <view class="standings-cols">
+        <text>比赛</text>
+        <text>胜/平/负</text>
+        <text>进/失</text>
+        <text>积分</text>
+      </view>
+    </view>
+    <block wx:for="{{selectedGroup.table}}" wx:key="key">
+      <view class="standing-row {{item.rankClass}}">
+        <view class="standing-team">
+          <text class="standing-rank">{{item.rank}}</text>
+          <image class="standing-flag" src="{{item.team.flag}}" mode="aspectFit"></image>
+          <text class="standing-abbr">{{item.abbr}}</text>
+        </view>
+        <view class="standing-stats">
+          <text>{{item.played}}</text>
+          <text>{{item.record}}</text>
+          <text>{{item.goals}}</text>
+          <text>{{item.points}}</text>
         </view>
       </view>
-      <text class="schedule-meta">{{item.group}} · {{item.venue}}</text>
-    </navigator>
-  </block>
+    </block>
+  </view>
+
+  <view class="remaining-section">
+    <text class="section-title-text">剩余比赛</text>
+    <block wx:if="{{groupMatches.length}}">
+      <block wx:for="{{groupMatches}}" wx:key="id">
+        <navigator wx:if="{{item.hasPrediction}}" class="fixture-row glass" url="/pages/detail/detail?id={{item.id}}&amp;source=upcoming" hover-class="fixture-hover">
+          <view class="fixture-team">
+            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+            <text>{{item.home.abbr}}</text>
+          </view>
+          <view class="fixture-time">
+            <text>{{item.dateText}}</text>
+            <text>{{item.kickoff}}</text>
+          </view>
+          <view class="fixture-team right">
+            <text>{{item.away.abbr}}</text>
+            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+          </view>
+          <text class="fixture-arrow">&gt;</text>
+        </navigator>
+        <view wx:else class="fixture-row glass no-arrow">
+          <view class="fixture-team">
+            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+            <text>{{item.home.abbr}}</text>
+          </view>
+          <view class="fixture-time">
+            <text>{{item.dateText}}</text>
+            <text>{{item.kickoff}}</text>
+          </view>
+          <view class="fixture-team right">
+            <text>{{item.away.abbr}}</text>
+            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+          </view>
+        </view>
+      </block>
+    </block>
+    <view class="empty-fixtures glass" wx:else>
+      <text>本组暂无未开始比赛</text>
+    </view>
+  </view>
+
+  <view class="bracket-section">
+    <text class="section-title-text">淘汰赛图</text>
+    <view class="bracket-board glass">
+      <view class="bracket-half upper">
+        <block wx:for="{{bracket.upper}}" wx:key="id">
+          <view class="bracket-tie">
+            <view class="bracket-team top {{item.winner === item.home.seed ? 'winner-route' : ''}}">
+              <text>{{item.home.abbr}}</text>
+              <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
+              <view wx:else class="seed-box"></view>
+            </view>
+            <view class="bracket-score">
+              <text>{{item.score || '-'}}</text>
+              <text wx:if="{{item.extraScore}}" class="small-score">({{item.extraScore}})</text>
+              <text wx:if="{{item.penaltyScore}}" class="small-score">({{item.penaltyScore}})</text>
+            </view>
+            <view class="bracket-team top {{item.winner === item.away.seed ? 'winner-route' : ''}}">
+              <text>{{item.away.abbr}}</text>
+              <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
+              <view wx:else class="seed-box"></view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <view class="trophy-core">
+        <text class="trophy-icon">🏆</text>
+        <text>FINAL</text>
+      </view>
+
+      <view class="bracket-half lower">
+        <block wx:for="{{bracket.lower}}" wx:key="id">
+          <view class="bracket-tie">
+            <view class="bracket-team bottom {{item.winner === item.home.seed ? 'winner-route' : ''}}">
+              <image wx:if="{{item.home.flag}}" src="{{item.home.flag}}" mode="aspectFit"></image>
+              <view wx:else class="seed-box"></view>
+              <text>{{item.home.abbr}}</text>
+            </view>
+            <view class="bracket-score">
+              <text>{{item.score || '-'}}</text>
+              <text wx:if="{{item.extraScore}}" class="small-score">({{item.extraScore}})</text>
+              <text wx:if="{{item.penaltyScore}}" class="small-score">({{item.penaltyScore}})</text>
+            </view>
+            <view class="bracket-team bottom {{item.winner === item.away.seed ? 'winner-route' : ''}}">
+              <image wx:if="{{item.away.flag}}" src="{{item.away.flag}}" mode="aspectFit"></image>
+              <view wx:else class="seed-box"></view>
+              <text>{{item.away.abbr}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
 </view>

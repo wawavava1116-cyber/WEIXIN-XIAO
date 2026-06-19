@@ -1,37 +1,273 @@
-const { upcomingMatches, recentFinishedHomeMatches } = require('../../utils/matches')
-const { getDatabaseBadge } = require('../../utils/buildInfo')
+const { matches, finishedMatches } = require('../../utils/matches')
+
+const ABBR = {
+  Argentina: 'ARG',
+  Australia: 'AUS',
+  Austria: 'AUT',
+  Belgium: 'BEL',
+  'Bosnia and Herzegovina': 'BIH',
+  Brazil: 'BRA',
+  Canada: 'CAN',
+  'Cabo Verde': 'CPV',
+  Colombia: 'COL',
+  'Congo DR': 'COD',
+  "Cote d'Ivoire": 'CIV',
+  Croatia: 'CRO',
+  Curacao: 'CUW',
+  Czechia: 'CZE',
+  Ecuador: 'ECU',
+  England: 'ENG',
+  France: 'FRA',
+  Germany: 'GER',
+  Ghana: 'GHA',
+  Haiti: 'HAI',
+  Iran: 'IRN',
+  Iraq: 'IRQ',
+  Japan: 'JPN',
+  Jordan: 'JOR',
+  Korea: 'KOR',
+  Mexico: 'MEX',
+  Morocco: 'MAR',
+  Netherlands: 'NED',
+  'New Zealand': 'NZL',
+  Norway: 'NOR',
+  Panama: 'PAN',
+  Paraguay: 'PAR',
+  Portugal: 'POR',
+  Qatar: 'QAT',
+  'Saudi Arabia': 'KSA',
+  Scotland: 'SCO',
+  Senegal: 'SEN',
+  'South Africa': 'RSA',
+  Spain: 'ESP',
+  Sweden: 'SWE',
+  Switzerland: 'SUI',
+  Tunisia: 'TUN',
+  Türkiye: 'TUR',
+  Uruguay: 'URU',
+  Uzbekistan: 'UZB',
+  'United States': 'USA'
+}
+
+const BRACKET_SEEDS = [
+  ['A1', 'B2'], ['C1', 'D2'], ['E1', 'F2'], ['G1', 'H2'],
+  ['I1', 'J2'], ['K1', 'L2'], ['A2', 'B1'], ['C2', 'D1'],
+  ['E2', 'F1'], ['G2', 'H1'], ['I2', 'J1'], ['K2', 'L1'],
+  ['A3', 'C3'], ['B3', 'D3'], ['E3', 'G3'], ['F3', 'H3']
+]
+
+function getAbbr(team) {
+  if (!team) return ''
+  return ABBR[team.en] || String(team.en || team.cn || '').replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase()
+}
 
 function getMatchTimeValue(match) {
   if (typeof match.sortTime === 'number' && match.sortTime > 0) return match.sortTime
   return 0
 }
 
-function buildSchedule() {
-  return upcomingMatches.concat(recentFinishedHomeMatches || [])
-    .slice()
+function getGroupKey(groupName) {
+  const match = String(groupName || '').match(/[A-L]/i)
+  return match ? match[0].toUpperCase() : groupName
+}
+
+function getGroupNumber(groupName) {
+  const key = getGroupKey(groupName)
+  const code = key.charCodeAt(0)
+  return code >= 65 && code <= 90 ? code - 64 : 99
+}
+
+function buildReviewMap() {
+  return finishedMatches.reduce((result, review) => {
+    if (review.matchId) result[review.matchId] = review
+    return result
+  }, {})
+}
+
+function getScoreParts(score) {
+  const parts = String(score || '').split('-').map((item) => Number(item))
+  if (parts.length !== 2 || parts.some(Number.isNaN)) return null
+  return parts
+}
+
+function makeEmptyStats(team, groupName) {
+  return {
+    key: team.key || team.cn,
+    groupName,
+    team,
+    abbr: getAbbr(team),
+    played: 0,
+    win: 0,
+    draw: 0,
+    loss: 0,
+    gf: 0,
+    ga: 0,
+    points: 0
+  }
+}
+
+function buildStandings(reviewMap) {
+  const groups = {}
+  matches.forEach((match) => {
+    const groupName = match.group || '未分组'
+    if (!groups[groupName]) groups[groupName] = {}
+    ;[match.home, match.away].forEach((team) => {
+      const key = team.key || team.cn
+      if (!groups[groupName][key]) groups[groupName][key] = makeEmptyStats(team, groupName)
+    })
+  })
+
+  matches.forEach((match) => {
+    const review = reviewMap[match.id]
+    const scoreParts = review ? getScoreParts(review.score) : null
+    if (!scoreParts) return
+    const groupName = match.group || '未分组'
+    const home = groups[groupName][match.home.key || match.home.cn]
+    const away = groups[groupName][match.away.key || match.away.cn]
+    if (!home || !away) return
+    const homeGoals = scoreParts[0]
+    const awayGoals = scoreParts[1]
+    home.played += 1
+    away.played += 1
+    home.gf += homeGoals
+    home.ga += awayGoals
+    away.gf += awayGoals
+    away.ga += homeGoals
+    if (homeGoals > awayGoals) {
+      home.win += 1
+      away.loss += 1
+      home.points += 3
+    } else if (homeGoals < awayGoals) {
+      away.win += 1
+      home.loss += 1
+      away.points += 3
+    } else {
+      home.draw += 1
+      away.draw += 1
+      home.points += 1
+      away.points += 1
+    }
+  })
+
+  return Object.keys(groups)
+    .sort((a, b) => getGroupNumber(a) - getGroupNumber(b))
+    .map((groupName) => {
+      const table = Object.keys(groups[groupName]).map((key) => groups[groupName][key])
+        .sort((a, b) => {
+          const pointDiff = b.points - a.points
+          if (pointDiff) return pointDiff
+          const gdDiff = (b.gf - b.ga) - (a.gf - a.ga)
+          if (gdDiff) return gdDiff
+          const gfDiff = b.gf - a.gf
+          if (gfDiff) return gfDiff
+          return a.abbr.localeCompare(b.abbr)
+        })
+        .map((row, index) => Object.assign({}, row, {
+          rank: index + 1,
+          rankClass: index === 0 ? 'rank-one' : index === 1 ? 'rank-two' : index === 2 ? 'rank-three' : 'rank-four',
+          record: `${row.win}/${row.draw}/${row.loss}`,
+          goals: `${row.gf}/${row.ga}`
+        }))
+      return {
+        key: getGroupKey(groupName),
+        name: groupName,
+        table
+      }
+    })
+}
+
+function buildGroupMatches(groupName, reviewMap) {
+  return matches
+    .filter((match) => match.group === groupName && !reviewMap[match.id])
     .sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
     .map((match) => ({
       id: match.id,
       dateText: match.dateText,
       kickoff: match.kickoff,
-      group: match.group,
-      venue: match.venue,
-      statusText: match.statusText || '未开赛',
-      home: match.home,
-      away: match.away
+      home: Object.assign({}, match.home, { abbr: getAbbr(match.home) }),
+      away: Object.assign({}, match.away, { abbr: getAbbr(match.away) }),
+      hasPrediction: Boolean(match.pick && match.pick.result)
     }))
 }
 
+function buildQualifiedTeams(groups) {
+  const result = {}
+  groups.forEach((group) => {
+    const groupComplete = group.table.length && group.table.every((item) => item.played >= 3)
+    if (!groupComplete) return
+    group.table.slice(0, 3).forEach((row) => {
+      const seed = `${group.key}${row.rank}`
+      result[seed] = {
+        seed,
+        abbr: row.abbr,
+        flag: row.team.flag,
+        confirmed: true
+      }
+    })
+  })
+  return result
+}
+
+function makeBracketTeam(seed, qualifiedTeams) {
+  return qualifiedTeams[seed] || {
+    seed,
+    abbr: seed,
+    flag: '',
+    confirmed: false
+  }
+}
+
+function buildBracket(groups) {
+  const qualifiedTeams = buildQualifiedTeams(groups)
+  const ties = BRACKET_SEEDS.map((pair, index) => ({
+    id: `r32-${index}`,
+    home: makeBracketTeam(pair[0], qualifiedTeams),
+    away: makeBracketTeam(pair[1], qualifiedTeams),
+    score: '',
+    extraScore: '',
+    penaltyScore: '',
+    winner: ''
+  }))
+  return {
+    upper: ties.slice(0, 8),
+    lower: ties.slice(8)
+  }
+}
+
+function buildPageData(selectedGroupKey) {
+  const reviewMap = buildReviewMap()
+  const groups = buildStandings(reviewMap)
+  const selectedGroup = groups.find((group) => group.key === selectedGroupKey) || groups[0]
+  return {
+    groupTabs: groups.map((group) => ({
+      key: group.key,
+      name: group.name,
+      active: selectedGroup && group.key === selectedGroup.key
+    })),
+    selectedGroup,
+    groupMatches: selectedGroup ? buildGroupMatches(selectedGroup.name, reviewMap) : [],
+    bracket: buildBracket(groups)
+  }
+}
+
 Page({
-  data: {
-    databaseBadge: getDatabaseBadge(),
-    matches: buildSchedule()
-  },
+  data: Object.assign({
+    selectedGroupKey: 'A'
+  }, buildPageData('A')),
 
   onShow() {
-    this.setData({
-      databaseBadge: getDatabaseBadge(),
-      matches: buildSchedule()
-    })
+    this.refreshPage(this.data.selectedGroupKey || 'A')
+  },
+
+  refreshPage(groupKey) {
+    this.setData(Object.assign({
+      selectedGroupKey: groupKey
+    }, buildPageData(groupKey)))
+  },
+
+  selectGroup(event) {
+    const groupKey = event.currentTarget.dataset.group
+    if (!groupKey) return
+    this.refreshPage(groupKey)
   }
 })
