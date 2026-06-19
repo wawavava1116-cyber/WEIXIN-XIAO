@@ -119,9 +119,9 @@
 
 .fixture-arrow {
   color: #d6aa4c;
-  font-size: 34rpx;
+  font-size: 44rpx;
   line-height: 1;
-  font-weight: 1000;
+  font-weight: 300;
   text-align: right;
 }
 
