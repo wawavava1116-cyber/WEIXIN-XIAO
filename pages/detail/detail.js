@@ -16,13 +16,13 @@ function buildDynamicHistoryMatch(review) {
       venue: review.venue || sourceMatch.venue,
       isFinished: true,
       matchStatus: 'finished',
-      statusText: '完赛',
+      statusText: '\u5b8c\u8d5b',
       liveScore: review.score,
       review: Object.assign({}, sourceMatch.review || {}, review)
     })
   }
   const analysis = {
-    conclusion: '该场比赛来自实时完赛复盘缓存，数据库正式复盘更新后会显示完整分析。',
+    conclusion: '\u8be5\u573a\u6bd4\u8d5b\u6765\u81ea\u5b9e\u65f6\u5b8c\u8d5b\u590d\u76d8\u7f13\u5b58\uff0c\u6570\u636e\u5e93\u6b63\u5f0f\u590d\u76d8\u66f4\u65b0\u540e\u4f1a\u663e\u793a\u5b8c\u6574\u5206\u6790\u3002',
     market: { oneXtwo: '', handicap: '', total: '' },
     form: { home: '', away: '' },
     news: { home: '', away: '' },
@@ -43,7 +43,7 @@ function buildDynamicHistoryMatch(review) {
     altitudeLevel: 'unknown',
     isFinished: true,
     matchStatus: 'finished',
-    statusText: '完赛',
+    statusText: '\u5b8c\u8d5b',
     liveScore: review.score,
     home: { cn: review.home || '', en: '', flag: '' },
     away: { cn: review.away || '', en: '', flag: '' },
@@ -67,9 +67,9 @@ function getScorePanel(match) {
   if (isFinished) {
     return {
       mode: 'finished',
-      eyebrow: '完赛比分',
+      eyebrow: '\u5b8c\u8d5b\u6bd4\u5206',
       score: (match.review && match.review.score) || match.liveScore || '--',
-      subLabel: '预测比分',
+      subLabel: '\u9884\u6d4b\u6bd4\u5206',
       subScore: predictedScore
     }
   }
@@ -77,18 +77,18 @@ function getScorePanel(match) {
   if (isLive) {
     return {
       mode: 'live',
-      eyebrow: match.matchClock || match.phaseText || '进行中',
+      eyebrow: match.matchClock || match.phaseText || '\u8fdb\u884c\u4e2d',
       score: match.liveScore || '--',
-      subLabel: '预测比分',
+      subLabel: '\u9884\u6d4b\u6bd4\u5206',
       subScore: predictedScore
     }
   }
 
   return {
     mode: 'pending',
-    eyebrow: '预测比分',
+    eyebrow: '\u9884\u6d4b\u6bd4\u5206',
     score: predictedScore,
-    subLabel: '备用比分',
+    subLabel: '\u5907\u7528\u6bd4\u5206',
     subScore: (match.pick && match.pick.backup) || '--'
   }
 }
@@ -100,33 +100,9 @@ Page({
   },
 
   onLoad(options) {
-    refreshRemoteDatabase()
-    const remoteDatabase = getRemoteDatabaseSync()
-    const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
-    const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
-    const primaryMatches = options.source === 'history'
-      ? historyMatches.concat(remoteHistoryMatches)
-      : matches.concat(remoteMatches)
-    const fallbackMatches = options.source === 'history'
-      ? matches.concat(remoteMatches)
-      : historyMatches.concat(remoteHistoryMatches)
-    const dynamicReview = getDynamicReviews().find((item) => item.matchId === options.id || item.id === options.id)
-    const baseMatch = primaryMatches.find((item) => item.id === options.id) ||
-      fallbackMatches.find((item) => item.id === options.id)
-    const dynamicMatch = dynamicReview ? buildDynamicHistoryMatch(dynamicReview) : null
-    const match = options.source === 'history' && dynamicMatch ? dynamicMatch : (baseMatch || dynamicMatch)
-    if (!match) {
-      wx.showToast({ title: '未找到比赛', icon: 'none' })
-      return
-    }
-    wx.setNavigationBarTitle({
-      title: `${match.home.cn} vs ${match.away.cn}`
-    })
-    this.setMatch(match)
-    refreshTeamStats([match], (updatedMatches) => {
-      this.setMatch(updatedMatches[0])
-    })
-    this.refreshScore()
+    this.loadOptions = options || {}
+    this.loadMatch(this.loadOptions, false)
+    refreshRemoteDatabase(null, () => this.loadMatch(this.loadOptions, true))
     this.scoreTimer = setInterval(() => {
       this.refreshScore()
     }, 10000)
@@ -137,6 +113,35 @@ Page({
       clearInterval(this.scoreTimer)
       this.scoreTimer = null
     }
+  },
+
+  loadMatch(options, remoteReady) {
+    const remoteDatabase = getRemoteDatabaseSync()
+    const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
+    const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
+    const primaryMatches = options.source === 'history'
+      ? remoteHistoryMatches.concat(historyMatches)
+      : remoteMatches.concat(matches)
+    const fallbackMatches = options.source === 'history'
+      ? remoteMatches.concat(matches)
+      : remoteHistoryMatches.concat(historyMatches)
+    const dynamicReview = getDynamicReviews().find((item) => item.matchId === options.id || item.id === options.id)
+    const baseMatch = primaryMatches.find((item) => item.id === options.id) ||
+      fallbackMatches.find((item) => item.id === options.id)
+    const dynamicMatch = dynamicReview ? buildDynamicHistoryMatch(dynamicReview) : null
+    const match = options.source === 'history' && dynamicMatch ? dynamicMatch : (baseMatch || dynamicMatch)
+    if (!match) {
+      if (remoteReady) wx.showToast({ title: '\u672a\u627e\u5230\u6bd4\u8d5b', icon: 'none' })
+      return
+    }
+    wx.setNavigationBarTitle({
+      title: `${match.home.cn} vs ${match.away.cn}`
+    })
+    this.setMatch(match)
+    refreshTeamStats([match], (updatedMatches) => {
+      this.setMatch(updatedMatches[0])
+    })
+    this.refreshScore()
   },
 
   setMatch(match) {

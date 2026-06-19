@@ -1,5 +1,6 @@
 const { matches, finishedMatches } = require('../../utils/matches')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
+const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 const ABBR = {
   Argentina: 'ARG',
@@ -86,7 +87,11 @@ function getGroupNumber(groupName) {
 }
 
 function buildReviewMap(sourceMatches) {
-  const result = finishedMatches.reduce((map, review) => {
+  const remoteDatabase = getRemoteDatabaseSync()
+  const sourceReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+    ? remoteDatabase.finishedMatches
+    : finishedMatches
+  const result = sourceReviews.reduce((map, review) => {
     if (review.matchId) map[review.matchId] = review
     return map
   }, {})
@@ -173,7 +178,7 @@ function buildStandings(sourceMatches, reviewMap) {
     applyScoreToRows(home, away, scoreParts)
   })
 
-  finishedMatches.forEach((review) => {
+  sourceReviews.forEach((review) => {
     if (!review.matchId || sourceIds[review.matchId]) return
     const scoreParts = getScoreParts(review.score)
     if (!scoreParts) return
@@ -292,7 +297,11 @@ function buildPageData(sourceMatches, selectedGroupKey) {
 }
 
 function getBaseMatches() {
-  return matches.map(cloneMatch)
+  const remoteDatabase = getRemoteDatabaseSync()
+  const sourceMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) && remoteDatabase.matches.length
+    ? remoteDatabase.matches
+    : matches
+  return sourceMatches.map(cloneMatch)
 }
 
 Page({
@@ -304,6 +313,7 @@ Page({
 
   onLoad() {
     this.sourceMatches = getBaseMatches()
+    refreshRemoteDatabase(null, () => this.refreshLiveSchedule())
     this.refreshLiveSchedule()
     this.scoreTimer = setInterval(() => {
       this.refreshLiveSchedule({ silent: true })
@@ -311,8 +321,8 @@ Page({
   },
 
   onShow() {
+    refreshRemoteDatabase(null, () => this.refreshLiveSchedule({ silent: true }))
     this.refreshPage(this.data.selectedGroupKey || 'A')
-    this.refreshLiveSchedule({ silent: true })
   },
 
   onUnload() {

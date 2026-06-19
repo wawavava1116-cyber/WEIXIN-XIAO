@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 16:05 - 小程序页面改为优先读取云服务器数据库
+
+- 环境：公司电脑 Codex
+- 目的：解决正式版小程序必须重新上传审核才能看到每日赛程/预测更新的问题；让首页、赛程、预测、历史和详情页优先使用云服务器 `/api/database/latest` 返回的最新数据库，包内静态数据只作为断网兜底。
+- 涉及文件：`utils/remoteMatchDatabase.js`、`utils/buildInfo.js`、`pages/index/index.js`、`pages/schedule/schedule.js`、`pages/prediction/prediction.js`、`pages/history/history.js`、`pages/detail/detail.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：远程数据库工具新增服务器更新时间徽标和远程字段读取；首页刷新后同步显示服务器数据库时间；赛程页和预测页改为进入页面时先刷新服务器快照并用远程 `matches/upcomingMatches/finishedMatches` 构建内容；详情页支持服务器新增比赛在远程数据返回后再加载，避免审核包内没有新比赛时提示找不到。
+- 数据库/赛程/复盘：未新增比赛和复盘内容；展示来源从“审核包静态数据优先”调整为“云服务器数据库优先”。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：未修改服务器代码；后续每日只需在服务器更新 `/api/database/latest` 快照，正式版用户重新进入或下拉刷新即可读取最新内容。
+- 验证：已运行 `node -c` 检查远程数据库工具、首页、赛程页、预测页、历史页、详情页和数据库徽标工具；已确认远程 `databaseUpdatedAt` 可显示为页面数据库更新时间。
+- 后续注意：这次客户端读取逻辑本身需要重新上传审核一次；审核通过后，后续每日数据库更新不再需要因为赛程/预测内容重新提交小程序审核，但微信后台必须把 `https://www.ag-shield.com` 加入 request 合法域名。
+
 ## 2026-06-19 15:29 - 用预测 Skill 刷新 6月19日数据库与必发权重
 
 - 环境：公司电脑 Codex

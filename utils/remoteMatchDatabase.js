@@ -1,4 +1,5 @@
 const { apiBaseUrl } = require('./serverConfig')
+const { getDatabaseBadge } = require('./buildInfo')
 
 const CACHE_KEY = 'worldcup_remote_match_database'
 const CACHE_TTL = 10 * 60 * 1000
@@ -30,6 +31,20 @@ function setRemoteDatabase(database) {
   } catch (error) {
     // Remote database cache failure should not block page rendering.
   }
+}
+
+function getRemoteDatabaseBadge() {
+  const database = getRemoteDatabaseSync()
+  return getDatabaseBadge(
+    database && database.databaseUpdatedAt,
+    database && database.version
+  )
+}
+
+function getRemoteMatchesSync(fieldName, fallback) {
+  const database = getRemoteDatabaseSync()
+  const value = database && Array.isArray(database[fieldName]) ? database[fieldName] : null
+  return value && value.length ? value : fallback
 }
 
 function refreshRemoteDatabase(onReady, onComplete) {
@@ -64,5 +79,7 @@ function refreshRemoteDatabase(onReady, onComplete) {
 
 module.exports = {
   getRemoteDatabaseSync,
+  getRemoteDatabaseBadge,
+  getRemoteMatchesSync,
   refreshRemoteDatabase
 }

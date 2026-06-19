@@ -2,9 +2,8 @@ const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require(
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
-const { getDatabaseBadge } = require('../../utils/buildInfo')
 const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
-const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const {
   getStoredUser,
   loginAsGuest,
@@ -457,7 +456,7 @@ Page({
     reviewSuccessRate: getReviewRate(prepareReviews(finishedMatches.slice(0, 10))),
     finishedMatches: prepareReviews(finishedMatches.slice(0, 10)),
     reviewChart: buildReviewChart(prepareReviews(finishedMatches.slice(0, 10))),
-    databaseBadge: getDatabaseBadge(),
+    databaseBadge: getRemoteDatabaseBadge(),
     startupLoading: true,
     startupProgress: 0,
     showAnnouncement: false,
@@ -714,7 +713,8 @@ Page({
         finishedMatches: nextReviews,
         reviewSummary: `${nextReviews.length} 场历史复盘`,
         reviewSuccessRate: getReviewRate(nextReviews),
-        reviewChart: buildReviewChart(nextReviews)
+        reviewChart: buildReviewChart(nextReviews),
+        databaseBadge: getRemoteDatabaseBadge()
       })
     }
 

@@ -1,7 +1,6 @@
 const { matches, historyMatches, finishedMatches } = require('../../utils/matches')
-const { getDatabaseBadge } = require('../../utils/buildInfo')
 const { getDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
-const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 const ALL_DATE_LABEL = '全部'
 
@@ -74,7 +73,7 @@ Page({
     filteredHistoryMatches: initialFilteredHistoryMatches,
     historyDates: buildHistoryDates(initialHistoryMatches),
     historyDateIndex: 0,
-    databaseBadge: getDatabaseBadge(),
+    databaseBadge: getRemoteDatabaseBadge(),
     selectedHistoryDate: ALL_DATE_LABEL
   },
 
@@ -96,7 +95,8 @@ Page({
       filteredHistoryMatches,
       historyDates,
       historyDateIndex,
-      selectedHistoryDate
+      selectedHistoryDate,
+      databaseBadge: getRemoteDatabaseBadge()
     })
   },
 

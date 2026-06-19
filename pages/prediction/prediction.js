@@ -1,5 +1,5 @@
 const { upcomingMatches } = require('../../utils/matches')
-const { getDatabaseBadge } = require('../../utils/buildInfo')
+const { getRemoteDatabaseBadge, getRemoteMatchesSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
 function getMatchTimeValue(match) {
   if (typeof match.sortTime === 'number' && match.sortTime > 0) return match.sortTime
@@ -7,7 +7,7 @@ function getMatchTimeValue(match) {
 }
 
 function buildPredictions() {
-  return upcomingMatches.slice()
+  return getRemoteMatchesSync('upcomingMatches', upcomingMatches).slice()
     .sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
     .map((match) => ({
       id: match.id,
@@ -22,13 +22,18 @@ function buildPredictions() {
 
 Page({
   data: {
-    databaseBadge: getDatabaseBadge(),
+    databaseBadge: getRemoteDatabaseBadge(),
     matches: buildPredictions()
   },
 
   onShow() {
+    refreshRemoteDatabase(null, () => this.refreshPredictions())
+    this.refreshPredictions()
+  },
+
+  refreshPredictions() {
     this.setData({
-      databaseBadge: getDatabaseBadge(),
+      databaseBadge: getRemoteDatabaseBadge(),
       matches: buildPredictions()
     })
   }
