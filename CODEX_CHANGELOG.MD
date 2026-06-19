@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-19 20:34 - 服务端启动读取微信登录配置
+
+- 环境：公司电脑 Codex + 腾讯云服务器排查
+- 目的：修复手机端点击完善微信资料时提示“微信身份暂不可用”的问题根因之一：服务端没有自动读取 `server/.env` 中的微信登录配置。
+- 涉及文件：`server/src/index.js`、`server/README.md`、`CODEX_CHANGELOG.MD`
+- 主要改动：服务器启动时自动读取 `server/.env` 并注入未设置的环境变量；文档明确 `WECHAT_APP_SECRET` 必须填写微信公众平台 AppSecret，否则 `/api/auth/wechat-login` 无法用 `wx.login` code 换取 openid。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改微信云函数代码，不需要重新上传云函数。
+- 服务器：修改了 `server/` 运行代码，需要重新部署轻量云服务器服务；同时服务器 `.env` 还需要补齐 `WECHAT_APP_SECRET`。
+- 验证：已运行服务器 `npm run check` 和 `git diff --check`。
+- 后续注意：当前云服务器检测到 `WECHAT_APP_ID` 已写入 `.env`，但 `WECHAT_APP_SECRET` 缺失；需要从微信公众平台复制 AppSecret 到服务器 `.env` 后重启服务。
+
 ## 2026-06-19 20:20 - 压缩主包图片资源并补充上传忽略
 
 - 环境：公司电脑 Codex

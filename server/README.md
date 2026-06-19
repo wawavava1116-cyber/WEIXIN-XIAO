@@ -39,6 +39,8 @@ WECHAT_APP_SECRET=你的小程序 AppSecret
 PUBLIC_BASE_URL=https://你的服务器 HTTPS 域名
 ```
 
+`WECHAT_APP_SECRET` 必须填写微信公众平台里当前小程序的 AppSecret。没有这个值时，`/api/auth/wechat-login` 无法用 `wx.login` 返回的 code 换取 openid，手机端会提示微信身份暂不可用。
+
 长期稳定运行时，建议配置证书登录：
 
 ```bash
