@@ -45,7 +45,7 @@ function applyLiveScore(match, scores) {
   }
 
   if (next.matchStatus === 'finished' && !next.finishDetectedAt) {
-    next.finishDetectedAt = Date.parse(latest.updatedAt || '') || Date.now()
+    next.finishDetectedAt = next.sortTime ? next.sortTime + 2 * 60 * 60 * 1000 : Date.now()
   }
   return next
 }
@@ -57,9 +57,6 @@ function applyLiveScores(matches, scores) {
 function getFinishDetectedAt(match) {
   if (match.finishDetectedAt) return match.finishDetectedAt
   if (match.review && match.review.endedAtMs) return match.review.endedAtMs
-  if (match.matchStatus === 'finished' && match.scoreUpdatedAt) {
-    return Date.parse(match.scoreUpdatedAt) || Date.now()
-  }
   if (match.matchStatus === 'finished' && match.sortTime) {
     return match.sortTime + 2 * 60 * 60 * 1000
   }
