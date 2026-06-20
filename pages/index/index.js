@@ -733,6 +733,9 @@ Page({
     refreshRemoteDatabase()
       .then(() => this.refreshAll(options))
       .catch((error) => {
+        if (this.startupDone && getRemoteDatabaseSync()) {
+          this.refreshAll({ silent: true })
+        }
         if (options.manual) wx.stopPullDownRefresh()
         if (!options.silent) {
           wx.hideNavigationBarLoading()
