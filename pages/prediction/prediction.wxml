@@ -9,52 +9,56 @@
   </view>
 
   <view class="prediction-section">
-    <text class="section-title-text">今天和明天未开赛比赛</text>
-    <view class="auth-panel glass" wx:if="{{!canPredict}}">
-      <text>{{authMessage}}</text>
+    <view class="section-title-row">
+      <text class="section-title-text">已经预测</text>
+      <view class="section-toggle" bindtap="togglePredictionMatches">
+        <text>{{showPredictionMatches ? '收起可预测比赛' : '查看可预测比赛'}}</text>
+        <text>{{matches.length}}</text>
+      </view>
     </view>
-    <block wx:if="{{matches.length}}">
-      <block wx:for="{{matches}}" wx:key="id">
-        <navigator wx:if="{{canPredict}}" class="fixture-row glass" url="{{item.formPath}}" hover-class="fixture-hover">
-          <view class="fixture-team">
-            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
-            <text>{{item.home.abbr}}</text>
+    <view class="prediction-match-panel" wx:if="{{showPredictionMatches}}">
+      <view class="auth-panel glass" wx:if="{{!canPredict}}">
+        <text>{{authMessage}}</text>
+      </view>
+      <block wx:if="{{matches.length}}">
+        <block wx:for="{{matches}}" wx:key="id">
+          <navigator wx:if="{{canPredict}}" class="fixture-row glass" url="{{item.formPath}}" hover-class="fixture-hover">
+            <view class="fixture-team">
+              <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+              <text>{{item.home.abbr}}</text>
+            </view>
+            <view class="fixture-time">
+              <text>{{item.dateText}}</text>
+              <text>{{item.kickoff}}</text>
+              <text wx:if="{{item.savedText}}" class="saved-text">{{item.savedText}}</text>
+            </view>
+            <view class="fixture-team right">
+              <text>{{item.away.abbr}}</text>
+              <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+            </view>
+            <text class="fixture-arrow">›</text>
+          </navigator>
+          <view wx:else class="fixture-row glass disabled">
+            <view class="fixture-team">
+              <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+              <text>{{item.home.abbr}}</text>
+            </view>
+            <view class="fixture-time">
+              <text>{{item.dateText}}</text>
+              <text>{{item.kickoff}}</text>
+            </view>
+            <view class="fixture-team right">
+              <text>{{item.away.abbr}}</text>
+              <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+            </view>
+            <text class="fixture-arrow">›</text>
           </view>
-          <view class="fixture-time">
-            <text>{{item.dateText}}</text>
-            <text>{{item.kickoff}}</text>
-            <text wx:if="{{item.savedText}}" class="saved-text">{{item.savedText}}</text>
-          </view>
-          <view class="fixture-team right">
-            <text>{{item.away.abbr}}</text>
-            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
-          </view>
-          <text class="fixture-arrow">›</text>
-        </navigator>
-        <view wx:else class="fixture-row glass disabled">
-          <view class="fixture-team">
-            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
-            <text>{{item.home.abbr}}</text>
-          </view>
-          <view class="fixture-time">
-            <text>{{item.dateText}}</text>
-            <text>{{item.kickoff}}</text>
-          </view>
-          <view class="fixture-team right">
-            <text>{{item.away.abbr}}</text>
-            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
-          </view>
-          <text class="fixture-arrow">›</text>
-        </view>
+        </block>
       </block>
-    </block>
-    <view class="empty-fixtures glass" wx:else>
-      <text>今天和明天暂无可预测的未开赛比赛</text>
+      <view class="empty-fixtures glass" wx:else>
+        <text>今天和明天暂无可预测的未开赛比赛</text>
+      </view>
     </view>
-  </view>
-
-  <view class="prediction-section">
-    <text class="section-title-text">已经预测</text>
     <view class="stats-card glass" wx:if="{{canPredict}}">
       <view>
         <text class="stats-label">近10次准确率</text>

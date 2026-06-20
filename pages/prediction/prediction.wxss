@@ -66,6 +66,45 @@
   font-weight: 1000;
 }
 
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.section-title-row .section-title-text {
+  margin-bottom: 0;
+}
+
+.section-toggle {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  min-height: 42rpx;
+  padding: 0 14rpx;
+  border: 1rpx solid rgba(214, 170, 76, 0.36);
+  border-radius: 10rpx;
+  color: #d6aa4c;
+  background: rgba(214, 170, 76, 0.08);
+  font-size: 19rpx;
+  font-weight: 1000;
+}
+
+.section-toggle text:last-child {
+  min-width: 30rpx;
+  color: #050505;
+  background: #d6aa4c;
+  border-radius: 999rpx;
+  text-align: center;
+}
+
+.prediction-match-panel {
+  margin-bottom: 14rpx;
+}
+
 .fixture-row {
   display: grid;
   grid-template-columns: 1fr 1.08fr 1fr 26rpx;

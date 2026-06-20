@@ -206,7 +206,7 @@
   width: 100%;
   min-width: 0;
   min-height: 52rpx;
-  margin-top: 10rpx;
+  margin-top: 34rpx;
   border-radius: 8rpx;
   color: #050505;
   background: #d6aa4c;

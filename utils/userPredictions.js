@@ -89,6 +89,11 @@ function deletePredictionGroup(groupId) {
   return requestPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}/delete`, 'POST')
 }
 
+function markPredictionGroupShared(groupId) {
+  if (!hasPredictionProfile()) return Promise.reject(new Error('PROFILE_REQUIRED'))
+  return requestPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}/share`, 'POST')
+}
+
 function fetchPredictionGroup(groupId) {
   return requestPublicPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}`, 'GET')
 }
@@ -154,6 +159,7 @@ module.exports = {
   getPredictions,
   hasPredictionProfile,
   joinPredictionGroup,
+  markPredictionGroupShared,
   savePrediction,
   submitGroupPredictions,
   submitPrediction

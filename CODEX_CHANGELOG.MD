@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 11:34 - 我的预测折叠可预测场次并延后小组入档
+- 环境：公司电脑 Codex + 手机端体验反馈
+- 目的：让“我的预测”页面不再单独展示可预测场次，把入口折叠到“已经预测”标题区；提交预测按钮与进球数选项拉开距离；新发起的小组只有分享或提交后才进入“我的小组”列表。
+- 涉及文件：`pages/prediction/prediction.js`、`pages/prediction/prediction.wxml`、`pages/prediction/prediction.wxss`、`pages/predictionForm/predictionForm.wxss`、`pages/predictionGroup/predictionGroup.js`、`server/src/index.js`、`server/src/predictionStore.js`、`utils/userPredictions.js`、`cloudfunctions/apiProxy/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：“今天和明天未开赛比赛”区块移入“已经预测”标题右侧的展开按钮；填写预测页提交按钮上边距增大；小组创建后默认作为未激活草稿，不进入 dashboard；提交小组预测或触发分享时把小组标记为 active；新增 `/api/prediction-groups/:id/share` 接口和云函数代理白名单。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容；小组数据新增 `active/sharedAt` 运行时字段，旧小组兼容显示。
+- 云函数：修改 `cloudfunctions/apiProxy` 路由白名单，需要重新上传并部署 `apiProxy` 云函数。
+- 服务器：修改 `server/` 小组预测接口，需要重新部署轻量云服务器服务。
+- 验证：已运行相关 JS 语法检查、WXML 标签基础检查、服务器 `npm.cmd run check` 和 `git diff --check`。
+- 后续注意：真机验证时确认未分享且未提交的小组返回我的预测后不出现在“我的小组”，分享或提交后会出现。
+
 ## 2026-06-20 11:18 - 填写预测和小组预测统一比赛标签
 - 环境：公司电脑 Codex + 手机端截图反馈
 - 目的：把“填写预测”顶部过小的国旗竖排队伍信息，改成与“我的预测”未开赛列表一致的横向比赛标签；小组预测详情页每场比赛头部同步统一。

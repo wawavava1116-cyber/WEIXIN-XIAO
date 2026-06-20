@@ -99,6 +99,7 @@ Page({
     canPredict: hasPredictionProfile(),
     authMessage: '',
     matches: buildPredictionMatches(),
+    showPredictionMatches: false,
     submittedPredictions: [],
     groupSubmittedPredictions: [],
     groupSizeOptions: [
@@ -193,6 +194,12 @@ Page({
     this.setData({
       selectedGroupMatchIds: selected,
       groupMatchOptions: buildGroupMatchOptions(this.data.matches, selected)
+    })
+  },
+
+  togglePredictionMatches() {
+    this.setData({
+      showPredictionMatches: !this.data.showPredictionMatches
     })
   },
 

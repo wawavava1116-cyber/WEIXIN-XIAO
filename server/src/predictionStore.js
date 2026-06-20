@@ -143,6 +143,7 @@ function createPredictionGroup(user, payload) {
     matches,
     members: [user.id],
     predictions: {},
+    active: false,
     createdAt: nowIso()
   }
   store.groups.unshift(group)
@@ -170,6 +171,26 @@ function deletePredictionGroup(user, groupId) {
     throw err
   }
   store.groups.splice(index, 1)
+  writePredictionStore(store)
+  return group
+}
+
+function markPredictionGroupShared(user, groupId) {
+  const store = readPredictionStore()
+  const group = store.groups.find((item) => item.id === groupId)
+  if (!group) {
+    const err = new Error('GROUP_NOT_FOUND')
+    err.statusCode = 404
+    throw err
+  }
+  if (group.ownerId !== user.id) {
+    const err = new Error('GROUP_SHARE_FORBIDDEN')
+    err.statusCode = 403
+    throw err
+  }
+  group.active = true
+  group.sharedAt = nowIso()
+  group.updatedAt = nowIso()
   writePredictionStore(store)
   return group
 }
@@ -232,6 +253,7 @@ function saveGroupPredictions(user, groupId, payload) {
     predictions: required.map((matchId) => byMatch[matchId]),
     submittedAt: nowIso()
   }
+  group.active = true
   group.updatedAt = nowIso()
   writePredictionStore(store)
   return group
@@ -442,6 +464,7 @@ function getGroupDashboard(user, snapshot) {
   const store = readPredictionStore()
   return {
     groups: store.groups
+      .filter((group) => group.active !== false)
       .filter((group) => (group.members || []).indexOf(user.id) !== -1 || group.ownerId === user.id)
       .map((group) => decorateGroup(group, user.id, snapshot))
   }
@@ -488,6 +511,7 @@ module.exports = {
   getUserMedals,
   getPredictionDashboard,
   joinPredictionGroup,
+  markPredictionGroupShared,
   saveGroupPredictions,
   saveUserPrediction
 }

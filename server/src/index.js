@@ -25,6 +25,7 @@ const {
   getPredictionDashboard,
   getUserMedals,
   joinPredictionGroup,
+  markPredictionGroupShared,
   saveGroupPredictions,
   saveUserPrediction
 } = require('./predictionStore')
@@ -476,6 +477,16 @@ async function handleRequest(req, res) {
     const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
     const groups = getGroupDashboard(user, snapshot)
     sendJson(res, 200, { ok: true, groups: groups.groups })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname.match(/^\/api\/prediction-groups\/[^/]+\/share$/)) {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const groupId = decodeURIComponent(url.pathname.split('/')[3])
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const group = markPredictionGroupShared(user, groupId)
+    sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
     return
   }
 

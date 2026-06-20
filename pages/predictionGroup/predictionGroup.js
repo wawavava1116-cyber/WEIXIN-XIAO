@@ -2,6 +2,7 @@ const {
   fetchPredictionGroup,
   hasPredictionProfile,
   joinPredictionGroup,
+  markPredictionGroupShared,
   submitGroupPredictions
 } = require('../../utils/userPredictions')
 const { getStoredUser } = require('../../utils/userAuth')
@@ -252,8 +253,21 @@ Page({
     })
   },
 
+  markShared() {
+    if (!this.groupId || !hasPredictionProfile()) return
+    markPredictionGroupShared(this.groupId).then((result) => {
+      if (result && result.group) {
+        this.setData({
+          group: decorateGroup(result.group, this.data.selections, this.data.collapsedMatches),
+          members: decorateMembers(result.group)
+        })
+      }
+    }).catch(() => {})
+  },
+
   onShareAppMessage() {
     const group = this.data.group || {}
+    this.markShared()
     return {
       title: `${group.size || ''}人世界杯预测小组，来一起预测`,
       path: `/pages/predictionGroup/predictionGroup?id=${this.groupId}`
@@ -262,6 +276,7 @@ Page({
 
   onShareTimeline() {
     const group = this.data.group || {}
+    this.markShared()
     return {
       title: `${group.size || ''}人世界杯预测小组，来一起预测`,
       query: `id=${this.groupId}`
