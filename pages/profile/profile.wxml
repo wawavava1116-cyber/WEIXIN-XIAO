@@ -2,10 +2,16 @@
   <view class="profile-hero glass">
     <button class="profile-avatar avatar-edit-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
       <image wx:if="{{profile.avatarUrl}}" src="{{profile.avatarUrl}}" mode="aspectFill"></image>
-      <text wx:else>人</text>
+      <view wx:else class="avatar-silhouette">
+        <view class="avatar-head"></view>
+        <view class="avatar-body"></view>
+      </view>
     </button>
     <view class="profile-copy">
-      <text class="profile-name" bindtap="showManualProfileForm">{{profile.nickname}}</text>
+      <view class="profile-name-row">
+        <text class="profile-name" bindtap="showManualProfileForm">{{profile.nickname}}</text>
+        <text wx:if="{{profile.canEditProfile && !showProfileForm}}" class="profile-inline-edit" bindtap="showManualProfileForm">修改昵称</text>
+      </view>
       <text class="profile-mode">{{profile.modeText}}</text>
       <text class="profile-edit-tip" wx:if="{{profile.canEditProfile}}">点击头像或昵称可修改资料</text>
     </view>
@@ -15,7 +21,6 @@
     <text class="profile-card-title">账号状态</text>
     <text class="profile-card-text">{{profile.statusText}}</text>
     <button wx:if="{{profile.canLogin && !showProfileForm}}" class="profile-login-button" loading="{{savingProfile}}" bindtap="oneTapWechatLogin">微信一键登录</button>
-    <button wx:if="{{profile.canEditProfile && !showProfileForm}}" class="profile-login-button profile-secondary-button" bindtap="showManualProfileForm">修改昵称</button>
     <view wx:if="{{showProfileForm}}" class="wechat-profile-form">
       <text class="profile-card-text">选择微信昵称，或输入自定义昵称。</text>
       <input class="nickname-input" type="nickname" placeholder="选择或输入昵称" value="{{profileNickname}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
