@@ -1,5 +1,6 @@
 const { getFavoriteIds, toggleFavorite, decorateMatches } = require('../../utils/favorites')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 function getAllMatches() {
   const remoteDatabase = getRemoteDatabaseSync()
@@ -26,7 +27,7 @@ function getFavoriteMatches() {
     .filter(Boolean)
 }
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     favoriteMatches: []
   },
@@ -48,4 +49,4 @@ Page({
     this.refreshFavorites()
     wx.showToast({ title: '已取消关注', icon: 'none' })
   }
-})
+}))

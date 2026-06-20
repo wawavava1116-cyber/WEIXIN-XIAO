@@ -1,5 +1,6 @@
 const { getDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const ALL_DATE_LABEL = '全部'
 
@@ -64,7 +65,7 @@ function filterHistoryMatches(items, selectedDate) {
 const initialHistoryMatches = buildHistoryMatches()
 const initialFilteredHistoryMatches = filterHistoryMatches(initialHistoryMatches, ALL_DATE_LABEL)
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     historyMatches: initialHistoryMatches,
     filteredHistoryMatches: initialFilteredHistoryMatches,
@@ -105,4 +106,4 @@ Page({
     const filteredHistoryMatches = filterHistoryMatches(this.data.historyMatches, selectedDate)
     this.setData({ historyDateIndex: index, selectedHistoryDate: selectedDate, filteredHistoryMatches })
   }
-})
+}))

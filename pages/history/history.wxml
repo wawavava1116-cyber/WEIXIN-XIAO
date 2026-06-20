@@ -1,4 +1,4 @@
-<view class="safe-page history-page">
+<view class="safe-page history-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="hero">
     <view class="hero-mark">
       <image class="hero-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>

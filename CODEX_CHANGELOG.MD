@@ -1,5 +1,14 @@
 # Codex 项目变更日志
 
+## 2026-06-20 15:52 - 增加主页面左右滑切换和二级页右滑返回
+- 环境：公司电脑 Codex + 用户导航体验需求
+- 目的：让首页、赛程页、我的预测页、个人信息页支持左右滑动切换；从这些页面进入的下层页面支持向右滑动返回上一层。
+- 涉及文件：`utils/swipeNavigation.js`、`pages/index/*`、`pages/schedule/*`、`pages/prediction/*`、`pages/profile/*`、`pages/detail/*`、`pages/history/*`、`pages/favorites/*`、`pages/predictionForm/*`、`pages/predictionResult/*`、`pages/predictionGroup/*`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增统一手势导航工具，主 tab 页按 首页 -> 赛程 -> 我的预测 -> 信息 的顺序左右滑切换；二级页检测明确右滑后优先 `navigateBack`，无页面栈时回首页；手势阈值限制横向位移和纵向位移，减少上下滚动误触。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数/服务器：未修改云函数或 `server/`，不需要重新部署。
+- 验证：已运行相关页面 JS 语法检查和 `git diff --check`。
+
 ## 2026-06-20 15:36 - 修正个人信息头像形状和昵称自动聚焦
 - 环境：公司电脑 Codex + 用户手机端截图反馈
 - 目的：修正个人信息页默认头像仍被微信原生按钮撑成椭圆的问题，并让点击“修改昵称”后直接进入昵称输入状态。

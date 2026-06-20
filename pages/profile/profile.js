@@ -5,6 +5,7 @@ const {
   saveUserProfile
 } = require('../../utils/userAuth')
 const { fetchPredictionDashboard, hasPredictionProfile } = require('../../utils/userPredictions')
+const { createMainSwipeHandlers } = require('../../utils/swipeNavigation')
 
 function getProfile() {
   const user = getStoredUser() || {}
@@ -22,7 +23,7 @@ function getProfile() {
   }
 }
 
-Page({
+Page(Object.assign({}, createMainSwipeHandlers('pages/profile/profile'), {
   data: {
     profile: getProfile(),
     medals: { gold: 0, silver: 0, bronze: 0 },
@@ -147,4 +148,4 @@ Page({
         wx.showToast({ title: message.slice(0, 28), icon: 'none' })
       })
   }
-})
+}))

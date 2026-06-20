@@ -6,6 +6,7 @@ const {
   submitGroupPredictions
 } = require('../../utils/userPredictions')
 const { getStoredUser } = require('../../utils/userAuth')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const RESULT_OPTIONS = ['主胜', '平局', '客胜']
 const GOAL_OPTIONS = ['0-1', '1-2', '2-3', '3-4', '4-5', '5+']
@@ -97,7 +98,7 @@ function getMySelections(group, fallbackSelections) {
   return selections
 }
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     group: null,
     members: [],
@@ -282,4 +283,4 @@ Page({
       query: `id=${this.groupId}`
     }
   }
-})
+}))

@@ -1,4 +1,4 @@
-<view class="safe-page profile-page">
+<view class="safe-page profile-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="profile-hero glass">
     <button class="profile-avatar avatar-edit-button" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
       <image wx:if="{{profile.avatarUrl}}" src="{{profile.avatarUrl}}" mode="aspectFill"></image>

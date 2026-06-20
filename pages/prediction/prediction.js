@@ -2,6 +2,7 @@ const { getRemoteDatabaseBadge, getRemoteMatchesSync, refreshRemoteDatabase } = 
 const { createPredictionGroup, deletePredictionGroup, fetchPredictionDashboard, getPrediction, hasPredictionProfile } = require('../../utils/userPredictions')
 const { getStoredUser } = require('../../utils/userAuth')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
+const { createMainSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const DAY = 24 * 60 * 60 * 1000
 const BEIJING_OFFSET = 8 * 60 * 60 * 1000
@@ -92,7 +93,7 @@ function buildGroupMatchOptions(matches, selectedIds) {
   }))
 }
 
-Page({
+Page(Object.assign({}, createMainSwipeHandlers('pages/prediction/prediction'), {
   data: {
     databaseBadge: getRemoteDatabaseBadge(),
     canPredict: hasPredictionProfile(),
@@ -263,4 +264,4 @@ Page({
       }
     })
   }
-})
+}))

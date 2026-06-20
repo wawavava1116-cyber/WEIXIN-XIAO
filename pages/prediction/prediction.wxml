@@ -1,4 +1,4 @@
-<view class="safe-page prediction-page">
+<view class="safe-page prediction-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="prediction-hero">
     <image class="prediction-logo" src="/assets/brand/worldcup26-logo-black.png" mode="aspectFit"></image>
     <view class="prediction-hero-copy">

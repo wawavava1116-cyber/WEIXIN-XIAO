@@ -3,6 +3,7 @@ const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
 const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { createMainSwipeHandlers } = require('../../utils/swipeNavigation')
 const {
   getStoredUser,
   ensureWechatSession,
@@ -452,7 +453,7 @@ function saveAnnouncementClosedAt() {
   }
 }
 
-Page({
+Page(Object.assign({}, createMainSwipeHandlers('pages/index/index'), {
   data: {
     matches: [],
     favoriteCount: getFavoriteIds().length,
@@ -778,4 +779,4 @@ Page({
       icon: 'none'
     })
   }
-})
+}))

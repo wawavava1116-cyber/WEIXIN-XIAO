@@ -1,4 +1,5 @@
 const { decodePrediction, encodePrediction, getPrediction } = require('../../utils/userPredictions')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 function buildShareTitle(prediction) {
   if (!prediction) return '我的世界杯预测'
@@ -15,7 +16,7 @@ function normalizePrediction(prediction) {
   })
 }
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     prediction: null,
     sharePayload: ''
@@ -50,4 +51,4 @@ Page({
       query: `data=${this.data.sharePayload}`
     }
   }
-})
+}))

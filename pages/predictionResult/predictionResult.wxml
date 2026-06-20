@@ -1,4 +1,4 @@
-<view class="safe-page prediction-result-page">
+<view class="safe-page prediction-result-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <block wx:if="{{prediction}}">
     <view class="result-hero glass">
       <text class="result-kicker">MY WORLD CUP PICKS</text>

@@ -1,5 +1,6 @@
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { createMainSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const ABBR = {
   Argentina: 'ARG',
@@ -496,7 +497,7 @@ function getBaseMatches() {
   return sourceMatches.map(cloneMatch)
 }
 
-Page({
+Page(Object.assign({}, createMainSwipeHandlers('pages/schedule/schedule'), {
   data: Object.assign({
     selectedGroupKey: 'A',
     isRefreshing: false,
@@ -565,4 +566,4 @@ Page({
     if (!groupKey) return
     this.refreshPage(groupKey)
   }
-})
+}))

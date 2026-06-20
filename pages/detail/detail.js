@@ -2,6 +2,7 @@ const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getDynamicReviews } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 function buildDynamicHistoryMatch(review) {
   if (!review || !review.matchId) return null
@@ -99,7 +100,7 @@ function getScorePanel(match) {
   }
 }
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     match: null,
     scorePanel: null
@@ -164,4 +165,4 @@ Page({
       this.setMatch(updatedMatches[0])
     })
   }
-})
+}))

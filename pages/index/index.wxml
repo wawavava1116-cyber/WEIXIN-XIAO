@@ -1,4 +1,4 @@
-<view class="safe-page home-page">
+<view class="safe-page home-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="startup-mask" wx:if="{{startupLoading}}">
     <view class="startup-panel">
       <text class="startup-percent">{{startupProgress}}%</text>

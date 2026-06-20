@@ -1,6 +1,7 @@
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { hasPredictionProfile, submitPrediction } = require('../../utils/userPredictions')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
+const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const RESULT_OPTIONS = ['主胜', '平局', '客胜']
 const GOAL_OPTIONS = ['0-1', '1-2', '2-3', '3-4', '4-5', '5+']
@@ -50,7 +51,7 @@ function buildScoreGroups(selectedScores) {
   }))
 }
 
-Page({
+Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
     match: null,
     resultOptions: RESULT_OPTIONS.map((value) => ({ value, selected: false })),
@@ -180,4 +181,4 @@ Page({
       wx.showToast({ title: message, icon: 'none' })
     })
   }
-})
+}))

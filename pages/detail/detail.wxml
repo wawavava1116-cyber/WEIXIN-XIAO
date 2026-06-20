@@ -1,4 +1,4 @@
-<view class="safe-page detail-page" wx:if="{{match}}">
+<view class="safe-page detail-page" wx:if="{{match}}" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="detail-hero">
     <view class="meta-line">
       <text>{{match.dateText}} · {{match.kickoff}} · {{match.group}}</text>

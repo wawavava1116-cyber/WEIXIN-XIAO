@@ -1,4 +1,4 @@
-<view class="safe-page favorites-page">
+<view class="safe-page favorites-page" bindtouchstart="onPageTouchStart" bindtouchend="onPageTouchEnd">
   <view class="favorite-hero">
     <text class="favorite-title">我的关注</text>
     <text class="favorite-subtitle">已关注比赛会自动排在首页上方，也会集中收纳在这里。</text>
