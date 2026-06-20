@@ -120,7 +120,9 @@
     <view class="group-create glass" wx:else>
       <view class="group-size-row">
         <block wx:for="{{groupSizeOptions}}" wx:key="value">
-          <button class="group-size-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectGroupSize">{{item.value}}人</button>
+          <view class="group-size-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectGroupSize">
+            <text>{{item.value}}人</text>
+          </view>
         </block>
       </view>
       <text class="group-create-title">选择预测比赛</text>

@@ -45,14 +45,18 @@
           <text class="pick-title">胜平负</text>
           <view class="option-row">
             <block wx:for="{{item.resultOptions}}" wx:for-item="option" wx:key="value">
-              <button class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectResult">{{option.value}}</button>
+              <view class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectResult">
+                <text>{{option.value}}</text>
+              </view>
             </block>
           </view>
 
           <text class="pick-title">备选胜平负 <text class="pick-note">可选</text></text>
           <view class="option-row">
             <block wx:for="{{item.backupOptions}}" wx:for-item="option" wx:key="value">
-              <button class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectBackup">{{option.value}}</button>
+              <view class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectBackup">
+                <text>{{option.value}}</text>
+              </view>
             </block>
           </view>
 
@@ -61,7 +65,9 @@
             <text class="score-group-title">{{scoreGroup.title}}</text>
             <view class="score-grid">
               <block wx:for="{{scoreGroup.options}}" wx:for-item="score" wx:key="value">
-                <button class="score-card {{score.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{score.value}}" bindtap="selectScore">{{score.value}}</button>
+                <view class="score-card {{score.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{score.value}}" bindtap="selectScore">
+                  <text>{{score.value}}</text>
+                </view>
               </block>
             </view>
           </block>
@@ -69,7 +75,9 @@
           <text class="pick-title">进球数</text>
           <view class="goal-grid">
             <block wx:for="{{item.goalOptions}}" wx:for-item="option" wx:key="value">
-              <button class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectGoals">{{option.value}}</button>
+              <view class="pick-chip {{option.selected ? 'selected' : ''}}" data-match-id="{{item.matchId}}" data-value="{{option.value}}" bindtap="selectGoals">
+                <text>{{option.value}}</text>
+              </view>
             </block>
           </view>
         </view>

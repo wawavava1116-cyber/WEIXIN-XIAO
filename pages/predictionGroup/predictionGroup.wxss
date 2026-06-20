@@ -187,8 +187,10 @@
 .option-row,
 .goal-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8rpx;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 10rpx;
+  row-gap: 8rpx;
+  width: 100%;
 }
 
 .pick-chip,
@@ -196,13 +198,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 58rpx;
-  border: 2rpx solid rgba(214, 170, 76, 0.24);
+  width: 100%;
+  min-width: 0;
+  height: 54rpx;
+  border: 1rpx solid rgba(214, 170, 76, 0.24);
   border-radius: 10rpx;
   color: #fff;
   background: #111;
   font-size: 22rpx;
   font-weight: 1000;
+  text-align: center;
+}
+
+.pick-chip text,
+.score-card text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.1;
 }
 
 .score-group-title {
@@ -214,12 +227,14 @@
 
 .score-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 7rpx;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 8rpx;
+  row-gap: 8rpx;
+  width: 100%;
 }
 
 .score-card {
-  min-height: 54rpx;
+  height: 50rpx;
   font-size: 20rpx;
 }
 
