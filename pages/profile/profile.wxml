@@ -10,9 +10,11 @@
     <view class="profile-copy">
       <view class="profile-name-row">
         <text class="profile-name" bindtap="showManualProfileForm">{{profile.nickname}}</text>
+      </view>
+      <view class="profile-meta-row">
+        <text class="profile-mode">{{profile.modeText}}</text>
         <text wx:if="{{profile.canEditProfile && !showProfileForm}}" class="profile-inline-edit" bindtap="showManualProfileForm">修改昵称</text>
       </view>
-      <text class="profile-mode">{{profile.modeText}}</text>
       <text class="profile-edit-tip" wx:if="{{profile.canEditProfile}}">点击头像或昵称可修改资料</text>
     </view>
   </view>
