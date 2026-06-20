@@ -25,7 +25,7 @@
     <button wx:if="{{profile.canLogin && !showProfileForm}}" class="profile-login-button" loading="{{savingProfile}}" bindtap="oneTapWechatLogin">微信一键登录</button>
     <view wx:if="{{showProfileForm}}" class="wechat-profile-form">
       <text class="profile-card-text">选择微信昵称，或输入自定义昵称。</text>
-      <input class="nickname-input" type="nickname" placeholder="选择或输入昵称" value="{{profileNickname}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
+      <input class="nickname-input" type="nickname" placeholder="选择或输入昵称" value="{{profileNickname}}" focus="{{profileNicknameFocus}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
       <button class="profile-login-button" loading="{{savingProfile}}" bindtap="saveWechatProfile">保存资料</button>
     </view>
   </view>

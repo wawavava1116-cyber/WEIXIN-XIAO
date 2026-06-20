@@ -28,6 +28,7 @@ Page({
     medals: { gold: 0, silver: 0, bronze: 0 },
     showProfileForm: false,
     profileNickname: '',
+    profileNicknameFocus: false,
     savingProfile: false
   },
 
@@ -75,8 +76,12 @@ Page({
       savingProfile: false,
       profile: getProfile(),
       showProfileForm: true,
-      profileNickname: user.nickname || ''
+      profileNickname: user.nickname || '',
+      profileNicknameFocus: false
     })
+    setTimeout(() => {
+      this.setData({ profileNicknameFocus: true })
+    }, 80)
   },
 
   onProfileNicknameInput(event) {
@@ -129,6 +134,7 @@ Page({
         this.setData({
           showProfileForm: false,
           profileNickname: '',
+          profileNicknameFocus: false,
           savingProfile: false
         })
         this.refreshProfile()

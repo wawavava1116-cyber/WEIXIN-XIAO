@@ -17,18 +17,27 @@
   justify-content: center;
   width: 86rpx;
   height: 86rpx;
+  min-width: 86rpx;
+  max-width: 86rpx;
   overflow: hidden;
   border: 1rpx solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
   background: #d7dce3;
+  box-sizing: border-box;
 }
 
 .avatar-edit-button {
   margin: 0;
   padding: 0;
-  min-width: 0;
-  min-height: 0;
-  line-height: 1;
+  width: 86rpx;
+  height: 86rpx;
+  min-width: 86rpx;
+  max-width: 86rpx;
+  min-height: 86rpx;
+  max-height: 86rpx;
+  border-radius: 50%;
+  font-size: 0;
+  line-height: 0;
   box-sizing: border-box;
   background: #d7dce3;
 }
@@ -40,6 +49,7 @@
 .profile-avatar image {
   width: 86rpx;
   height: 86rpx;
+  border-radius: 50%;
 }
 
 .avatar-silhouette {
