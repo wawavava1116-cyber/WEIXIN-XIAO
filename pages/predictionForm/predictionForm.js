@@ -1,4 +1,3 @@
-const { matches, upcomingMatches } = require('../../utils/matches')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { hasPredictionProfile, submitPrediction } = require('../../utils/userPredictions')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
@@ -27,7 +26,7 @@ function getAllMatches() {
   const remoteDatabase = getRemoteDatabaseSync()
   const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
   const remoteUpcoming = remoteDatabase && Array.isArray(remoteDatabase.upcomingMatches) ? remoteDatabase.upcomingMatches : []
-  return remoteMatches.concat(remoteUpcoming, matches, upcomingMatches)
+  return remoteMatches.concat(remoteUpcoming)
 }
 
 function findMatch(id) {
@@ -75,8 +74,10 @@ Page({
       })
       return
     }
-    this.loadMatch()
-    refreshRemoteDatabase(null, () => this.loadMatch())
+    refreshRemoteDatabase(null, () => this.loadMatch(), () => {
+      wx.showToast({ title: '云端比赛读取失败', icon: 'none' })
+      wx.navigateBack()
+    })
   },
 
   loadMatch() {

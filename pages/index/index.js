@@ -1,4 +1,3 @@
-const { upcomingMatches, recentFinishedHomeMatches, finishedMatches } = require('../../utils/matches')
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = require('../../utils/favorites')
@@ -18,7 +17,6 @@ const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
 const LIVE_SCORE_CACHE_KEY = 'worldcup_live_score_cache'
 const ANNOUNCEMENT_CLOSED_KEY = 'worldcup_announcement_closed_at'
 const ANNOUNCEMENT_HIDE_MS = 24 * 60 * 60 * 1000
-const sortedUpcomingMatches = sortMatchesByTime(upcomingMatches.concat(recentFinishedHomeMatches || []))
 const FEATURED_PRIORITY = {
   'brazil-morocco-20260613': 100,
   'australia-turkey-20260613': 72,
@@ -81,7 +79,7 @@ function getRefreshBaseMatches() {
   const remoteUpcoming = remoteDatabase && Array.isArray(remoteDatabase.upcomingMatches)
     ? remoteDatabase.upcomingMatches.concat(remoteDatabase.recentFinishedHomeMatches || [])
     : null
-  const sourceMatches = remoteUpcoming && remoteUpcoming.length ? sortMatchesByTime(remoteUpcoming) : sortedUpcomingMatches
+  const sourceMatches = remoteUpcoming && remoteUpcoming.length ? sortMatchesByTime(remoteUpcoming) : []
   return sourceMatches.map(cloneMatch)
 }
 
@@ -194,11 +192,19 @@ function getPickWinner(match) {
 function getStaticMatch(sourceMatch) {
   if (!sourceMatch) return null
   const matchId = typeof sourceMatch === 'string' ? sourceMatch : sourceMatch.id
-  const byId = sortedUpcomingMatches.find((match) => match.id === matchId)
+  const remoteDatabase = getRemoteDatabaseSync()
+  const remoteMatches = remoteDatabase
+    ? []
+      .concat(remoteDatabase.matches || [])
+      .concat(remoteDatabase.upcomingMatches || [])
+      .concat(remoteDatabase.recentFinishedHomeMatches || [])
+      .concat(remoteDatabase.historyMatches || [])
+    : []
+  const byId = remoteMatches.find((match) => match.id === matchId)
   if (byId) return byId
   const homeName = sourceMatch.home && sourceMatch.home.cn
   const awayName = sourceMatch.away && sourceMatch.away.cn
-  return sortedUpcomingMatches.find((match) => (
+  return remoteMatches.find((match) => (
     match.home && match.away &&
     match.home.cn === homeName &&
     match.away.cn === awayName
@@ -345,11 +351,11 @@ function buildReviewFromFinishedMatch(match) {
   })
 }
 
-function mergeReviewMatches(staticReviews, matches) {
+function mergeReviewMatches(matches) {
   const remoteDatabase = getRemoteDatabaseSync()
   const baseReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
     ? remoteDatabase.finishedMatches
-    : staticReviews
+    : []
   const dynamicReviews = matches
     .filter((match) => match.matchStatus === 'finished' && match.liveScore)
     .map(buildReviewFromFinishedMatch)
@@ -448,14 +454,14 @@ function saveAnnouncementClosedAt() {
 
 Page({
   data: {
-    matches: prepareDisplayMatches(sortedUpcomingMatches),
+    matches: [],
     favoriteCount: getFavoriteIds().length,
-    featured: selectFeaturedMatch(sortedUpcomingMatches),
+    featured: null,
     reviewOpen: false,
-    reviewSummary: `${finishedMatches.slice(0, 10).length} 场历史复盘`,
-    reviewSuccessRate: getReviewRate(prepareReviews(finishedMatches.slice(0, 10))),
-    finishedMatches: prepareReviews(finishedMatches.slice(0, 10)),
-    reviewChart: buildReviewChart(prepareReviews(finishedMatches.slice(0, 10))),
+    reviewSummary: '0 场历史复盘',
+    reviewSuccessRate: '0.0%',
+    finishedMatches: [],
+    reviewChart: buildReviewChart([]),
     databaseBadge: getRemoteDatabaseBadge(),
     startupLoading: true,
     startupProgress: 0,
@@ -465,14 +471,14 @@ Page({
     userInfo: getStoredUser() || { mode: 'guest', nickname: '游客用户', avatarUrl: '' },
     profileNickname: '',
     isRefreshing: false,
-    syncText: '下拉同步实时比分'
+    syncText: '下拉同步云端数据'
   },
 
   onLoad() {
     this.startupDone = false
     this.runStartupRefresh()
     this.scoreTimer = setInterval(() => {
-      this.refreshAll({ silent: true })
+      this.refreshRemoteAndAll({ silent: true })
     }, 10000)
   },
 
@@ -485,45 +491,40 @@ Page({
       this.applyFavoriteState()
       return
     }
-    this.refreshAll()
+    this.refreshRemoteAndAll()
     this.applyFavoriteState()
   },
 
   onUnload() {
     if (this.scoreTimer) clearInterval(this.scoreTimer)
     if (this.refreshFallback) clearTimeout(this.refreshFallback)
-    if (this.startupRemoteFallback) clearTimeout(this.startupRemoteFallback)
-    if (this.startupHardFallback) clearTimeout(this.startupHardFallback)
+    if (this.startupRetryTimer) clearTimeout(this.startupRetryTimer)
     if (this.startupProgressTimer) clearInterval(this.startupProgressTimer)
   },
 
   onPullDownRefresh() {
-    this.refreshAll({ manual: true })
+    this.refreshRemoteAndAll({ manual: true })
   },
 
   runStartupRefresh() {
     clearStartupCaches()
     this.startStartupProgress()
     this.checkForAppUpdate()
-    let started = false
     const startHomeRefresh = () => {
-      if (started) return
-      started = true
-      if (this.startupRemoteFallback) {
-        clearTimeout(this.startupRemoteFallback)
-        this.startupRemoteFallback = null
-      }
       this.refreshAll({
         startup: true,
         afterFinish: () => this.finishStartupProgress()
       })
     }
-    this.startupRemoteFallback = setTimeout(startHomeRefresh, 4500)
-    this.startupHardFallback = setTimeout(() => {
-      this.refreshing = false
-      this.finishStartupProgress()
-    }, 10000)
-    refreshRemoteDatabase(null, startHomeRefresh)
+    const loadRemote = () => {
+      refreshRemoteDatabase()
+        .then(startHomeRefresh)
+        .catch(() => {
+          this.setData({ syncText: '正在重新读取云端数据' })
+          this.startupRetryTimer = setTimeout(loadRemote, 3000)
+        })
+    }
+    loadRemote()
   },
 
   startStartupProgress() {
@@ -538,10 +539,7 @@ Page({
   },
 
   finishStartupProgress() {
-    if (this.startupHardFallback) {
-      clearTimeout(this.startupHardFallback)
-      this.startupHardFallback = null
-    }
+    if (this.startupRetryTimer) clearTimeout(this.startupRetryTimer)
     if (this.startupProgressTimer) {
       clearInterval(this.startupProgressTimer)
       this.startupProgressTimer = null
@@ -697,7 +695,7 @@ Page({
         wx.hideNavigationBarLoading()
         wx.stopPullDownRefresh()
         setTimeout(() => {
-          this.setData({ isRefreshing: false, syncText: '下拉同步实时比分' })
+          this.setData({ isRefreshing: false, syncText: '下拉同步云端数据' })
         }, 800)
       }
       if (options.afterFinish) options.afterFinish()
@@ -711,7 +709,7 @@ Page({
       const visibleMatches = nextMatches.filter(keepVisibleMatch)
       const timeSortedMatches = sortMatchesByTime(visibleMatches)
       const sortedMatches = sortFavoritesFirst(decorateMatches(timeSortedMatches, getFavoriteIds()))
-      const nextReviews = mergeReviewMatches(finishedMatches, nextMatches)
+      const nextReviews = mergeReviewMatches(nextMatches)
       this.setData({
         matches: sortedMatches,
         favoriteCount: getFavoriteIds().length,
@@ -725,9 +723,27 @@ Page({
     }
 
     const refreshBaseMatches = getRefreshBaseMatches()
+    updateMatches(refreshBaseMatches)
     refreshTeamStats(refreshBaseMatches, updateMatches, taskDone)
     refreshLiveScores(refreshBaseMatches, updateMatches, taskDone)
     this.refreshFallback = setTimeout(finish, options.startup ? 6000 : 5000)
+  },
+
+  refreshRemoteAndAll(options = {}) {
+    refreshRemoteDatabase()
+      .then(() => this.refreshAll(options))
+      .catch((error) => {
+        if (options.manual) wx.stopPullDownRefresh()
+        if (!options.silent) {
+          wx.hideNavigationBarLoading()
+          this.setData({
+            isRefreshing: false,
+            syncText: '云端数据读取失败'
+          })
+          const message = error && error.message ? error.message : '云端数据读取失败'
+          wx.showToast({ title: message.slice(0, 28), icon: 'none' })
+        }
+      })
   },
 
   toggleReview() {

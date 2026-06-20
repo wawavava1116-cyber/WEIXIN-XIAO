@@ -1,5 +1,5 @@
 const CACHE_KEY = 'worldcup_live_score_cache'
-const CACHE_TTL = 8 * 1000
+const CACHE_TTL = 10 * 1000
 
 function normalizeScores(rawScores) {
   const matches = rawScores && rawScores.matches ? rawScores.matches : rawScores

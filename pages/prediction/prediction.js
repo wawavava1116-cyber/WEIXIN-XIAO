@@ -1,4 +1,3 @@
-const { upcomingMatches } = require('../../utils/matches')
 const { getRemoteDatabaseBadge, getRemoteMatchesSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { createPredictionGroup, deletePredictionGroup, fetchPredictionDashboard, getPrediction, hasPredictionProfile } = require('../../utils/userPredictions')
 const { getStoredUser } = require('../../utils/userAuth')
@@ -34,7 +33,7 @@ function isPendingMatch(match, now, windowKeys) {
 function buildPredictionMatches() {
   const now = Date.now()
   const windowKeys = getPredictionWindowKeys(now)
-  return getRemoteMatchesSync('upcomingMatches', upcomingMatches).slice()
+  return getRemoteMatchesSync('upcomingMatches').slice()
     .filter((match) => isPendingMatch(match, now, windowKeys))
     .sort((a, b) => getMatchTimeValue(a) - getMatchTimeValue(b))
     .map((match) => {
@@ -121,8 +120,9 @@ Page({
   },
 
   onShow() {
-    refreshRemoteDatabase(null, () => this.refreshPredictions())
-    this.refreshPredictions()
+    refreshRemoteDatabase(null, () => this.refreshPredictions(), () => {
+      wx.showToast({ title: '云端比赛读取失败', icon: 'none' })
+    })
     this.refreshDashboard()
   },
 

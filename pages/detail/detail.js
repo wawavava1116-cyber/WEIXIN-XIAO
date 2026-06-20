@@ -1,4 +1,3 @@
-const { matches, historyMatches } = require('../../utils/matches')
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getDynamicReviews } = require('../../utils/reviewCache')
@@ -6,8 +5,15 @@ const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/re
 
 function buildDynamicHistoryMatch(review) {
   if (!review || !review.matchId) return null
-  const sourceMatch = matches.find((item) => item.id === review.matchId) ||
-    historyMatches.find((item) => item.id === review.matchId)
+  const remoteDatabase = getRemoteDatabaseSync()
+  const remoteMatches = remoteDatabase
+    ? []
+      .concat(remoteDatabase.matches || [])
+      .concat(remoteDatabase.historyMatches || [])
+      .concat(remoteDatabase.upcomingMatches || [])
+      .concat(remoteDatabase.recentFinishedHomeMatches || [])
+    : []
+  const sourceMatch = remoteMatches.find((item) => item.id === review.matchId)
   if (sourceMatch) {
     return Object.assign({}, sourceMatch, {
       dateText: review.dateText || sourceMatch.dateText,
@@ -101,8 +107,9 @@ Page({
 
   onLoad(options) {
     this.loadOptions = options || {}
-    this.loadMatch(this.loadOptions, false)
-    refreshRemoteDatabase(null, () => this.loadMatch(this.loadOptions, true))
+    refreshRemoteDatabase(null, () => this.loadMatch(this.loadOptions, true), () => {
+      wx.showToast({ title: '云端详情读取失败', icon: 'none' })
+    })
     this.scoreTimer = setInterval(() => {
       this.refreshScore()
     }, 10000)
@@ -120,14 +127,14 @@ Page({
     const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
     const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
     const primaryMatches = options.source === 'history'
-      ? remoteHistoryMatches.concat(historyMatches)
-      : remoteMatches.concat(matches)
-    const fallbackMatches = options.source === 'history'
-      ? remoteMatches.concat(matches)
-      : remoteHistoryMatches.concat(historyMatches)
+      ? remoteHistoryMatches
+      : remoteMatches
+    const alternateRemoteMatches = options.source === 'history'
+      ? remoteMatches
+      : remoteHistoryMatches
     const dynamicReview = getDynamicReviews().find((item) => item.matchId === options.id || item.id === options.id)
     const baseMatch = primaryMatches.find((item) => item.id === options.id) ||
-      fallbackMatches.find((item) => item.id === options.id)
+      alternateRemoteMatches.find((item) => item.id === options.id)
     const dynamicMatch = dynamicReview ? buildDynamicHistoryMatch(dynamicReview) : null
     const match = options.source === 'history' && dynamicMatch ? dynamicMatch : (baseMatch || dynamicMatch)
     if (!match) {

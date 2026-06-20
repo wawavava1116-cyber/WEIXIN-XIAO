@@ -1,4 +1,3 @@
-const { matches, historyMatches, finishedMatches } = require('../../utils/matches')
 const { getDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
@@ -10,9 +9,7 @@ function buildHistoryMatch(review) {
   const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
   const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
   const sourceMatch = remoteMatches.find((item) => item.id === review.matchId) ||
-    remoteHistoryMatches.find((item) => item.id === review.matchId) ||
-    matches.find((item) => item.id === review.matchId) ||
-    historyMatches.find((item) => item.id === review.matchId)
+    remoteHistoryMatches.find((item) => item.id === review.matchId)
   const sourceReview = sourceMatch && sourceMatch.review ? sourceMatch.review : null
   const nextReview = Object.assign({}, sourceReview || {}, review)
   if (sourceMatch) {
@@ -46,9 +43,9 @@ function buildHistoryMatch(review) {
 
 function buildHistoryMatches() {
   const remoteDatabase = getRemoteDatabaseSync()
-  const staticReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+  const staticReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches)
     ? remoteDatabase.finishedMatches.filter(Boolean)
-    : finishedMatches.filter(Boolean)
+    : []
   return mergeReviewLists(staticReviews, getDynamicReviews(), 0)
     .map(buildHistoryMatch)
     .filter(Boolean)
@@ -78,7 +75,9 @@ Page({
   },
 
   onShow() {
-    refreshRemoteDatabase(null, () => this.refreshHistoryMatches())
+    refreshRemoteDatabase(null, () => this.refreshHistoryMatches(), () => {
+      wx.showToast({ title: '云端历史读取失败', icon: 'none' })
+    })
   },
 
   refreshHistoryMatches() {

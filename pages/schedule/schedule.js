@@ -1,4 +1,3 @@
-const { matches, finishedMatches } = require('../../utils/matches')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 
@@ -88,9 +87,9 @@ function getGroupNumber(groupName) {
 
 function getSourceReviews() {
   const remoteDatabase = getRemoteDatabaseSync()
-  return remoteDatabase && Array.isArray(remoteDatabase.finishedMatches) && remoteDatabase.finishedMatches.length
+  return remoteDatabase && Array.isArray(remoteDatabase.finishedMatches)
     ? remoteDatabase.finishedMatches
-    : finishedMatches
+    : []
 }
 
 function buildReviewMap(sourceMatches) {
@@ -466,9 +465,9 @@ function buildPageData(sourceMatches, selectedGroupKey) {
 
 function getBaseMatches() {
   const remoteDatabase = getRemoteDatabaseSync()
-  const sourceMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) && remoteDatabase.matches.length
+  const sourceMatches = remoteDatabase && Array.isArray(remoteDatabase.matches)
     ? remoteDatabase.matches
-    : matches
+    : []
   return sourceMatches.map(cloneMatch)
 }
 
@@ -480,17 +479,17 @@ Page({
   }, buildPageData(getBaseMatches(), 'A')),
 
   onLoad() {
-    this.sourceMatches = getBaseMatches()
-    refreshRemoteDatabase(null, () => this.refreshLiveSchedule())
-    this.refreshLiveSchedule()
+    this.sourceMatches = []
+    refreshRemoteDatabase(null, () => this.refreshLiveSchedule(), () => {
+      wx.showToast({ title: '云端赛程读取失败', icon: 'none' })
+    })
     this.scoreTimer = setInterval(() => {
-      this.refreshLiveSchedule({ silent: true })
-    }, 15000)
+      refreshRemoteDatabase(null, () => this.refreshLiveSchedule({ silent: true }), () => {})
+    }, 10000)
   },
 
   onShow() {
-    refreshRemoteDatabase(null, () => this.refreshLiveSchedule({ silent: true }))
-    this.refreshPage(this.data.selectedGroupKey || 'A')
+    refreshRemoteDatabase(null, () => this.refreshLiveSchedule({ silent: true }), () => {})
   },
 
   onUnload() {
@@ -498,7 +497,10 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.refreshLiveSchedule({ manual: true })
+    refreshRemoteDatabase(null, () => this.refreshLiveSchedule({ manual: true }), () => {
+      wx.stopPullDownRefresh()
+      wx.showToast({ title: '云端赛程读取失败', icon: 'none' })
+    })
   },
 
   refreshPage(groupKey) {

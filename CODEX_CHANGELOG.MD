@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 11:08 - 前端展示数据改为强依赖云端数据库
+- 环境：公司电脑 Codex + 用户数据同步策略要求
+- 目的：删除小程序前端页面对本地静态赛程/复盘数据的展示兜底，首页启动必须先读取云端数据库，数据加载完成后才显示首页；手机端云端数据刷新频率提高到 10 秒。
+- 涉及文件：`utils/remoteMatchDatabase.js`、`utils/liveMatchScores.js`、`pages/index/index.js`、`pages/schedule/schedule.js`、`pages/history/history.js`、`pages/detail/detail.js`、`pages/prediction/prediction.js`、`pages/predictionForm/predictionForm.js`、`pages/favorites/favorites.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：远程数据库缓存有效期从 10 分钟压缩为 10 秒；远程数据库读取失败时不再触发完成回调或使用本地数据兜底；首页初始数据改为空，启动遮罩保持到云端数据库成功读取并完成首轮刷新后才关闭；首页 10 秒定时刷新改为先拉云端数据库再合并实时比分；赛程页定时刷新从 15 秒改为 10 秒并先读取云端；历史、详情、预测、填写预测和收藏页移除本地 `utils/matches` 展示兜底。
+- 数据库/赛程/复盘：未修改比赛预测内容或复盘规则；前端读取策略改为只展示云服务器 `/api/database/latest` 返回的数据和运行时用户预测/动态复盘缓存。
+- 云函数：未修改云函数代码，不需要重新部署云函数。
+- 服务器：未修改 `server/`，不需要重新部署轻量云服务器服务；但手机端现在完全依赖服务器数据库接口，服务器不可用时首页会停留在加载状态并重试。
+- 验证：已运行相关页面和工具 JS 语法检查、WXML 标签检查、页面 JSON 解析检查、前端本地赛程引用检查和 `git diff --check`。
+- 后续注意：真机测试时必须确认云服务器 `/api/database/latest` 可稳定访问；如果服务器或 `apiProxy` 不通，首页不会再展示审核包内的旧赛程。
+
 ## 2026-06-20 10:52 - 我的预测可预测比赛固定展开
 - 环境：公司电脑 Codex + 用户体验反馈
 - 目的：把“我的预测”页面中的可预测比赛列表改为默认展开并固定显示，删除原来的“查看/收起可预测比赛”按钮。

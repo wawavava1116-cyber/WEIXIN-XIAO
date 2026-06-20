@@ -2,7 +2,7 @@ const { getDatabaseBadge } = require('./buildInfo')
 const { requestServerApi } = require('./remoteApi')
 
 const CACHE_KEY = 'worldcup_remote_match_database'
-const CACHE_TTL = 10 * 60 * 1000
+const CACHE_TTL = 10 * 1000
 
 function normalizeDatabase(raw) {
   if (!raw || typeof raw !== 'object') return null
@@ -35,42 +35,42 @@ function setRemoteDatabase(database) {
 
 function getRemoteDatabaseBadge() {
   const database = getRemoteDatabaseSync()
+  if (!database) return '正在读取云端数据库'
   return getDatabaseBadge(
-    database && database.databaseUpdatedAt,
-    database && database.version
+    database.databaseUpdatedAt,
+    database.version
   )
 }
 
-function getRemoteMatchesSync(fieldName, fallback) {
+function getRemoteMatchesSync(fieldName) {
   const database = getRemoteDatabaseSync()
   const value = database && Array.isArray(database[fieldName]) ? database[fieldName] : null
-  return value && value.length ? value : fallback
+  return value && value.length ? value : []
 }
 
-function refreshRemoteDatabase(onReady, onComplete) {
-  let finished = false
-  let fallbackTimer = null
-  const complete = () => {
-    if (finished) return
-    finished = true
-    if (fallbackTimer) clearTimeout(fallbackTimer)
-    onComplete && onComplete()
-  }
-  fallbackTimer = setTimeout(complete, 4000)
-  requestServerApi({
+function refreshRemoteDatabase(onReady, onComplete, onError) {
+  return requestServerApi({
     path: '/api/database/latest',
     method: 'GET',
-    timeout: 3500
+    timeout: 10000
   })
     .then((data) => {
       const database = normalizeDatabase(data)
-      if (database) {
-        setRemoteDatabase(database)
-        onReady && onReady(database)
+      if (!database) {
+        throw new Error('REMOTE_DATABASE_INVALID')
       }
-      complete()
+      setRemoteDatabase(database)
+      onReady && onReady(database)
+      onComplete && onComplete(database)
+      return database
     })
-    .catch(complete)
+    .catch((error) => {
+      if (onError) {
+        onError(error)
+        return null
+      }
+      throw error
+    })
 }
 
 module.exports = {
