@@ -1,10 +1,14 @@
-const { apiBaseUrl } = require('./serverConfig')
+const { apiBaseUrl, apiDomainFallbackEnabled } = require('./serverConfig')
 
 const CLOUD_PROXY_NAME = 'apiProxy'
 const DEFAULT_TIMEOUT_MS = 10000
 
 function getApiBaseUrl() {
   return String(apiBaseUrl || '').replace(/\/$/, '')
+}
+
+function canUseDomainFallback() {
+  return apiDomainFallbackEnabled === true && !!getApiBaseUrl()
 }
 
 function normalizeRequestError(message) {
@@ -88,13 +92,15 @@ function requestServerApi(options) {
   const requestOptions = Object.assign({ method: 'GET', timeout: DEFAULT_TIMEOUT_MS }, options || {})
   if (wx.cloud && wx.cloud.callFunction) {
     return callCloudProxy(requestOptions).catch((error) => {
-      if (String(error && error.message || '').indexOf('CLOUD_PROXY') >= 0) {
+      if (String(error && error.message || '').indexOf('CLOUD_PROXY') >= 0 && canUseDomainFallback()) {
         return callDomainApi(requestOptions)
       }
       throw error
     })
   }
-  return callDomainApi(requestOptions)
+  return canUseDomainFallback()
+    ? callDomainApi(requestOptions)
+    : Promise.reject(new Error('CLOUD_PROXY_REQUIRED'))
 }
 
 module.exports = {

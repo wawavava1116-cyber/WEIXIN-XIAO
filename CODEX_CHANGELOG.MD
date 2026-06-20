@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 14:05 - 禁用域名直连兜底并强制走云函数代理
+- 环境：公司电脑 Codex + 线上域名/服务器连通性检查
+- 目的：处理当前正式版/体验版读取云端数据时 `www.ag-shield.com` HTTPS 域名超时导致本地托底数据停留时间过长的问题；新版本改为不再尝试该域名直连，避免被域名链路拖慢。
+- 涉及文件：`utils/serverConfig.js`、`utils/remoteApi.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：`apiBaseUrl` 改为空并新增 `apiDomainFallbackEnabled: false`；`requestServerApi` 只有在显式开启域名兜底且存在可用域名时才会回退到 `wx.request`，默认强制通过 `apiProxy` 云函数访问服务器 IP。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或服务器数据库内容；只调整小程序端访问云端数据库/用户预测接口的通道选择。
+- 云函数：本次未修改云函数代码，但新版本依赖 `apiProxy` 已部署且可用；如果云函数未部署，页面会提示云端代理不可用而不是等待域名超时。
+- 服务器：未修改 `server/`，不需要重新部署轻量云服务器；但 `www.ag-shield.com` 域名本身仍需备案/解封后才能作为直连备用通道。
+- 验证：已运行 `node -c utils/remoteApi.js`、`node -c utils/serverConfig.js` 和 `git diff --check`；外部检查确认服务器 IP HTTPS 正常，`www.ag-shield.com` 域名 HTTPS 仍超时。
+- 后续注意：已经上线的旧正式版包内代码无法被云端直接改写，本次改动需要随体验版审核通过后才会彻底生效；旧正式版若仍直连域名，只能通过恢复域名访问速度来改善。
+
 ## 2026-06-20 12:20 - 用预测 Skill 更新完赛归档和第二三轮小组形势
 - 环境：公司电脑 Codex + football-match-predictor Skill + Betfair API + 公开赛果核对
 - 目的：按用户要求归档 6 月 20 日已结束比赛，并根据第一、第二轮结果重新校准后续小组赛出线关系、保平/必须赢球等预测权重。
