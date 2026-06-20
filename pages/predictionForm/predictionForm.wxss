@@ -102,7 +102,8 @@
 .goal-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8rpx;
+  column-gap: 10rpx;
+  row-gap: 8rpx;
 }
 
 .goal-grid {
@@ -115,7 +116,7 @@
   justify-content: center;
   width: 100%;
   min-width: 0;
-  min-height: 54rpx;
+  height: 54rpx;
   border: 1rpx solid rgba(214, 170, 76, 0.24);
   border-radius: 8rpx;
   color: #fff;
@@ -125,8 +126,15 @@
   text-align: center;
 }
 
+.pick-chip text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.1;
+}
+
 .goal-chip {
-  min-height: 48rpx;
+  height: 50rpx;
   font-size: 20rpx;
 }
 
@@ -143,8 +151,8 @@
 
 .score-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 10rpx;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 8rpx;
   row-gap: 8rpx;
   width: 100%;
 }
@@ -155,13 +163,13 @@
   justify-content: center;
   width: 100%;
   min-width: 0;
-  min-height: 50rpx;
-  padding: 4rpx 0;
+  height: 50rpx;
+  padding: 0;
   border: 1rpx solid rgba(255, 255, 255, 0.12);
   border-radius: 8rpx;
   color: #fff;
   background: #151515;
-  font-size: 22rpx;
+  font-size: 20rpx;
   line-height: 1.1;
   font-weight: 1000;
   text-align: center;

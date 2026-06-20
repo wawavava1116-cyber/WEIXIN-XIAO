@@ -21,7 +21,9 @@
     <text class="pick-title">胜平负</text>
     <view class="option-row">
       <block wx:for="{{resultOptions}}" wx:key="value">
-        <button class="pick-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectResult">{{item.value}}</button>
+        <view class="pick-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectResult">
+          <text>{{item.value}}</text>
+        </view>
       </block>
     </view>
   </view>
@@ -31,7 +33,9 @@
     <text class="pick-note">可选</text>
     <view class="option-row">
       <block wx:for="{{backupOptions}}" wx:key="value">
-        <button class="pick-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectBackup">{{item.value}}</button>
+        <view class="pick-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectBackup">
+          <text>{{item.value}}</text>
+        </view>
       </block>
     </view>
   </view>
@@ -46,9 +50,9 @@
         <text class="score-group-title">{{item.title}}</text>
         <view class="score-grid">
           <block wx:for="{{item.options}}" wx:for-item="score" wx:key="value">
-            <button class="score-card {{score.selected ? 'selected' : ''}}" data-value="{{score.value}}" bindtap="selectScore">
+            <view class="score-card {{score.selected ? 'selected' : ''}}" data-value="{{score.value}}" bindtap="selectScore">
               <text>{{score.value}}</text>
-            </button>
+            </view>
           </block>
         </view>
       </view>
@@ -59,7 +63,9 @@
     <text class="pick-title">进球数</text>
     <view class="goal-grid">
       <block wx:for="{{goalOptions}}" wx:key="value">
-        <button class="pick-chip goal-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectGoals">{{item.value}}</button>
+        <view class="pick-chip goal-chip {{item.selected ? 'selected' : ''}}" data-value="{{item.value}}" bindtap="selectGoals">
+          <text>{{item.value}}</text>
+        </view>
       </block>
     </view>
   </view>
