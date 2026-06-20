@@ -11,12 +11,8 @@
   <view class="prediction-section">
     <view class="section-title-row">
       <text class="section-title-text">已经预测</text>
-      <view class="section-toggle" bindtap="togglePredictionMatches">
-        <text>{{showPredictionMatches ? '收起可预测比赛' : '查看可预测比赛'}}</text>
-        <text>{{matches.length}}</text>
-      </view>
     </view>
-    <view class="prediction-match-panel" wx:if="{{showPredictionMatches}}">
+    <view class="prediction-match-panel">
       <view class="auth-panel glass" wx:if="{{!canPredict}}">
         <text>{{authMessage}}</text>
       </view>

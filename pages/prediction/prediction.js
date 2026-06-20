@@ -99,7 +99,6 @@ Page({
     canPredict: hasPredictionProfile(),
     authMessage: '',
     matches: buildPredictionMatches(),
-    showPredictionMatches: false,
     showSubmittedRecords: false,
     submittedPredictions: [],
     groupSubmittedPredictions: [],
@@ -200,12 +199,6 @@ Page({
     this.setData({
       selectedGroupMatchIds: selected,
       groupMatchOptions: buildGroupMatchOptions(this.data.matches, selected)
-    })
-  },
-
-  togglePredictionMatches() {
-    this.setData({
-      showPredictionMatches: !this.data.showPredictionMatches
     })
   },
 

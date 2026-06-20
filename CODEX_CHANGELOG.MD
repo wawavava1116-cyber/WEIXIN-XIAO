@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 10:52 - 我的预测可预测比赛固定展开
+- 环境：公司电脑 Codex + 用户体验反馈
+- 目的：把“我的预测”页面中的可预测比赛列表改为默认展开并固定显示，删除原来的“查看/收起可预测比赛”按钮。
+- 涉及文件：`pages/prediction/prediction.js`、`pages/prediction/prediction.wxml`、`pages/prediction/prediction.wxss`、`CODEX_CHANGELOG.MD`
+- 主要改动：移除 `showPredictionMatches` 状态和 `togglePredictionMatches` 方法；删除标题右侧的可预测比赛折叠按钮；可预测比赛列表不再使用条件渲染，进入页面即展示；清理无用的按钮样式。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容。
+- 云函数：未修改云函数，不需要重新部署云函数。
+- 服务器：未修改 `server/`，不需要重新部署轻量云服务器服务。
+- 验证：后续运行 `node -c pages/prediction/prediction.js`、WXML 标签检查和 `git diff --check`。
+- 后续注意：真机预览时确认“已预测内容”折叠按钮仍然只控制已提交记录，不影响可预测比赛列表。
+
 ## 2026-06-20 10:45 - 我的预测已提交内容改为折叠显示
 - 环境：公司电脑 Codex + 手机端截图反馈
 - 目的：按用户反馈把“我的预测”页面统计卡下方已经预测的单场/小组记录折叠起来，避免进入页面后红框区域直接铺满内容。
