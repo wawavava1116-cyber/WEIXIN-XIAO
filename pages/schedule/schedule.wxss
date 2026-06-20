@@ -763,3 +763,143 @@
   margin: 8rpx 0;
   border-radius: 6rpx;
 }
+
+.bracket-board {
+  grid-template-columns: minmax(0, 1fr) 70rpx minmax(0, 1fr);
+  gap: 3rpx;
+  min-height: 570rpx;
+  padding: 8rpx 3rpx;
+}
+
+.bracket-rounds {
+  gap: 2rpx;
+  height: 548rpx;
+}
+
+.bracket-match-node {
+  padding: 1rpx 0;
+}
+
+.bracket-match-node::after {
+  right: -3rpx;
+  width: 3rpx;
+  background: rgba(214, 170, 76, 0.28);
+}
+
+.bracket-right-rounds .bracket-match-node::after {
+  left: -3rpx;
+}
+
+.bracket-round-8 .bracket-match-node {
+  min-height: 46rpx;
+}
+
+.bracket-round-4 .bracket-match-node {
+  min-height: 76rpx;
+}
+
+.bracket-round-2 .bracket-match-node {
+  min-height: 124rpx;
+}
+
+.bracket-round-1 .bracket-match-node {
+  min-height: 198rpx;
+}
+
+.bracket-team-row {
+  gap: 2rpx;
+  height: 28rpx;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #f7f7f7;
+  background: transparent;
+  font-size: 15rpx;
+  line-height: 1;
+  text-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.72);
+}
+
+.bracket-team-row image {
+  width: 27rpx;
+  height: 19rpx;
+  border-radius: 2rpx;
+  box-shadow: 0 0 0 1rpx rgba(255, 255, 255, 0.16);
+}
+
+.bracket-team-row text {
+  max-width: 28rpx;
+  color: #f7f7f7;
+  font-size: 15rpx;
+  letter-spacing: 0;
+}
+
+.seed-box {
+  width: 17rpx;
+  height: 11rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.36);
+  border-radius: 2rpx;
+  background: transparent;
+}
+
+.winner-route {
+  color: #56e88a;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.winner-route image {
+  box-shadow: 0 0 0 2rpx rgba(57, 217, 123, 0.46);
+}
+
+.winner-route text {
+  color: #56e88a;
+}
+
+.bracket-score-line {
+  min-height: 14rpx;
+  color: #d6aa4c;
+  font-size: 11rpx;
+}
+
+.small-score {
+  font-size: 9rpx;
+}
+
+.bracket-center {
+  min-height: 520rpx;
+}
+
+.medal-match {
+  width: 68rpx;
+}
+
+.medal-title {
+  font-size: 10rpx;
+}
+
+.medal-node {
+  min-height: 58rpx;
+  padding: 1rpx 0;
+  border-color: rgba(214, 170, 76, 0.22);
+  background: transparent;
+}
+
+.medal-node .bracket-team-row {
+  justify-content: center;
+}
+
+.medal-node .bracket-team-row image {
+  width: 25rpx;
+  height: 18rpx;
+}
+
+.medal-node .bracket-team-row text {
+  max-width: 30rpx;
+  font-size: 14rpx;
+}
+
+.bracket-logo {
+  width: 30rpx;
+  height: 38rpx;
+  margin: 6rpx 0;
+}
