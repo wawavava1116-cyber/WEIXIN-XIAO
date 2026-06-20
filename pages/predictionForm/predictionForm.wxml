@@ -1,19 +1,23 @@
 <view class="safe-page prediction-form-page">
-  <view class="match-hero glass" wx:if="{{match}}">
-    <view class="match-team">
-      <image class="match-flag" src="{{match.home.flag}}" mode="aspectFit"></image>
-      <text class="match-abbr">{{match.home.abbr}}</text>
-      <text class="match-name">{{match.home.cn}}</text>
+  <view class="match-hero fixture-row glass" wx:if="{{match}}">
+    <view class="fixture-team">
+      <image class="fixture-flag" src="{{match.home.flag}}" mode="aspectFit"></image>
+      <view>
+        <text class="fixture-abbr">{{match.home.abbr}}</text>
+        <text class="fixture-name">{{match.home.cn}}</text>
+      </view>
     </view>
-    <view class="match-center">
+    <view class="fixture-time">
       <text>{{match.dateText}}</text>
       <text>{{match.kickoff}}</text>
       <text>VS</text>
     </view>
-    <view class="match-team right">
-      <image class="match-flag" src="{{match.away.flag}}" mode="aspectFit"></image>
-      <text class="match-abbr">{{match.away.abbr}}</text>
-      <text class="match-name">{{match.away.cn}}</text>
+    <view class="fixture-team right">
+      <view>
+        <text class="fixture-abbr">{{match.away.abbr}}</text>
+        <text class="fixture-name">{{match.away.cn}}</text>
+      </view>
+      <image class="fixture-flag" src="{{match.away.flag}}" mode="aspectFit"></image>
     </view>
   </view>
 

@@ -37,10 +37,26 @@
       <block wx:for="{{group.matchForms}}" wx:key="matchId">
         <view class="match-form glass">
           <view class="match-form-head" data-match-id="{{item.matchId}}" bindtap="toggleMatchForm">
-            <view class="match-line">
-              <text>{{item.home.abbr}}</text>
-              <text>{{item.dateText}} {{item.kickoff}}</text>
-              <text>{{item.away.abbr}}</text>
+            <view class="fixture-row">
+              <view class="fixture-team">
+                <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+                <view>
+                  <text class="fixture-abbr">{{item.home.abbr}}</text>
+                  <text class="fixture-name">{{item.home.cn}}</text>
+                </view>
+              </view>
+              <view class="fixture-time">
+                <text>{{item.dateText}}</text>
+                <text>{{item.kickoff}}</text>
+                <text>VS</text>
+              </view>
+              <view class="fixture-team right">
+                <view>
+                  <text class="fixture-abbr">{{item.away.abbr}}</text>
+                  <text class="fixture-name">{{item.away.cn}}</text>
+                </view>
+                <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+              </view>
             </view>
             <view wx:if="{{item.canCollapse}}" class="match-toggle">{{item.toggleText}}</view>
           </view>
@@ -94,9 +110,18 @@
       <text class="section-title-text">比赛</text>
       <block wx:for="{{group.matches}}" wx:key="matchId">
         <view class="match-summary glass">
-          <text>{{item.home.abbr}}</text>
-          <text>{{item.dateText}} {{item.kickoff}}</text>
-          <text>{{item.away.abbr}}</text>
+          <view class="fixture-team">
+            <image class="fixture-flag" src="{{item.home.flag}}" mode="aspectFit"></image>
+            <text class="fixture-abbr">{{item.home.abbr}}</text>
+          </view>
+          <view class="fixture-time">
+            <text>{{item.dateText}}</text>
+            <text>{{item.kickoff}}</text>
+          </view>
+          <view class="fixture-team right">
+            <text class="fixture-abbr">{{item.away.abbr}}</text>
+            <image class="fixture-flag" src="{{item.away.flag}}" mode="aspectFit"></image>
+          </view>
         </view>
       </block>
     </view>

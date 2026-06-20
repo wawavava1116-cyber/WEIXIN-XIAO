@@ -149,28 +149,90 @@
 
 .match-form-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 76rpx;
   align-items: center;
   gap: 10rpx;
 }
 
-.match-line,
+.fixture-row,
 .match-summary {
   display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-columns: 1fr 1.08fr 1fr;
   align-items: center;
   gap: 8rpx;
   color: #fff;
-  font-size: 25rpx;
+}
+
+.fixture-team {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  min-width: 0;
+}
+
+.fixture-team.right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.fixture-flag {
+  flex: none;
+  width: 44rpx;
+  height: 32rpx;
+}
+
+.fixture-team > view {
+  min-width: 0;
+}
+
+.fixture-abbr,
+.fixture-name,
+.fixture-time text {
+  display: block;
+}
+
+.fixture-abbr {
+  color: #fff;
+  font-size: 28rpx;
+  line-height: 1;
   font-weight: 1000;
+}
+
+.fixture-name {
+  margin-top: 5rpx;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 16rpx;
+  line-height: 1.15;
+  font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixture-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rpx;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 18rpx;
+  line-height: 1.15;
+  font-weight: 900;
   text-align: center;
+}
+
+.fixture-time text:last-child {
+  color: #d6aa4c;
+  font-size: 22rpx;
+  font-weight: 1000;
 }
 
 .match-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 76rpx;
+  min-width: 0;
+  width: 76rpx;
   height: 42rpx;
   padding: 0 12rpx;
   border: 1rpx solid rgba(214, 170, 76, 0.38);
@@ -184,12 +246,6 @@
 
 .match-form-body {
   margin-top: 12rpx;
-}
-
-.match-line text:nth-child(2),
-.match-summary text:nth-child(2) {
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 18rpx;
 }
 
 .match-summary {
