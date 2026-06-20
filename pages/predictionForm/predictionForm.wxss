@@ -69,6 +69,7 @@
 
 .pick-section {
   margin-top: 9rpx;
+  width: 100%;
 }
 
 .section-head {
@@ -121,6 +122,7 @@
   background: #141414;
   font-size: 21rpx;
   font-weight: 1000;
+  text-align: center;
 }
 
 .goal-chip {
@@ -141,8 +143,10 @@
 
 .score-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8rpx;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 10rpx;
+  row-gap: 8rpx;
+  width: 100%;
 }
 
 .score-card {
@@ -158,8 +162,16 @@
   color: #fff;
   background: #151515;
   font-size: 22rpx;
-  line-height: 1;
+  line-height: 1.1;
   font-weight: 1000;
+  text-align: center;
+}
+
+.score-card text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 1.1;
 }
 
 .pick-chip.selected,
