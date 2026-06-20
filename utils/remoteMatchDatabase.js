@@ -2,7 +2,6 @@ const { getDatabaseBadge } = require('./buildInfo')
 const { requestServerApi } = require('./remoteApi')
 
 const CACHE_KEY = 'worldcup_remote_match_database'
-const CACHE_TTL = 10 * 1000
 
 function normalizeDatabase(raw) {
   if (!raw || typeof raw !== 'object') return null
@@ -15,7 +14,6 @@ function getRemoteDatabaseSync() {
   try {
     const cache = wx.getStorageSync(CACHE_KEY)
     if (!cache || !cache.savedAt || !cache.database) return null
-    if (Date.now() - cache.savedAt > CACHE_TTL) return null
     return cache.database
   } catch (error) {
     return null
