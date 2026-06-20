@@ -73,46 +73,55 @@
         <text class="stats-value">{{predictionStats.settledCount || 0}}场</text>
       </view>
     </view>
-    <block wx:if="{{canPredict && submittedPredictions.length}}">
-      <block wx:for="{{submittedPredictions}}" wx:key="id">
-        <navigator class="submitted-card glass" url="/pages/predictionResult/predictionResult?id={{item.id}}" hover-class="fixture-hover">
-          <view class="submitted-top">
-            <text>{{item.dateText}} · {{item.kickoff}}</text>
-            <text class="{{item.settled ? 'settled-ok' : 'settled-pending'}}">{{item.percent}}</text>
-          </view>
-          <view class="submitted-teams">
-            <text>{{item.home.abbr}}</text>
-            <text>vs</text>
-            <text>{{item.away.abbr}}</text>
-          </view>
-          <view class="submitted-picks">
-            <text>{{item.resultText}}</text>
-            <text>{{item.scoreText}}</text>
-            <text>{{item.goalsText}}</text>
-          </view>
-        </navigator>
+    <view class="submitted-toggle glass" wx:if="{{canPredict}}" bindtap="toggleSubmittedRecords">
+      <view>
+        <text class="submitted-toggle-title">已预测内容</text>
+        <text class="submitted-toggle-sub">{{submittedRecordCount}} 条</text>
+      </view>
+      <text class="submitted-toggle-action">{{showSubmittedRecords ? '收起' : '展开'}}</text>
+    </view>
+    <view wx:if="{{showSubmittedRecords}}">
+      <block wx:if="{{canPredict && submittedPredictions.length}}">
+        <block wx:for="{{submittedPredictions}}" wx:key="id">
+          <navigator class="submitted-card glass" url="/pages/predictionResult/predictionResult?id={{item.id}}" hover-class="fixture-hover">
+            <view class="submitted-top">
+              <text>{{item.dateText}} · {{item.kickoff}}</text>
+              <text class="{{item.settled ? 'settled-ok' : 'settled-pending'}}">{{item.percent}}</text>
+            </view>
+            <view class="submitted-teams">
+              <text>{{item.home.abbr}}</text>
+              <text>vs</text>
+              <text>{{item.away.abbr}}</text>
+            </view>
+            <view class="submitted-picks">
+              <text>{{item.resultText}}</text>
+              <text>{{item.scoreText}}</text>
+              <text>{{item.goalsText}}</text>
+            </view>
+          </navigator>
+        </block>
       </block>
-    </block>
-    <block wx:if="{{canPredict && groupSubmittedPredictions.length}}">
-      <block wx:for="{{groupSubmittedPredictions}}" wx:key="id">
-        <navigator class="submitted-card group-submitted-card glass" url="{{item.path}}" hover-class="fixture-hover">
-          <view class="submitted-top">
-            <text>{{item.dateText}} · {{item.kickoff}}</text>
-            <text class="settled-pending">{{item.progressText}}</text>
-          </view>
-          <view class="submitted-teams">
-            <text>{{item.titleText}}</text>
-          </view>
-          <view class="submitted-picks">
-            <text>{{item.matchText}}</text>
-            <text>{{item.stateText}}</text>
-            <text>可修改</text>
-          </view>
-        </navigator>
+      <block wx:if="{{canPredict && groupSubmittedPredictions.length}}">
+        <block wx:for="{{groupSubmittedPredictions}}" wx:key="id">
+          <navigator class="submitted-card group-submitted-card glass" url="{{item.path}}" hover-class="fixture-hover">
+            <view class="submitted-top">
+              <text>{{item.dateText}} · {{item.kickoff}}</text>
+              <text class="settled-pending">{{item.progressText}}</text>
+            </view>
+            <view class="submitted-teams">
+              <text>{{item.titleText}}</text>
+            </view>
+            <view class="submitted-picks">
+              <text>{{item.matchText}}</text>
+              <text>{{item.stateText}}</text>
+              <text>可修改</text>
+            </view>
+          </navigator>
+        </block>
       </block>
-    </block>
-    <view class="empty-fixtures glass" wx:if="{{canPredict && !submittedPredictions.length && !groupSubmittedPredictions.length}}">
-      <text>暂无已提交预测</text>
+      <view class="empty-fixtures glass" wx:if="{{canPredict && !submittedPredictions.length && !groupSubmittedPredictions.length}}">
+        <text>暂无已提交预测</text>
+      </view>
     </view>
   </view>
 

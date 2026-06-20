@@ -223,6 +223,52 @@
   font-weight: 1000;
 }
 
+.submitted-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+  min-height: 68rpx;
+  margin-top: 10rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 14rpx;
+  color: #fff;
+}
+
+.submitted-toggle-title,
+.submitted-toggle-sub {
+  display: block;
+}
+
+.submitted-toggle-title {
+  color: #fff;
+  font-size: 23rpx;
+  line-height: 1.15;
+  font-weight: 1000;
+}
+
+.submitted-toggle-sub {
+  margin-top: 4rpx;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 18rpx;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.submitted-toggle-action {
+  flex: none;
+  min-width: 72rpx;
+  padding: 8rpx 14rpx;
+  border: 1rpx solid rgba(214, 170, 76, 0.36);
+  border-radius: 999rpx;
+  color: #d6aa4c;
+  background: rgba(214, 170, 76, 0.08);
+  font-size: 20rpx;
+  line-height: 1;
+  font-weight: 1000;
+  text-align: center;
+}
+
 .submitted-card {
   display: block;
   margin-top: 10rpx;

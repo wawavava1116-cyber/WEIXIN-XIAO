@@ -100,8 +100,10 @@ Page({
     authMessage: '',
     matches: buildPredictionMatches(),
     showPredictionMatches: false,
+    showSubmittedRecords: false,
     submittedPredictions: [],
     groupSubmittedPredictions: [],
+    submittedRecordCount: 0,
     groupSizeOptions: [
       { value: 2, selected: true },
       { value: 5, selected: false },
@@ -142,6 +144,7 @@ Page({
         authMessage: '完成微信身份和昵称后才能提交预测，游客无法预测。',
         submittedPredictions: [],
         groupSubmittedPredictions: [],
+        submittedRecordCount: 0,
         predictionStats: {
           accuracy: '0.0%',
           settledCount: 0,
@@ -153,11 +156,14 @@ Page({
     }
     fetchPredictionDashboard().then((result) => {
       const groups = (result.groups || []).slice(0, 10).map(buildGroupCard)
+      const submittedPredictions = (result.predictions || []).slice(0, 10).map(buildSubmittedPrediction)
+      const groupSubmittedPredictions = groups.filter((group) => group.currentUserDone).map(buildGroupSubmittedPrediction)
       this.setData({
         canPredict: true,
         authMessage: '',
-        submittedPredictions: (result.predictions || []).slice(0, 10).map(buildSubmittedPrediction),
-        groupSubmittedPredictions: groups.filter((group) => group.currentUserDone).map(buildGroupSubmittedPrediction),
+        submittedPredictions,
+        groupSubmittedPredictions,
+        submittedRecordCount: submittedPredictions.length + groupSubmittedPredictions.length,
         groups,
         medals: result.medals || {},
         predictionStats: result.stats || {}
@@ -200,6 +206,12 @@ Page({
   togglePredictionMatches() {
     this.setData({
       showPredictionMatches: !this.data.showPredictionMatches
+    })
+  },
+
+  toggleSubmittedRecords() {
+    this.setData({
+      showSubmittedRecords: !this.data.showSubmittedRecords
     })
   },
 
