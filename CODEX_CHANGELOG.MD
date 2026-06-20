@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 12:20 - 用预测 Skill 更新完赛归档和第二三轮小组形势
+- 环境：公司电脑 Codex + football-match-predictor Skill + Betfair API + 公开赛果核对
+- 目的：按用户要求归档 6 月 20 日已结束比赛，并根据第一、第二轮结果重新校准后续小组赛出线关系、保平/必须赢球等预测权重。
+- 涉及文件：`utils/matches.js`、`server/config/targets.json`、`server/src/liveScoresClient.js`、`cloudfunctions/liveScores/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增并归档 美国 2-0 澳大利亚、苏格兰 0-1 摩洛哥、巴西 3-0 海地、土耳其 0-1 巴拉圭；新增荷兰 vs 瑞典、厄瓜多尔 vs 库拉索、突尼斯 vs 日本的 Betfair 成交快照；补充 6 月 21 日至 6 月 25 日实时比分识别名单；把 C 组、D 组、E/F 组关键第二/第三轮预测加入小组形势说明，重点处理“美国已出线可轮换”“巴拉圭/澳大利亚直接卡位”“巴西/摩洛哥保平主动”“厄瓜多尔必须赢”等因素。
+- 数据库/赛程/复盘：完赛归档后首页 `upcomingMatches` 从 荷兰 vs 瑞典 开始；新增复盘命中率为 土耳其 0%、巴西 85%、摩洛哥 100%、美国 85%；复盘继续使用胜平负 50%、比分 30%、进球数 20% 加权规则。
+- 云函数：修改 `cloudfunctions/liveScores` 的比赛识别名单，微信开发者工具需要重新上传并部署该云函数。
+- 服务器：修改 `server/` Betfair 目标和实时比分识别逻辑，需要同步轻量云服务器并重启服务，同时重新生成 `/api/database/latest` 数据库快照。
+- 验证：已运行 `node -c utils/matches.js`、`node -c server/src/liveScoresClient.js`、`node -c cloudfunctions/liveScores/index.js`、首页导出顺序检查、完赛从首页移除检查、`git diff --check`。
+- 后续注意：德国 vs 科特迪瓦、西班牙 vs 沙特、比利时 vs 伊朗、乌拉圭 vs 佛得角、新西兰 vs 埃及本次 Betfair 市场暂未匹配到，后续同步时继续观察市场是否开放。
+
 ## 2026-06-20 11:58 - 前端剔除过期开赛缓存比赛
 - 环境：公司电脑 Codex + 用户端截图反馈
 - 目的：修正用户端每隔一段时间又短暂显示 03:00、06:00 已完成比赛的问题。

@@ -61,5 +61,61 @@
     "home": "Scotland",
     "away": "Morocco",
     "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "netherlands-sweden-20260620",
+    "eventName": "Netherlands v Sweden",
+    "home": "Netherlands",
+    "away": "Sweden",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "germany-ivorycoast-20260620",
+    "eventName": "Germany v Cote d'Ivoire",
+    "home": "Germany",
+    "away": "Cote d'Ivoire",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "ecuador-curacao-20260620",
+    "eventName": "Ecuador v Curacao",
+    "home": "Ecuador",
+    "away": "Curacao",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "tunisia-japan-20260620",
+    "eventName": "Tunisia v Japan",
+    "home": "Tunisia",
+    "away": "Japan",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "spain-saudi-20260621",
+    "eventName": "Spain v Saudi Arabia",
+    "home": "Spain",
+    "away": "Saudi Arabia",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "belgium-iran-20260621",
+    "eventName": "Belgium v Iran",
+    "home": "Belgium",
+    "away": "Iran",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "uruguay-caboverde-20260621",
+    "eventName": "Uruguay v Cape Verde",
+    "home": "Uruguay",
+    "away": "Cape Verde",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "newzealand-egypt-20260621",
+    "eventName": "New Zealand v Egypt",
+    "home": "New Zealand",
+    "away": "Egypt",
+    "marketType": "MATCH_ODDS"
   }
 ]

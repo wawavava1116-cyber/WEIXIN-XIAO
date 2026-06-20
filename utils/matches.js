@@ -1665,7 +1665,10 @@ const betfairMarketSnapshot = {
   'usa-australia-20260619': { marketId: '1.251401910', totalMatched: 1305025, delayed: true, odds: { home: 1.65, draw: 4.6, away: 5.7 }, probability: { home: 61, draw: 22, away: 18 }, oddsMovement: { draw: 'steam', away: 'drift' } },
   'scotland-morocco-20260619': { marketId: '1.258058492', totalMatched: 347156, delayed: true, odds: { home: 5.9, draw: 3.7, away: 1.79 }, probability: { home: 17, draw: 27, away: 56 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'drift' } },
   'brazil-haiti-20260619': { marketId: '1.258055706', totalMatched: 288884, delayed: true, odds: { home: 1.12, draw: 12.5, away: 30 }, probability: { home: 89, draw: 8, away: 3 }, oddsMovement: { home: 'steam', away: 'drift' } },
-  'turkey-paraguay-20260619': { marketId: '1.258055656', totalMatched: 173758, delayed: true, odds: { home: 2.14, draw: 3.5, away: 4.1 }, probability: { home: 47, draw: 29, away: 25 }, oddsMovement: { home: 'drift', away: 'steam' } }
+  'turkey-paraguay-20260619': { marketId: '1.258055656', totalMatched: 173758, delayed: true, odds: { home: 2.14, draw: 3.5, away: 4.1 }, probability: { home: 47, draw: 29, away: 25 }, oddsMovement: { home: 'drift', away: 'steam' } },
+  'netherlands-sweden-20260620': { marketId: '1.257505065', totalMatched: 236174, delayed: true, odds: { home: 1.77, draw: 4.2, away: 5 }, probability: { home: 56, draw: 24, away: 20 } },
+  'ecuador-curacao-20260620': { marketId: '1.257505345', totalMatched: 319199, delayed: true, odds: { home: 1.16, draw: 10.5, away: 27 }, probability: { home: 87, draw: 10, away: 4 }, oddsMovement: { home: 'steam' } },
+  'tunisia-japan-20260620': { marketId: '1.257505483', totalMatched: 181727, delayed: true, odds: { home: 7, draw: 4.2, away: 1.63 }, probability: { home: 14, draw: 24, away: 62 }, oddsMovement: { away: 'steam' } }
 }
 
 const predictionDiscipline = {
@@ -1696,12 +1699,15 @@ const predictionDiscipline = {
   'scotland-morocco-20260619': { result: '摩洛哥胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '1-2球', oneXtwo: '摩洛哥胜主选，但必发成交上升时摩洛哥赔率从低走高，客胜权重下调，平局保护需要保留', handicap: '参考摩洛哥-0.5到-0.75；摩洛哥防守和反击质量更好，但赔率漂移后不追深盘', order: '摩洛哥胜 > 平局保护 > 1-2球' },
   'turkey-paraguay-20260619': { result: '土耳其胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '土耳其胜主选，但必发成交放大时主胜赔率走高，主胜权重显著降低，平局保护上调', handicap: '参考土耳其-0.25；土耳其创造力更强，但赔率漂移和巴拉圭对抗会让比赛保持悬念，主胜只适合浅盘', order: '土耳其胜 > 平局保护 > 2-3球' },
   'usa-australia-20260619': { result: '美国胜', resultBackup: '', score: '2-1', backup: '2-0', total: '2-3球', oneXtwo: '美国胜方向清晰；必发成交量高且主胜赔率稳定，澳大利亚赔率走高，主胜仍是主线', handicap: '参考美国-0.75到-1；美国高节奏压迫能制造更多机会，但Pulisic伤情让穿深盘谨慎', order: '美国胜 > 美国-0.75 > 2-3球' },
+  'netherlands-sweden-20260620': { result: '荷兰胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '荷兰胜主选，平局低权重保护；必发胜/平/负约56/24/20，荷兰首轮只拿1分后争胜需求更强，瑞典首轮大胜后保平价值也不低', handicap: '参考荷兰-0.5；荷兰需要主动压上争取小组主动权，但瑞典定位球和反击会限制穿盘上限', order: '荷兰胜 > 平局保护 > 2-3球' },
+  'ecuador-curacao-20260620': { result: '厄瓜多尔胜', resultBackup: '', score: '2-0', backup: '3-0', total: '2-3球', oneXtwo: '厄瓜多尔胜方向清晰；必发胜/平/负约87/10/4，厄瓜多尔首轮输球后必须拿三分，主胜权重继续放大', handicap: '参考厄瓜多尔-1.75；库拉索首轮大比分失利后防线压力很高，但深盘仍需防领先后的节奏管理', order: '厄瓜多尔胜 > 厄瓜多尔-1.75谨慎 > 2-3球' },
+  'tunisia-japan-20260620': { result: '日本胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '日本胜方向上调；必发胜/平/负约14/24/62，日本首轮拿分后若本场取胜基本掌握出线主动，突尼斯首轮失利必须冒险', handicap: '参考日本-0.75；日本传控和边路速度更稳定，突尼斯若压出来会留下身后空间', order: '日本胜 > 日本-0.75 > 2-3球' },
   'ecuador-germany-20260625': { result: '德国胜', resultBackup: '', score: '1-2', backup: '0-2', total: '2-3球', oneXtwo: '德国胜方向清晰，不设置胜平负备选', handicap: '德国-0.75附近，赢球优先，穿深盘看首发强度', order: '德国胜 > 德国-0.75谨慎 > 2-3球' },
   'curacao-ivorycoast-20260625': { result: '科特迪瓦胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '科特迪瓦胜主选，平局作为低权重保护', handicap: '科特迪瓦-0.5到-0.75，赢球优先，不追过深', order: '科特迪瓦胜 > 平局保护 > 2-3球' },
   'japan-sweden-20260625': { result: '平局', resultBackup: '瑞典胜', score: '1-1', backup: '1-2', total: '2-3球', oneXtwo: '平局主选，瑞典胜作为身体和定位球优势的备选', handicap: '瑞典0到-0.25谨慎，日本受让方向有韧性', order: '平局 > 瑞典胜 > 2-3球' },
   'tunisia-netherlands-20260625': { result: '荷兰胜', resultBackup: '', score: '0-2', backup: '1-2', total: '2-3球', oneXtwo: '荷兰胜方向清晰，不设置胜平负备选', handicap: '荷兰-0.75附近，赢球优先，穿盘谨慎', order: '荷兰胜 > 荷兰-0.75 > 2-3球' },
-  'turkey-usa-20260625': { result: '美国胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '美国胜主选，平局作为伤情和末轮轮换保护', handicap: '美国-0.25到-0.5，赢球优先，不追深盘', order: '美国胜 > 平局保护 > 2-3球' },
-  'paraguay-australia-20260625': { result: '澳大利亚胜', resultBackup: '平局', score: '1-2', backup: '1-1', total: '2-3球', oneXtwo: '澳大利亚胜主选，平局作为低比分保护', handicap: '澳大利亚0到-0.25，受让不败逻辑更稳，客胜只作浅盘', order: '澳大利亚胜 > 平局保护 > 2-3球' }
+  'turkey-usa-20260625': { result: '美国胜', resultBackup: '平局', score: '0-2', backup: '1-1', total: '1-2球', oneXtwo: '美国胜主选，平局低权重保护；美国两连胜已出线，末轮可能轮换但整体节奏和板凳深度仍占优，土耳其两连败后士气和出线概率明显下滑', handicap: '美国-0.25到-0.5谨慎；美国赢球优先但不追深盘，土耳其若开放进攻会暴露身后空间', order: '美国胜 > 平局保护 > 1-2球' },
+  'paraguay-australia-20260625': { result: '平局', resultBackup: '巴拉圭胜', score: '1-1', backup: '1-0', total: '1-2球', oneXtwo: '平局主选，巴拉圭胜低权重备选；巴拉圭击败土耳其后与澳大利亚形成直接出线卡位，澳大利亚至少要抢分，巴拉圭保平也具备较高价值', handicap: '澳大利亚0到-0.25谨慎；巴拉圭少打一人仍能守住土耳其，防守韧性上调，比赛更可能低比分', order: '平局 > 巴拉圭胜 > 1-2球' }
 }
 
 const coachStyleNotes = {
@@ -1777,6 +1783,16 @@ const publicReferenceNotes = {
   'mexico-korea-20260618': '韩国训练无人机事件；墨西哥 Montes 停赛',
   'brazil-haiti-20260619': 'Neymar 小腿伤势仍未完整合练',
   'usa-australia-20260619': 'Christian Pulisic 小腿伤情每日观察'
+}
+
+const groupSituationNotes = {
+  'netherlands-sweden-20260620': '小组形势：荷兰首轮只拿1分，本场争胜才能重新掌握前二主动；瑞典首轮大胜后保平即可保持较舒服位置，因此荷兰进攻动力更强但也要防瑞典反击。',
+  'ecuador-curacao-20260620': '小组形势：厄瓜多尔首轮输球后本场必须争三分，库拉索首轮大比分失利后净胜球压力极大，若再输基本失去前二主动。',
+  'tunisia-japan-20260620': '小组形势：日本首轮拿分后本场赢球基本锁住出线主动，突尼斯首轮失利后不能只守平，后程冒险会增加日本反击空间。',
+  'scotland-brazil-20260624': '小组形势：巴西与摩洛哥同积4分，巴西保平大概率即可晋级；苏格兰3分在手但末轮若不能赢巴西，出线会更多依赖第三名比较。',
+  'morocco-haiti-20260624': '小组形势：摩洛哥击败苏格兰后已到4分，面对两连败海地只要不犯错即可锁住晋级主动，比赛管理权重高于无脑大胜。',
+  'turkey-usa-20260625': '小组形势：美国两连胜已经出线，末轮有轮换空间；土耳其两连败后主动权基本丢失，比赛心态更容易被先丢球放大。',
+  'paraguay-australia-20260625': '小组形势：巴拉圭击败土耳其后追到3分，澳大利亚同样3分，这场是第三轮直接卡位战，巴拉圭保平价值上升，澳大利亚必须避免输球。'
 }
 
 function getDefaultInjuryImpact(match) {
@@ -2107,10 +2123,18 @@ matches.forEach((match) => {
   if (coachStyleNotes[match.id]) {
     match.analysis.tactics = `${match.analysis.tactics} ${coachStyleNotes[match.id]}`
   }
+  if (groupSituationNotes[match.id]) {
+    match.analysis.h2h = `${match.analysis.h2h} ${groupSituationNotes[match.id]}`
+    match.analysis.risk = `${match.analysis.risk} ${groupSituationNotes[match.id]}`
+  }
   match.analysis.probability = buildProbabilityAnalysis(match)
 })
 
 const finishedReviewSource = [
+  { id: 'turkey-paraguay-review', matchId: 'turkey-paraguay-20260619', homeTeam: 'turkey', awayTeam: 'paraguay', home: '土耳其', away: '巴拉圭', dateText: '6月20日 周六', kickoff: '11:00', group: 'D组', venue: 'San Francisco Bay Area Stadium', endedAtSort: 202606201300, score: '0-1', resultMain: '土耳其胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
+  { id: 'brazil-haiti-review', matchId: 'brazil-haiti-20260619', homeTeam: 'brazil', awayTeam: 'haiti', home: '巴西', away: '海地', dateText: '6月20日 周六', kickoff: '08:30', group: 'C组', venue: 'Philadelphia Stadium', endedAtSort: 202606201030, score: '3-0', resultMain: '巴西胜', resultBackup: '', scoreMain: '4-0', scoreBackup: '3-0', totalPick: '3-4球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true },
+  { id: 'scotland-morocco-review', matchId: 'scotland-morocco-20260619', homeTeam: 'scotland', awayTeam: 'morocco', home: '苏格兰', away: '摩洛哥', dateText: '6月20日 周六', kickoff: '06:00', group: 'C组', venue: 'Boston Stadium', endedAtSort: 202606200800, score: '0-1', resultMain: '摩洛哥胜', resultBackup: '平局', scoreMain: '0-1', scoreBackup: '1-1', totalPick: '1-2球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: true, scoreBackupCorrect: false },
+  { id: 'usa-australia-review', matchId: 'usa-australia-20260619', homeTeam: 'usa', awayTeam: 'australia', home: '美国', away: '澳大利亚', dateText: '6月20日 周六', kickoff: '03:00', group: 'D组', venue: 'Seattle Stadium', endedAtSort: 202606200500, score: '2-0', resultMain: '美国胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '2-0', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: true },
   { id: 'mexico-korea-review', matchId: 'mexico-korea-20260618', homeTeam: 'mexico', awayTeam: 'korea', home: '墨西哥', away: '韩国', dateText: '6月19日 周五', kickoff: '09:00', group: 'A组', venue: 'Estadio Guadalajara', endedAtSort: 202606191100, score: '1-0', resultMain: '墨西哥胜', resultBackup: '平局', scoreMain: '2-1', scoreBackup: '1-1', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
   { id: 'canada-qatar-review', matchId: 'canada-qatar-20260618', homeTeam: 'canada', awayTeam: 'qatar', home: '加拿大', away: '卡塔尔', dateText: '6月19日 周五', kickoff: '06:00', group: 'B组', venue: 'BC Place Vancouver', endedAtSort: 202606190800, score: '6-0', resultMain: '加拿大胜', resultBackup: '', scoreMain: '2-1', scoreBackup: '2-0', totalPick: '2-3球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
   { id: 'switzerland-bosnia-review', matchId: 'switzerland-bosnia-20260618', homeTeam: 'switzerland', awayTeam: 'bosnia', home: '瑞士', away: '波黑', dateText: '6月19日 周五', kickoff: '03:00', group: 'B组', venue: 'Los Angeles Stadium', endedAtSort: 202606190500, score: '4-1', resultMain: '瑞士胜', resultBackup: '', scoreMain: '1-0', scoreBackup: '2-0', totalPick: '1-2球', resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false },
