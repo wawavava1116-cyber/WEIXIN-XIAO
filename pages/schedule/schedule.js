@@ -56,6 +56,11 @@ const BRACKET_SEEDS = [
   ['1J', '2H'], ['2D', '2G'], ['1B', '3EFGIJ'], ['1K', '3DEIJL']
 ]
 
+const CONFIRMED_GROUP_PLACEMENTS = [
+  { group: 'A', rank: 1, teamKey: 'mexico' },
+  { group: 'D', rank: 1, teamKey: 'usa' }
+]
+
 function cloneMatch(match) {
   return Object.assign({}, match, {
     home: Object.assign({}, match.home),
@@ -242,20 +247,40 @@ function buildGroupMatches(sourceMatches, groupName, reviewMap) {
 
 function buildQualifiedTeams(groups) {
   const result = {}
+  function addSeed(groupKey, rank, row) {
+    if (!row || !row.team) return
+    const seed = `${groupKey}${rank}`
+    const reverseSeed = `${rank}${groupKey}`
+    result[seed] = {
+      seed,
+      abbr: row.abbr,
+      flag: row.team.flag,
+      confirmed: true
+    }
+    result[reverseSeed] = Object.assign({}, result[seed], { seed: reverseSeed })
+  }
+
   groups.forEach((group) => {
     const groupComplete = group.table.length && group.table.every((item) => item.played >= 3)
     if (!groupComplete) return
     group.table.slice(0, 3).forEach((row) => {
-      const seed = `${group.key}${row.rank}`
-      const reverseSeed = `${row.rank}${group.key}`
-      result[seed] = {
-        seed,
-        abbr: row.abbr,
-        flag: row.team.flag,
-        confirmed: true
-      }
-      result[reverseSeed] = Object.assign({}, result[seed], { seed: reverseSeed })
+      addSeed(group.key, row.rank, row)
     })
+  })
+  CONFIRMED_GROUP_PLACEMENTS.forEach((placement) => {
+    const group = groups.find((item) => item.key === placement.group)
+    if (!group || !Array.isArray(group.table)) return
+    const expectedKey = String(placement.teamKey || '').toLowerCase()
+    const row = group.table.find((item) => {
+      const team = item.team || {}
+      return [
+        team.key,
+        team.en,
+        team.cn,
+        item.abbr
+      ].some((value) => String(value || '').toLowerCase() === expectedKey)
+    })
+    addSeed(placement.group, placement.rank, row)
   })
   return result
 }
