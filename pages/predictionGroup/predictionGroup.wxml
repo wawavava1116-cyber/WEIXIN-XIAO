@@ -36,12 +36,16 @@
       <text class="section-title-text">{{group.currentUserDone ? '修改小组预测' : '填写小组预测'}}</text>
       <block wx:for="{{group.matchForms}}" wx:key="matchId">
         <view class="match-form glass">
-          <view class="match-line">
-            <text>{{item.home.abbr}}</text>
-            <text>{{item.dateText}} {{item.kickoff}}</text>
-            <text>{{item.away.abbr}}</text>
+          <view class="match-form-head" data-match-id="{{item.matchId}}" bindtap="toggleMatchForm">
+            <view class="match-line">
+              <text>{{item.home.abbr}}</text>
+              <text>{{item.dateText}} {{item.kickoff}}</text>
+              <text>{{item.away.abbr}}</text>
+            </view>
+            <view wx:if="{{item.canCollapse}}" class="match-toggle">{{item.toggleText}}</view>
           </view>
 
+          <view class="match-form-body" wx:if="{{!item.collapsed}}">
           <text class="pick-title">胜平负</text>
           <view class="option-row">
             <block wx:for="{{item.resultOptions}}" wx:for-item="option" wx:key="value">
@@ -79,6 +83,7 @@
                 <text>{{option.value}}</text>
               </view>
             </block>
+          </view>
           </view>
         </view>
       </block>

@@ -142,13 +142,16 @@
     <text class="section-title-text">我的小组</text>
     <block wx:if="{{groups.length}}">
       <block wx:for="{{groups}}" wx:key="id">
-        <navigator class="group-card glass" url="/pages/predictionGroup/predictionGroup?id={{item.id}}" hover-class="fixture-hover">
+        <view class="group-card glass" data-id="{{item.id}}" bindtap="openGroup">
           <view class="group-card-top">
             <text>{{item.size}}人预测小组</text>
-            <text>{{item.progressText}}</text>
+            <view class="group-card-actions">
+              <text>{{item.progressText}}</text>
+              <view wx:if="{{item.canDelete}}" class="group-delete-button" data-id="{{item.id}}" catchtap="deleteGroup">删除</view>
+            </view>
           </view>
           <text class="group-card-sub">{{item.matches.length}} 场比赛 · {{item.allSettled ? '已结算' : (item.allPredicted ? '等待赛果' : '等待预测')}}</text>
-        </navigator>
+        </view>
       </block>
     </block>
     <view class="empty-fixtures glass" wx:else>

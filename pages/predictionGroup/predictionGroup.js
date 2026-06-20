@@ -37,8 +37,11 @@ function decorateScoreGroups(selectedScores) {
   }))
 }
 
-function decorateMatch(match, selection) {
+function decorateMatch(match, selection, collapsed, canCollapse) {
   return Object.assign({}, match, {
+    collapsed: Boolean(collapsed),
+    canCollapse: Boolean(canCollapse),
+    toggleText: collapsed ? '展开' : '收起',
     resultOptions: decorateOptionList(RESULT_OPTIONS, selection.result),
     backupOptions: decorateOptionList(RESULT_OPTIONS, selection.backup),
     goalOptions: decorateOptionList(GOAL_OPTIONS, selection.goals),
@@ -46,10 +49,18 @@ function decorateMatch(match, selection) {
   })
 }
 
-function decorateGroup(group, selections) {
+function decorateGroup(group, selections, collapsedMatches) {
   if (!group) return null
+  const matches = group.matches || []
+  const canCollapse = matches.length > 1
+  const collapsedMap = collapsedMatches || {}
   return Object.assign({}, group, {
-    matchForms: (group.matches || []).map((match) => decorateMatch(match, selections[match.matchId] || makeSelection(match)))
+    matchForms: matches.map((match) => decorateMatch(
+      match,
+      selections[match.matchId] || makeSelection(match),
+      canCollapse && collapsedMap[match.matchId],
+      canCollapse
+    ))
   })
 }
 
@@ -91,6 +102,7 @@ Page({
     members: [],
     canPredict: hasPredictionProfile(),
     selections: {},
+    collapsedMatches: {},
     statusText: ''
   },
 
@@ -112,14 +124,19 @@ Page({
     fetchPredictionGroup(this.groupId).then((result) => {
       const group = result.group
       const selections = getMySelections(group, this.data.selections)
-      ;(group.matches || []).forEach((match) => {
+      const collapsedMatches = Object.assign({}, this.data.collapsedMatches)
+      ;(group.matches || []).forEach((match, index) => {
         if (!selections[match.matchId]) selections[match.matchId] = makeSelection(match)
+        if ((group.matches || []).length > 1 && collapsedMatches[match.matchId] === undefined) {
+          collapsedMatches[match.matchId] = index > 0
+        }
       })
       this.setData({
-        group: decorateGroup(group, selections),
+        group: decorateGroup(group, selections, collapsedMatches),
         members: decorateMembers(group),
         canPredict: hasPredictionProfile(),
         selections,
+        collapsedMatches,
         statusText: group.allSettled ? '已结算' : group.allPredicted ? '等待赛果' : '等待成员预测'
       })
     }).catch(() => {
@@ -131,7 +148,7 @@ Page({
     joinPredictionGroup(this.groupId).then((result) => {
       const group = result.group
       this.setData({
-        group: decorateGroup(group, this.data.selections),
+        group: decorateGroup(group, this.data.selections, this.data.collapsedMatches),
         members: decorateMembers(group)
       })
     }).catch((error) => {
@@ -145,7 +162,18 @@ Page({
     selections[matchId] = Object.assign({}, selections[matchId] || { matchId, scores: [] }, patch)
     this.setData({
       selections,
-      group: decorateGroup(this.data.group, selections)
+      group: decorateGroup(this.data.group, selections, this.data.collapsedMatches)
+    })
+  },
+
+  toggleMatchForm(event) {
+    const matchId = event.currentTarget.dataset.matchId
+    if (!matchId) return
+    const collapsedMatches = Object.assign({}, this.data.collapsedMatches)
+    collapsedMatches[matchId] = !collapsedMatches[matchId]
+    this.setData({
+      collapsedMatches,
+      group: decorateGroup(this.data.group, this.data.selections, collapsedMatches)
     })
   },
 
@@ -215,7 +243,7 @@ Page({
       const nextGroup = result.group
       wx.showToast({ title: '已提交', icon: 'success' })
       this.setData({
-        group: decorateGroup(nextGroup, this.data.selections),
+        group: decorateGroup(nextGroup, this.data.selections, this.data.collapsedMatches),
         members: decorateMembers(nextGroup)
       })
     }).catch((error) => {

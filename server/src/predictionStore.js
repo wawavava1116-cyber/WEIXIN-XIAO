@@ -155,6 +155,25 @@ function getGroupById(groupId) {
   return store.groups.find((group) => group.id === groupId) || null
 }
 
+function deletePredictionGroup(user, groupId) {
+  const store = readPredictionStore()
+  const index = store.groups.findIndex((group) => group.id === groupId)
+  if (index === -1) {
+    const err = new Error('GROUP_NOT_FOUND')
+    err.statusCode = 404
+    throw err
+  }
+  const group = store.groups[index]
+  if (group.ownerId !== user.id) {
+    const err = new Error('GROUP_DELETE_FORBIDDEN')
+    err.statusCode = 403
+    throw err
+  }
+  store.groups.splice(index, 1)
+  writePredictionStore(store)
+  return group
+}
+
 function joinPredictionGroup(user, groupId) {
   const store = readPredictionStore()
   const group = store.groups.find((item) => item.id === groupId)
@@ -462,6 +481,7 @@ function getPredictionDashboard(user, snapshot) {
 
 module.exports = {
   createPredictionGroup,
+  deletePredictionGroup,
   decorateGroup,
   getGroupById,
   getGroupDashboard,

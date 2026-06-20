@@ -17,6 +17,7 @@ const ALLOWED_ROUTES = [
   { method: 'POST', pattern: /^\/api\/users\/me\/predictions$/ },
   { method: 'POST', pattern: /^\/api\/prediction-groups$/ },
   { method: 'GET', pattern: /^\/api\/prediction-groups\/[^/?]+$/ },
+  { method: 'POST', pattern: /^\/api\/prediction-groups\/[^/?]+\/delete$/ },
   { method: 'POST', pattern: /^\/api\/prediction-groups\/[^/?]+\/join$/ },
   { method: 'POST', pattern: /^\/api\/prediction-groups\/[^/?]+\/predictions$/ }
 ]

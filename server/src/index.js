@@ -18,6 +18,7 @@ const {
 } = require('./userStore')
 const {
   createPredictionGroup,
+  deletePredictionGroup,
   decorateGroup,
   getGroupById,
   getGroupDashboard,
@@ -464,6 +465,17 @@ async function handleRequest(req, res) {
     }
     const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
     sendJson(res, 200, { ok: true, group: decorateGroup(group, user.id, snapshot) })
+    return
+  }
+
+  if (req.method === 'POST' && url.pathname.match(/^\/api\/prediction-groups\/[^/]+\/delete$/)) {
+    const user = requireProfileUser(req, res)
+    if (!user) return
+    const groupId = decodeURIComponent(url.pathname.split('/')[3])
+    deletePredictionGroup(user, groupId)
+    const snapshot = readDatabaseSnapshot() || buildDatabaseSnapshot()
+    const groups = getGroupDashboard(user, snapshot)
+    sendJson(res, 200, { ok: true, groups: groups.groups })
     return
   }
 

@@ -370,8 +370,31 @@
   font-weight: 1000;
 }
 
-.group-card-top text:last-child {
+.group-card-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.group-card-actions text {
   color: #d6aa4c;
+}
+
+.group-delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74rpx;
+  height: 42rpx;
+  padding: 0 14rpx;
+  border: 1rpx solid rgba(214, 170, 76, 0.42);
+  border-radius: 8rpx;
+  color: #d6aa4c;
+  background: rgba(214, 170, 76, 0.08);
+  font-size: 20rpx;
+  line-height: 1;
+  font-weight: 1000;
 }
 
 .group-card-sub {

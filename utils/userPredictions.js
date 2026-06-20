@@ -84,6 +84,11 @@ function createPredictionGroup(payload) {
   return requestPredictionApi('/api/prediction-groups', 'POST', payload)
 }
 
+function deletePredictionGroup(groupId) {
+  if (!hasPredictionProfile()) return Promise.reject(new Error('PROFILE_REQUIRED'))
+  return requestPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}/delete`, 'POST')
+}
+
 function fetchPredictionGroup(groupId) {
   return requestPublicPredictionApi(`/api/prediction-groups/${encodeURIComponent(groupId)}`, 'GET')
 }
@@ -142,6 +147,7 @@ module.exports = {
   decodePrediction,
   encodePrediction,
   createPredictionGroup,
+  deletePredictionGroup,
   fetchPredictionDashboard,
   fetchPredictionGroup,
   getPrediction,

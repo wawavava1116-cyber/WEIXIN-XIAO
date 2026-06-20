@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-20 11:05 - 小组预测增加删除和多场收起展开
+- 环境：公司电脑 Codex + 手机端反馈
+- 目的：在“我的预测”的“我的小组”里支持删除自己发起的小组，并让多场次小组预测详情页支持按比赛收起/展开，避免表单过长。
+- 涉及文件：`utils/userPredictions.js`、`pages/prediction/prediction.js`、`pages/prediction/prediction.wxml`、`pages/prediction/prediction.wxss`、`pages/predictionGroup/predictionGroup.js`、`pages/predictionGroup/predictionGroup.wxml`、`pages/predictionGroup/predictionGroup.wxss`、`server/src/index.js`、`server/src/predictionStore.js`、`cloudfunctions/apiProxy/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增小组删除接口，只有发起人可删除；“我的小组”卡片增加删除按钮，删除后刷新小组列表；小组预测详情页为每场比赛增加展开/收起状态，多场时默认第一场展开、后续场次收起；保留提交前必须完成所有场次预测的校验。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或远程数据库内容；删除小组会从服务器运行时 `server/data/predictions.json` 中移除对应小组记录。
+- 云函数：修改 `cloudfunctions/apiProxy` 路由白名单，需要重新上传并部署 `apiProxy` 云函数。
+- 服务器：修改 `server/` 小组预测接口，需要重新部署轻量云服务器服务。
+- 验证：已运行相关 JS 语法检查、WXML 标签基础检查、服务器 `npm.cmd run check` 和 `git diff --check`。
+- 后续注意：真机验证时确认非发起人看不到删除入口，发起人删除后分享链接再次打开应提示小组读取失败。
+
 ## 2026-06-20 10:48 - 小组预测选择格同步改为稳定布局
 - 环境：公司电脑 Codex + 手机端反馈
 - 目的：修正“我的预测”里 2人/5人/10人选择框超出屏幕，以及小组预测详情页选择格和填写预测页样式不一致的问题。

@@ -1,6 +1,7 @@
 const { upcomingMatches } = require('../../utils/matches')
 const { getRemoteDatabaseBadge, getRemoteMatchesSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
-const { createPredictionGroup, fetchPredictionDashboard, getPrediction, hasPredictionProfile } = require('../../utils/userPredictions')
+const { createPredictionGroup, deletePredictionGroup, fetchPredictionDashboard, getPrediction, hasPredictionProfile } = require('../../utils/userPredictions')
+const { getStoredUser } = require('../../utils/userAuth')
 const { getTeamAbbr } = require('../../utils/teamAbbr')
 
 const DAY = 24 * 60 * 60 * 1000
@@ -78,6 +79,14 @@ function buildGroupSubmittedPrediction(group) {
   }
 }
 
+function buildGroupCard(group) {
+  const user = getStoredUser() || {}
+  return Object.assign({}, group, {
+    path: `/pages/predictionGroup/predictionGroup?id=${group.id}`,
+    canDelete: group.ownerId === user.id
+  })
+}
+
 function buildGroupMatchOptions(matches, selectedIds) {
   return matches.map((match) => Object.assign({}, match, {
     selected: selectedIds.indexOf(match.id) !== -1
@@ -142,7 +151,7 @@ Page({
       return
     }
     fetchPredictionDashboard().then((result) => {
-      const groups = (result.groups || []).slice(0, 10)
+      const groups = (result.groups || []).slice(0, 10).map(buildGroupCard)
       this.setData({
         canPredict: true,
         authMessage: '',
@@ -214,6 +223,32 @@ Page({
     }).catch((error) => {
       const title = error && error.message === 'PROFILE_REQUIRED' ? '请先选择微信昵称' : '发起失败'
       wx.showToast({ title, icon: 'none' })
+    })
+  },
+
+  openGroup(event) {
+    const id = event.currentTarget.dataset.id
+    if (id) wx.navigateTo({ url: `/pages/predictionGroup/predictionGroup?id=${id}` })
+  },
+
+  deleteGroup(event) {
+    const id = event.currentTarget.dataset.id
+    if (!id) return
+    wx.showModal({
+      title: '删除小组',
+      content: '删除后，成员将无法继续通过这个小组预测。确定删除吗？',
+      confirmText: '删除',
+      confirmColor: '#d64545',
+      success: (result) => {
+        if (!result.confirm) return
+        deletePredictionGroup(id).then(() => {
+          wx.showToast({ title: '已删除', icon: 'success' })
+          this.refreshDashboard()
+        }).catch((error) => {
+          const title = error && error.message === 'GROUP_DELETE_FORBIDDEN' ? '只能删除自己发起的小组' : '删除失败'
+          wx.showToast({ title, icon: 'none' })
+        })
+      }
     })
   }
 })
