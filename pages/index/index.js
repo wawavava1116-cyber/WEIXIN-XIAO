@@ -4,14 +4,6 @@ const { getFavoriteIds, toggleFavorite, decorateMatches, sortFavoritesFirst } = 
 const { getDynamicReviews, saveDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { createMainSwipeHandlers } = require('../../utils/swipeNavigation')
-const {
-  getStoredUser,
-  ensureWechatSession,
-  loginAsGuest,
-  saveUserProfile,
-  shouldAskProfileChoice,
-  markProfileChoiceDone
-} = require('../../utils/userAuth')
 
 const FINISHED_KEEP_MS = 60 * 60 * 1000
 const FINISH_CACHE_KEY = 'worldcup_finished_detected_at'
@@ -467,10 +459,6 @@ Page(Object.assign({}, createMainSwipeHandlers('pages/index/index'), {
     startupLoading: true,
     startupProgress: 0,
     showAnnouncement: false,
-    showUserProfilePrompt: false,
-    showUserProfileForm: false,
-    userInfo: getStoredUser() || { mode: 'guest', nickname: '游客用户', avatarUrl: '' },
-    profileNickname: '',
     isRefreshing: false,
     syncText: '下拉同步云端数据'
   },
@@ -556,100 +544,12 @@ Page(Object.assign({}, createMainSwipeHandlers('pages/index/index'), {
   },
 
   showEntryPrompts() {
-    if (shouldAskProfileChoice()) {
-      this.setData({
-        showUserProfilePrompt: true,
-        showAnnouncement: false
-      })
-      return
-    }
     this.setData({ showAnnouncement: shouldShowAnnouncement() })
   },
 
   closeAnnouncement() {
     saveAnnouncementClosedAt()
     this.setData({ showAnnouncement: false })
-  },
-
-  showManualProfileForm() {
-    const user = getStoredUser() || {}
-    this.setData({
-      showUserProfilePrompt: false,
-      showUserProfileForm: true,
-      userInfo: user.mode ? user : this.data.userInfo,
-      profileNickname: user.nickname && user.nickname !== '游客用户' ? user.nickname : ''
-    })
-  },
-
-  oneTapWechatLogin() {
-    wx.showLoading({ title: '正在登录' })
-    ensureWechatSession()
-      .then((session) => {
-        markProfileChoiceDone()
-        wx.hideLoading()
-        this.setData({
-          userInfo: session.user || this.data.userInfo,
-          showUserProfilePrompt: false,
-          showUserProfileForm: false,
-          showAnnouncement: false
-        })
-        wx.showToast({ title: '登录成功', icon: 'success' })
-      })
-      .catch((error) => {
-        wx.hideLoading()
-        const message = error && error.message ? error.message : '登录失败'
-        wx.showToast({ title: message.slice(0, 28), icon: 'none' })
-      })
-  },
-
-  continueAsGuest() {
-    markProfileChoiceDone()
-    this.setData({
-      showUserProfilePrompt: false,
-      showUserProfileForm: false
-    })
-    loginAsGuest()
-      .then((session) => {
-        this.setData({
-          userInfo: session.user || { mode: 'guest', nickname: '游客用户', avatarUrl: '' },
-          showAnnouncement: false
-        })
-      })
-      .catch(() => {
-        this.setData({ showAnnouncement: false })
-      })
-  },
-
-  onProfileNicknameInput(event) {
-    this.setData({
-      profileNickname: event.detail.value || ''
-    })
-  },
-
-  saveWechatProfile() {
-    const nickname = String(this.data.profileNickname || '').trim()
-    if (!nickname) {
-      wx.showToast({ title: '请先选择或填写微信名', icon: 'none' })
-      return
-    }
-    wx.showLoading({ title: '正在保存' })
-    ensureWechatSession()
-      .then(() => saveUserProfile({ nickname }))
-      .then((session) => {
-        markProfileChoiceDone()
-        wx.hideLoading()
-        this.setData({
-          userInfo: session.user || this.data.userInfo,
-          showUserProfileForm: false,
-          showAnnouncement: false
-        })
-        wx.showToast({ title: '已保存', icon: 'success' })
-      })
-      .catch((error) => {
-        wx.hideLoading()
-        const message = error && error.message ? error.message : '保存失败'
-        wx.showToast({ title: message.slice(0, 28), icon: 'none' })
-      })
   },
 
   checkForAppUpdate() {

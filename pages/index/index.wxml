@@ -23,44 +23,7 @@
     </view>
   </view>
 
-  <view class="profile-mask" wx:if="{{showUserProfilePrompt}}">
-    <view class="profile-sheet">
-      <view class="profile-sheet-handle"></view>
-      <text class="profile-title">微信一键登录</text>
-      <text class="profile-body">点击后使用微信身份建立用户数据，系统会先分配灰色头像和“微信用户+随机编号”。之后可以在个人信息页点击头像或名称修改。</text>
-      <view class="profile-actions">
-        <button class="profile-primary" bindtap="oneTapWechatLogin">微信一键登录</button>
-        <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>
-      </view>
-    </view>
-  </view>
-
-  <view class="profile-mask" wx:if="{{false}}">
-    <view class="profile-sheet">
-      <view class="profile-sheet-handle"></view>
-      <text class="profile-title">选择微信昵称？</text>
-      <text class="profile-body">服务器会用微信身份区分用户，昵称只用于预测记录和排行榜展示。也可以直接作为游客用户浏览。</text>
-      <view class="profile-actions">
-        <button class="profile-primary" bindtap="showManualProfileForm">选择微信昵称</button>
-        <button class="profile-secondary" bindtap="continueAsGuest">游客进入</button>
-      </view>
-    </view>
-  </view>
-
-  <view class="profile-mask" wx:if="{{showUserProfileForm}}">
-    <view class="profile-sheet">
-      <view class="profile-sheet-handle"></view>
-      <text class="profile-title">选择微信昵称</text>
-      <text class="profile-body">请选择或填写微信昵称，用于保存你的用户数据。</text>
-      <input class="nickname-input" type="nickname" placeholder="选择或确认微信名" value="{{profileNickname}}" bindinput="onProfileNicknameInput" bindchange="onProfileNicknameInput" />
-      <view class="profile-actions">
-        <button class="profile-primary" bindtap="saveWechatProfile">保存资料</button>
-        <button class="profile-secondary" bindtap="continueAsGuest">改用游客</button>
-      </view>
-    </view>
-  </view>
-
-  <view class="home-content {{(showUserProfilePrompt || showUserProfileForm) ? 'home-content-blurred' : ''}}">
+  <view class="home-content">
   <view class="warning-marquee">
     <text class="warning-track">⚠️ 理性观赛，远离违法赌博。本小程序内容仅供赛前信息参考，不提供任何投注服务。严禁利用预测内容参与任何形式的非法博彩。 ⚠️ 理性观赛，远离违法赌博。</text>
   </view>
