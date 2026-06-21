@@ -89,7 +89,30 @@
   </view>
 
   <view class="betfair-card glass" wx:if="{{match.analysis && match.analysis.betfairImpact}}">
-    <text class="block-title">必发成交量影响</text>
+    <text class="block-title">必发成交量实时分析（5分钟）</text>
+    <view class="betfair-realtime" wx:if="{{match.analysis.betfairRealtime}}">
+      <view class="betfair-flow-row">
+        <text class="betfair-flow-label">最大变化</text>
+        <view class="betfair-flow-value">
+          <text>{{match.analysis.betfairRealtime.maxEntry.label}}</text>
+          <text>{{match.analysis.betfairRealtime.maxEntry.volumeText}}</text>
+          <text class="trend-icon trend-volume-{{match.analysis.betfairRealtime.maxEntry.volumeDirection.type}}">{{match.analysis.betfairRealtime.maxEntry.volumeDirection.icon}}</text>
+        </view>
+      </view>
+      <view class="betfair-odds-row">
+        <text class="betfair-flow-label">赔率 胜/平/负</text>
+        <view class="betfair-odds-values">
+          <block wx:for="{{match.analysis.betfairRealtime.oddsEntries}}" wx:key="key">
+            <view class="betfair-odds-item">
+              <text>{{item.odds}}</text>
+              <text class="trend-icon trend-odds-{{item.oddsDirection.type}}">{{item.oddsDirection.icon}}</text>
+              <text class="betfair-odds-separator">{{item.separator}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      <text wx:if="{{match.analysis.betfairRealtime.hasAdjustment}}" class="betfair-adjustment betfair-adjustment-{{match.analysis.betfairRealtime.adjustmentLevel}}">{{match.analysis.betfairRealtime.adjustmentText}}</text>
+    </view>
     <text class="betfair-impact-text">{{match.analysis.betfairImpact}}</text>
   </view>
 

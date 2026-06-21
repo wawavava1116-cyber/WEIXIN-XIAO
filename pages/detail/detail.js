@@ -1,8 +1,104 @@
 const { refreshTeamStats } = require('../../utils/liveTeamStats')
 const { refreshLiveScores } = require('../../utils/liveMatchScores')
 const { getDynamicReviews } = require('../../utils/reviewCache')
+const { refreshBetfairHistory } = require('../../utils/remoteBetfairMarkets')
 const { getRemoteDatabaseSync, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
+
+const BETFAIR_HISTORY_REFRESH_MS = 5 * 60 * 1000
+
+function formatAmountK(value) {
+  const amount = Math.abs(Number(value) || 0)
+  if (amount >= 1000) return `${Math.round(amount / 1000)}K`
+  return `${Math.round(amount)}`
+}
+
+function formatOdds(value) {
+  const odds = Number(value)
+  if (!odds) return '--'
+  return odds >= 10 ? odds.toFixed(1) : odds.toFixed(2).replace(/0$/, '').replace(/\.0$/, '')
+}
+
+function getDirection(delta) {
+  const value = Number(delta) || 0
+  if (value > 0) return { type: 'up', icon: '↑' }
+  if (value < 0) return { type: 'down', icon: '↓' }
+  return { type: 'flat', icon: '－' }
+}
+
+function runnerMatchesText(runner, values) {
+  const name = String(runner && runner.name || '').toLowerCase()
+  return values.some((value) => {
+    const text = String(value || '').toLowerCase()
+    return text && name.indexOf(text) >= 0
+  })
+}
+
+function buildOutcomeEntries(sample, match) {
+  const runners = Array.isArray(sample && sample.runners) ? sample.runners : []
+  const changes = sample && sample.changes && sample.changes.runners ? sample.changes.runners : {}
+  const homeRunner = runners.find((runner) => runnerMatchesText(runner, [match.home.cn, match.home.en])) || runners[0]
+  const drawRunner = runners.find((runner) => runnerMatchesText(runner, ['draw', 'tie', '平']))
+  const awayRunner = runners.find((runner) => runnerMatchesText(runner, [match.away.cn, match.away.en])) ||
+    runners.find((runner) => runner !== homeRunner && runner !== drawRunner)
+  return [
+    { key: 'home', label: '胜', runner: homeRunner },
+    { key: 'draw', label: '平', runner: drawRunner },
+    { key: 'away', label: '负', runner: awayRunner }
+  ].map((entry, index) => {
+    const runner = entry.runner || {}
+    const runnerChange = changes[runner.selectionId] || {}
+    const volumeDelta = Number(runnerChange.totalMatchedDelta || runnerChange.tradedVolumeDelta || 0)
+    const oddsDelta = Number(runnerChange.priceDelta || 0)
+    return {
+      key: entry.key,
+      label: entry.label,
+      selectionId: runner.selectionId || '',
+      name: runner.name || '',
+      odds: formatOdds(runner.lastPriceTraded),
+      separator: index < 2 ? '/' : '',
+      probability: runner.probability || 0,
+      volumeDelta,
+      volumeText: `${formatAmountK(volumeDelta)}（${Math.round(runner.probability || 0)}%）`,
+      volumeDirection: getDirection(volumeDelta),
+      oddsDirection: getDirection(oddsDelta)
+    }
+  })
+}
+
+function buildBetfairRealtimeAnalysis(match, samples) {
+  if (!Array.isArray(samples) || !samples.length) {
+    return null
+  }
+  const latest = samples[samples.length - 1]
+  const entries = buildOutcomeEntries(latest, match)
+  const maxEntry = entries
+    .slice()
+    .sort((a, b) => Math.abs(b.volumeDelta) - Math.abs(a.volumeDelta))[0]
+  if (!maxEntry || !maxEntry.selectionId) {
+    return null
+  }
+  const hasEnoughHistory = samples.length >= 2
+  const isVolumeUp = maxEntry.volumeDelta > 0
+  let adjustmentText = hasEnoughHistory ? '变化仍偏中性，暂不明显调整打出预期和进球预期。' : ''
+  let adjustmentLevel = 'neutral'
+  if (hasEnoughHistory && isVolumeUp && maxEntry.oddsDirection.type === 'up') {
+    adjustmentText = `${maxEntry.label}成交放大但赔率走高，降低该方向打出预期和进球数量预期。`
+    adjustmentLevel = 'negative'
+  } else if (hasEnoughHistory && isVolumeUp && maxEntry.oddsDirection.type === 'down') {
+    adjustmentText = `${maxEntry.label}成交放大且赔率走低，提高该方向打出预期和进球数量预期。`
+    adjustmentLevel = 'positive'
+  }
+  return {
+    updatedAt: latest.recordedAt || '',
+    maxEntry,
+    oddsEntries: entries,
+    oddsLine: entries.map((entry) => entry.odds).join('/'),
+    adjustmentText,
+    hasAdjustment: Boolean(adjustmentText),
+    adjustmentLevel
+  }
+}
 
 function buildDynamicHistoryMatch(review) {
   if (!review || !review.matchId) return null
@@ -114,12 +210,19 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
     this.scoreTimer = setInterval(() => {
       this.refreshScore()
     }, 10000)
+    this.betfairTimer = setInterval(() => {
+      this.refreshBetfairRealtime()
+    }, BETFAIR_HISTORY_REFRESH_MS)
   },
 
   onUnload() {
     if (this.scoreTimer) {
       clearInterval(this.scoreTimer)
       this.scoreTimer = null
+    }
+    if (this.betfairTimer) {
+      clearInterval(this.betfairTimer)
+      this.betfairTimer = null
     }
   },
 
@@ -146,6 +249,7 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
       title: `${match.home.cn} vs ${match.away.cn}`
     })
     this.setMatch(match)
+    this.refreshBetfairRealtime(match)
     refreshTeamStats([match], (updatedMatches) => {
       this.setMatch(updatedMatches[0])
     })
@@ -153,9 +257,35 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
   },
 
   setMatch(match) {
+    const currentMatch = this.data.match
+    if (currentMatch && currentMatch.id === match.id &&
+      currentMatch.analysis && currentMatch.analysis.betfairRealtime &&
+      match.analysis && !match.analysis.betfairRealtime) {
+      match = Object.assign({}, match, {
+        analysis: Object.assign({}, match.analysis, {
+          betfairRealtime: currentMatch.analysis.betfairRealtime
+        })
+      })
+    }
     this.setData({
       match,
       scorePanel: getScorePanel(match)
+    })
+  },
+
+  refreshBetfairRealtime(match) {
+    const targetMatch = match || this.data.match
+    if (!targetMatch || targetMatch.review || targetMatch.matchStatus === 'finished') return
+    refreshBetfairHistory(targetMatch.id, (samples) => {
+      const betfairRealtime = buildBetfairRealtimeAnalysis(targetMatch, samples)
+      if (!betfairRealtime) return
+      const currentMatch = this.data.match
+      if (!currentMatch || currentMatch.id !== targetMatch.id) return
+      this.setMatch(Object.assign({}, currentMatch, {
+        analysis: Object.assign({}, currentMatch.analysis || {}, {
+          betfairRealtime
+        })
+      }))
     })
   },
 

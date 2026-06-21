@@ -333,6 +333,117 @@
   line-height: 1.48;
 }
 
+.betfair-realtime {
+  margin-bottom: 12rpx;
+  padding: 14rpx;
+  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1rpx solid rgba(214, 170, 76, 0.22);
+}
+
+.betfair-flow-row,
+.betfair-odds-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+  min-width: 0;
+}
+
+.betfair-odds-row {
+  margin-top: 10rpx;
+  padding-top: 10rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+
+.betfair-flow-label {
+  flex: none;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 20rpx;
+  font-weight: 900;
+}
+
+.betfair-flow-value,
+.betfair-odds-values,
+.betfair-odds-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.betfair-flow-value {
+  gap: 8rpx;
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 1000;
+}
+
+.betfair-odds-values {
+  justify-content: flex-end;
+  gap: 8rpx;
+}
+
+.betfair-odds-item {
+  gap: 3rpx;
+  color: #fff;
+  font-size: 22rpx;
+  font-weight: 1000;
+}
+
+.betfair-odds-separator {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.trend-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22rpx;
+  height: 22rpx;
+  border-radius: 999rpx;
+  font-size: 18rpx;
+  line-height: 1;
+  font-weight: 1000;
+}
+
+.trend-volume-up,
+.trend-odds-down {
+  color: #06180d;
+  background: #35e06d;
+}
+
+.trend-volume-down,
+.trend-odds-up {
+  color: #fff;
+  background: #ef4444;
+}
+
+.trend-volume-flat,
+.trend-odds-flat {
+  color: #111;
+  background: #d6aa4c;
+}
+
+.betfair-adjustment {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 21rpx;
+  line-height: 1.35;
+  font-weight: 900;
+}
+
+.betfair-adjustment-positive {
+  color: #57e389;
+}
+
+.betfair-adjustment-negative {
+  color: #ff7373;
+}
+
+.betfair-adjustment-neutral {
+  color: rgba(255, 255, 255, 0.74);
+}
+
 .body-line + .body-line {
   margin-top: 8rpx;
 }

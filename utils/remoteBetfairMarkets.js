@@ -65,4 +65,25 @@ function refreshBetfairMarkets(matches, onReady, onComplete) {
     .catch(complete)
 }
 
-module.exports = { refreshBetfairMarkets, applyBetfairMarkets }
+function refreshBetfairHistory(matchId, onReady, onComplete) {
+  const complete = () => {
+    onComplete && onComplete()
+  }
+  if (!matchId) {
+    complete()
+    return
+  }
+  requestServerApi({
+    path: `/api/betfair/history?matchIds=${encodeURIComponent(matchId)}&limit=2`,
+    method: 'GET'
+  })
+    .then((data) => {
+      const markets = data && data.markets ? data.markets : {}
+      const samples = Array.isArray(markets[matchId]) ? markets[matchId] : []
+      onReady && onReady(samples)
+      complete()
+    })
+    .catch(complete)
+}
+
+module.exports = { refreshBetfairMarkets, refreshBetfairHistory, applyBetfairMarkets }
