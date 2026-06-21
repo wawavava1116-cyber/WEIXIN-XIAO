@@ -4,6 +4,11 @@ const https = require('https')
 let cachedProxyList = []
 let cachedAt = 0
 
+const DEFAULT_PROXY_SOURCES = [
+  'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt',
+  'https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=http&proxy_format=protocolipport&format=text&timeout=15000'
+]
+
 function normalizeProxy(value) {
   const raw = String(value || '').trim()
   if (!raw || raw.startsWith('#')) return ''
@@ -67,10 +72,11 @@ async function loadBetfairProxyList() {
     .filter(Boolean)
 
   const timeoutMs = Number(process.env.BETFAIR_PROXY_SOURCE_TIMEOUT_MS || 10000)
-  const sourceUrls = String(process.env.BETFAIR_PROXY_SOURCES || '')
+  const configuredSources = String(process.env.BETFAIR_PROXY_SOURCES || '')
     .split(/[\s,]+/)
     .map((item) => item.trim())
     .filter(Boolean)
+  const sourceUrls = configuredSources.length ? configuredSources : DEFAULT_PROXY_SOURCES
 
   const fromSources = []
   for (const sourceUrl of sourceUrls) {

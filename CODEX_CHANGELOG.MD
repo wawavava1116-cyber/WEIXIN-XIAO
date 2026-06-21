@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-21 15:40 - 内置公共 HTTP 代理源并增加代理池检查命令
+- 环境：公司电脑 Codex + 用户要求用 GitHub 开源 ProxyPool/公开代理池完成配置。
+- 目的：让云服务器无需额外部署完整 ProxyPool 服务，只开启 `BETFAIR_PROXY_ENABLED=1` 即可自动使用公共 HTTP 代理源尝试 Betfair 同步。
+- 涉及文件：`server/src/proxyPool.js`、`server/src/checkProxyPool.js`、`server/package.json`、`server/.env.example`、`server/README.md`、`CODEX_CHANGELOG.MD`。
+- 主要改动：内置 Proxifly GitHub raw HTTP 列表和 ProxyScrape 免费 HTTP API 作为默认代理源；当 `BETFAIR_PROXY_SOURCES` 留空时自动使用默认源；新增 `npm run check-proxies`，用于在服务器上先检查代理池是否能拉取到候选代理。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或数据库快照内容。
+- 云函数/服务器：未修改云函数；修改 `server/`，云服务器需要拉取代码并重启服务后生效。
+- 验证：已运行服务器 `npm.cmd run check`、`BETFAIR_PROXY_ENABLED=1 npm.cmd run check-proxies` 和 `git diff --check`；本地代理池检查抓到 200 个 HTTP 候选代理。
+- 后续注意事项：公共代理不保证能成功访问 Betfair；如果 `npm run sync` 仍失败，可提高 `BETFAIR_PROXY_ATTEMPTS` 或改用稳定代理/VPN。
+
 ## 2026-06-21 15:25 - 服务器 Betfair 同步支持 HTTP 代理池
 - 环境：公司电脑 Codex + 用户希望尝试免费公共代理池解决云服务器无法直连 Betfair。
 - 目的：在不影响小程序数据库、用户接口和实时比分的前提下，只让 Betfair API 请求可选走 HTTP 代理池，并修正命令行同步脚本不能自动读取 `.env` 的问题。
