@@ -1,6 +1,6 @@
 const { callBettingApi, keepAlive, certLogin } = require('./betfairClient')
 const { loadTargets, scoreEventMatch } = require('./targets')
-const { upsertMarkets } = require('./store')
+const { appendMarketHistory, upsertMarkets } = require('./store')
 
 function toIsoAfterDays(days) {
   return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString()
@@ -119,7 +119,16 @@ async function syncBetfairMarkets() {
     })
   }
 
-  return upsertMarkets(synced)
+  const store = upsertMarkets(synced)
+  const history = appendMarketHistory(synced)
+  return {
+    ...store,
+    history: {
+      updatedAt: history.updatedAt || '',
+      dateKey: history.dateKey || '',
+      appended: history.appended || 0
+    }
+  }
 }
 
 if (require.main === module) {

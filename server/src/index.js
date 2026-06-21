@@ -2,7 +2,7 @@ const http = require('http')
 const https = require('https')
 const fs = require('fs')
 const path = require('path')
-const { readStore, readDatabaseSnapshot } = require('./store')
+const { getMarketHistory, readStore, readDatabaseSnapshot } = require('./store')
 const { syncBetfairMarkets } = require('./syncOnce')
 const { keepAlive, certLogin } = require('./betfairClient')
 const { buildDatabaseSnapshot } = require('./buildDatabaseSnapshot')
@@ -304,6 +304,23 @@ async function handleRequest(req, res) {
     sendJson(res, 200, {
       ok: true,
       ...snapshot
+    })
+    return
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/betfair/history') {
+    const matchIds = (url.searchParams.get('matchIds') || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+    const limit = Number(url.searchParams.get('limit') || 0)
+    sendJson(res, 200, {
+      ok: true,
+      ...getMarketHistory({
+        dateKey: url.searchParams.get('date') || '',
+        matchIds,
+        limit: Number.isFinite(limit) ? limit : 0
+      })
     })
     return
   }

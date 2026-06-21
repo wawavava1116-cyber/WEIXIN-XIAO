@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-21 14:20 - 服务器记录必发盘口五分钟变化历史
+- 环境：公司电脑 Codex + 用户希望记录当日比赛必发成交和赔率变化
+- 目的：让轻量云服务器在自动同步 Betfair 时，不只覆盖最新盘口，还能保留北京时间当日比赛的成交额、胜平负赔率、概率和变化方向历史，方便后续判断“成交额上涨但赔率变高”的反向信号。
+- 涉及文件：`server/src/store.js`、`server/src/syncOnce.js`、`server/src/index.js`、`server/.env.example`、`server/README.md`、`cloudfunctions/apiProxy/index.js`、`CODEX_CHANGELOG.MD`
+- 主要改动：新增 `server/data/betfair-market-history.json` 运行时历史文件；`syncBetfairMarkets()` 每次同步后会把北京时间当日且已匹配到 `marketId` 的盘口追加样本，记录总成交额、runner 最新成交价、可买/可卖、归一化概率，并计算相对上一条的成交额变化、赔率上/下/平、概率变化；新增 `GET /api/betfair/history` 支持按日期、比赛 ID 和条数读取历史曲线；云函数 `apiProxy` 白名单加入该读取接口。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或小程序数据库快照内容；新增的必发历史只写入服务器运行时 `server/data/`，不会提交到 Git。
+- 云函数/服务器：修改了 `server/`，需要同步轻量云服务器并重启服务；修改了 `cloudfunctions/apiProxy` 白名单，如小程序端需要读取该历史接口，需要重新上传部署 `apiProxy` 云函数。
+- 验证：已运行 `npm.cmd run check`、`node -c cloudfunctions/apiProxy/index.js` 和 `git diff --check`。
+- 后续注意事项：服务器需保持 `BETFAIR_SYNC_ENABLED=1` 且 `BETFAIR_SYNC_INTERVAL_MS=300000` 或同等配置，才能按 5 分钟间隔持续记录；`BETFAIR_HISTORY_RETENTION_DAYS` 默认保留 14 天。
+
 ## 2026-06-21 14:02 - 历史复盘刷新强制保持云端数据
 - 环境：公司电脑 Codex + 用户历史复盘刷新反馈
 - 目的：修正历史复盘页几秒一次刷新时短暂显示本地旧缓存的问题，让历史复盘和首页一样只展示云端归档后的数据。

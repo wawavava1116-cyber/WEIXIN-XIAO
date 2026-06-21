@@ -10,6 +10,7 @@ const ALLOWED_ROUTES = [
   { method: 'GET', pattern: /^\/health$/ },
   { method: 'GET', pattern: /^\/api\/database\/latest$/ },
   { method: 'GET', pattern: /^\/api\/betfair\/markets(\?.*)?$/ },
+  { method: 'GET', pattern: /^\/api\/betfair\/history(\?.*)?$/ },
   { method: 'POST', pattern: /^\/api\/users\/guest$/ },
   { method: 'POST', pattern: /^\/api\/auth\/wechat-login$/ },
   { method: 'POST', pattern: /^\/api\/users\/me\/profile$/ },

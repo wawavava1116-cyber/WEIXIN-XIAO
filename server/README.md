@@ -79,6 +79,15 @@ curl "http://127.0.0.1:8787/api/betfair/markets"
 curl "http://127.0.0.1:8787/api/betfair/markets?matchIds=mexico-korea-20260618"
 ```
 
+读取必发盘口变化记录：
+
+```bash
+curl "http://127.0.0.1:8787/api/betfair/history"
+curl "http://127.0.0.1:8787/api/betfair/history?date=2026-06-21&matchIds=spain-saudi-20260621&limit=20"
+```
+
+服务启动后，如果 `BETFAIR_SYNC_ENABLED=1`，会按 `BETFAIR_SYNC_INTERVAL_MS` 自动同步必发盘口；默认 `300000` 毫秒，即每 5 分钟一次。每次同步会覆盖最新缓存 `server/data/betfair-markets.json`，同时把北京时间当日比赛追加到 `server/data/betfair-market-history.json`，记录成交额、胜平负赔率、概率和相对上一条的变化。`BETFAIR_HISTORY_RETENTION_DAYS` 默认保留 14 天。
+
 读取小程序数据库快照：
 
 ```bash
