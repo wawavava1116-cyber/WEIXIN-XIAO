@@ -117,5 +117,89 @@
     "home": "New Zealand",
     "away": "Egypt",
     "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "argentina-austria-20260622",
+    "eventName": "Argentina v Austria",
+    "home": "Argentina",
+    "away": "Austria",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "france-iraq-20260622",
+    "eventName": "France v Iraq",
+    "home": "France",
+    "away": "Iraq",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "norway-senegal-20260622",
+    "eventName": "Norway v Senegal",
+    "home": "Norway",
+    "away": "Senegal",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "jordan-algeria-20260622",
+    "eventName": "Jordan v Algeria",
+    "home": "Jordan",
+    "away": "Algeria",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "portugal-uzbekistan-20260623",
+    "eventName": "Portugal v Uzbekistan",
+    "home": "Portugal",
+    "away": "Uzbekistan",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "england-ghana-20260623",
+    "eventName": "England v Ghana",
+    "home": "England",
+    "away": "Ghana",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "panama-croatia-20260623",
+    "eventName": "Panama v Croatia",
+    "home": "Panama",
+    "away": "Croatia",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "colombia-congodr-20260623",
+    "eventName": "Colombia v Congo DR",
+    "home": "Colombia",
+    "away": "Congo DR",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "caboverde-saudi-20260626",
+    "eventName": "Cape Verde v Saudi Arabia",
+    "home": "Cape Verde",
+    "away": "Saudi Arabia",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "uruguay-spain-20260626",
+    "eventName": "Uruguay v Spain",
+    "home": "Uruguay",
+    "away": "Spain",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "newzealand-belgium-20260626",
+    "eventName": "New Zealand v Belgium",
+    "home": "New Zealand",
+    "away": "Belgium",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "egypt-iran-20260626",
+    "eventName": "Egypt v Iran",
+    "home": "Egypt",
+    "away": "Iran",
+    "marketType": "MATCH_ODDS"
   }
 ]

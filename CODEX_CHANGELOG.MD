@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-21 14:35 - 用预测 Skill 归档 6 月 21 日完赛并补充滚动赛程
+- 环境：公司电脑 Codex + football-match-predictor Skill + Betfair API + 公开赛果核对。
+- 目的：按北京时间 2026-06-21 的最新赛果归档完赛，重算后续未赛预测，并把服务器 Betfair 目标扩展到新增滚动窗口比赛。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`pages/schedule/schedule.js`、`server/config/targets.json`、`CODEX_CHANGELOG.MD`。
+- 主要改动：新增荷兰 5-1 瑞典、德国 2-1 科特迪瓦、厄瓜多尔 0-0 库拉索、突尼斯 0-4 日本四场复盘；补充 6 月 27 日 G/H 组末轮四场赛程和预测；按最新 Betfair 同步结果补充 6 月 22 日、6 月 23 日、6 月 24 日和 6 月 27 日部分比赛盘口摘要；未赛列表导出时按 `sortTime` 排序，避免预测页或云端快照出现源数据顺序错位；赛程淘汰赛树新增 E1 德国。
+- 数据库/赛程/复盘：`finishedReviewSource` 新增 4 场完赛复盘，滚动窗口未赛数量为 28 场、复盘数量为 36 场；数据库更新时间更新为 `2026-06-21 14:25`；首页仅保留突尼斯 vs 日本作为完赛 1 小时内展示。
+- 云函数/服务器：未修改云函数；修改了 `server/config/targets.json`，轻量云服务器需要拉取代码并重启服务后，Betfair 定时同步才会包含新增目标。
+- 验证：已运行 `node -c utils/matches.js`、`node -c pages/schedule/schedule.js`、`node -c utils/buildInfo.js`、服务器 `npm.cmd run check`、Betfair `npm.cmd run sync`、数据库快照生成检查和 `git diff --check`。
+- 后续注意事项：`server/data/` 中 Betfair 运行缓存不会提交到 Git；云端同步后需确认 `/api/database/latest` 返回的首场未赛为西班牙 vs 沙特阿拉伯，复盘首场为突尼斯 vs 日本。
+
 ## 2026-06-21 14:18 - 预测详情展示必发五分钟实时变化分析
 - 环境：公司电脑 Codex + 用户要求详情页展示必发成交量和赔率变动
 - 目的：把详情页原“必发成交量影响”升级为“必发成交量实时分析（5分钟）”，直接展示服务器每 5 分钟记录的成交量变化、胜平负赔率变化和对打出预期/进球预期的修正。

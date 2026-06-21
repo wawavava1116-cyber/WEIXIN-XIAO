@@ -59,7 +59,8 @@ const BRACKET_SEEDS = [
 
 const CONFIRMED_GROUP_PLACEMENTS = [
   { group: 'A', rank: 1, teamKey: 'mexico' },
-  { group: 'D', rank: 1, teamKey: 'usa' }
+  { group: 'D', rank: 1, teamKey: 'usa' },
+  { group: 'E', rank: 1, teamKey: 'germany' }
 ]
 
 function cloneMatch(match) {
