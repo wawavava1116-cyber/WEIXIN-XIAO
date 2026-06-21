@@ -1,12 +1,10 @@
-const { getDynamicReviews, mergeReviewLists } = require('../../utils/reviewCache')
 const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
 const ALL_DATE_LABEL = '全部'
 
-function buildHistoryMatch(review) {
+function buildHistoryMatch(review, remoteDatabase) {
   if (!review || !review.matchId) return null
-  const remoteDatabase = getRemoteDatabaseSync()
   const remoteMatches = remoteDatabase && Array.isArray(remoteDatabase.matches) ? remoteDatabase.matches : []
   const remoteHistoryMatches = remoteDatabase && Array.isArray(remoteDatabase.historyMatches) ? remoteDatabase.historyMatches : []
   const sourceMatch = remoteMatches.find((item) => item.id === review.matchId) ||
@@ -42,13 +40,13 @@ function buildHistoryMatch(review) {
   }
 }
 
-function buildHistoryMatches() {
-  const remoteDatabase = getRemoteDatabaseSync()
-  const staticReviews = remoteDatabase && Array.isArray(remoteDatabase.finishedMatches)
-    ? remoteDatabase.finishedMatches.filter(Boolean)
-    : []
-  return mergeReviewLists(staticReviews, getDynamicReviews(), 0)
-    .map(buildHistoryMatch)
+function buildHistoryMatches(remoteDatabase) {
+  if (!remoteDatabase || !Array.isArray(remoteDatabase.finishedMatches)) {
+    return []
+  }
+  return remoteDatabase.finishedMatches
+    .filter(Boolean)
+    .map((review) => buildHistoryMatch(review, remoteDatabase))
     .filter(Boolean)
 }
 
@@ -62,7 +60,8 @@ function filterHistoryMatches(items, selectedDate) {
     : items.filter((item) => item.dateText === selectedDate)
 }
 
-const initialHistoryMatches = buildHistoryMatches()
+const initialRemoteDatabase = getRemoteDatabaseSync()
+const initialHistoryMatches = buildHistoryMatches(initialRemoteDatabase)
 const initialFilteredHistoryMatches = filterHistoryMatches(initialHistoryMatches, ALL_DATE_LABEL)
 
 Page(Object.assign({}, createBackSwipeHandlers(), {
@@ -76,13 +75,25 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
   },
 
   onShow() {
-    refreshRemoteDatabase(null, () => this.refreshHistoryMatches(), () => {
-      wx.showToast({ title: '云端历史读取失败', icon: 'none' })
+    const cachedDatabase = getRemoteDatabaseSync()
+    if (cachedDatabase && !this.data.historyMatches.length) {
+      this.refreshHistoryMatches(cachedDatabase)
+    }
+    refreshRemoteDatabase((remoteDatabase) => {
+      this.refreshHistoryMatches(remoteDatabase)
+    }, null, () => {
+      if (!this.data.historyMatches.length) {
+        wx.showToast({ title: '云端历史读取失败', icon: 'none' })
+      }
     })
   },
 
-  refreshHistoryMatches() {
-    const historyMatches = buildHistoryMatches()
+  refreshHistoryMatches(remoteDatabase) {
+    const nextDatabase = remoteDatabase || getRemoteDatabaseSync()
+    if (!nextDatabase) {
+      return
+    }
+    const historyMatches = buildHistoryMatches(nextDatabase)
     const historyDates = buildHistoryDates(historyMatches)
     let selectedHistoryDate = this.data.selectedHistoryDate || ALL_DATE_LABEL
     if (historyDates.indexOf(selectedHistoryDate) === -1) {
