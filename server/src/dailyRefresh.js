@@ -1,6 +1,9 @@
+const { loadDotenvFile } = require('./env')
 const { syncBetfairMarkets } = require('./syncOnce')
 const { buildDatabaseSnapshot } = require('./buildDatabaseSnapshot')
 const { refreshLiveScoreSnapshot } = require('./liveScoreRefresh')
+
+loadDotenvFile()
 
 const BETFAIR_SYNC_ENABLED = process.env.BETFAIR_SYNC_ENABLED === '1'
 

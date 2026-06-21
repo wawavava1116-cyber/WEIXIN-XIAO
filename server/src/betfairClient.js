@@ -1,6 +1,9 @@
 const fs = require('fs')
 const https = require('https')
+const net = require('net')
 const querystring = require('querystring')
+const tls = require('tls')
+const { loadBetfairProxyList, pickRandomProxy } = require('./proxyPool')
 
 const BETTING_API_URL = 'https://api.betfair.com/exchange/betting/json-rpc/v1'
 const KEEP_ALIVE_URL = 'https://identitysso.betfair.com/api/keepAlive'
@@ -12,46 +15,143 @@ function readRequiredEnv(name) {
   return value
 }
 
-function requestJson(url, { method = 'GET', headers = {}, body, certOptions } = {}) {
+function createHttpProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions) {
+  return new Promise((resolve, reject) => {
+    const proxy = new URL(proxyUrl)
+    if (proxy.protocol !== 'http:') {
+      reject(new Error(`Unsupported proxy protocol: ${proxy.protocol}`))
+      return
+    }
+
+    const socket = net.connect({
+      host: proxy.hostname,
+      port: Number(proxy.port || 80),
+      timeout: timeoutMs
+    })
+    let settled = false
+    let response = ''
+
+    function fail(error) {
+      if (settled) return
+      settled = true
+      socket.destroy()
+      reject(error)
+    }
+
+    socket.on('connect', () => {
+      const auth = proxy.username
+        ? `Proxy-Authorization: Basic ${Buffer.from(`${decodeURIComponent(proxy.username)}:${decodeURIComponent(proxy.password)}`).toString('base64')}\r\n`
+        : ''
+      socket.write([
+        `CONNECT ${parsed.hostname}:443 HTTP/1.1`,
+        `Host: ${parsed.hostname}:443`,
+        auth.trim(),
+        '',
+        ''
+      ].filter((line) => line !== '').join('\r\n') + '\r\n')
+    })
+    socket.on('timeout', () => fail(new Error('Proxy tunnel timeout')))
+    socket.on('error', fail)
+    socket.on('data', (chunk) => {
+      response += chunk.toString('latin1')
+      if (!response.includes('\r\n\r\n')) return
+      const statusLine = response.split('\r\n')[0] || ''
+      if (!/^HTTP\/\d(?:\.\d)? 2\d\d\b/.test(statusLine)) {
+        fail(new Error(`Proxy tunnel failed: ${statusLine || 'no status'}`))
+        return
+      }
+      socket.removeAllListeners('data')
+      socket.removeAllListeners('timeout')
+      socket.removeAllListeners('error')
+      const tlsSocket = tls.connect({
+        socket,
+        servername: parsed.hostname,
+        cert: certOptions && certOptions.cert,
+        key: certOptions && certOptions.key
+      }, () => {
+        if (settled) return
+        settled = true
+        resolve(tlsSocket)
+      })
+      tlsSocket.on('error', fail)
+    })
+  })
+}
+
+function requestJsonCore(url, { method = 'GET', headers = {}, body, certOptions, proxyUrl } = {}) {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url)
-    const req = https.request({
+    const timeout = Number(process.env.BETFAIR_REQUEST_TIMEOUT_MS || 20000)
+    const requestOptions = {
       hostname: parsed.hostname,
       path: `${parsed.pathname}${parsed.search}`,
       method,
       headers,
       cert: certOptions && certOptions.cert,
       key: certOptions && certOptions.key,
-      timeout: 20000
-    }, (res) => {
-      let data = ''
-      res.setEncoding('utf8')
-      res.on('data', (chunk) => {
-        data += chunk
+      timeout
+    }
+
+    async function startRequest() {
+      if (proxyUrl) {
+        const tunnel = await createHttpProxyTunnel(parsed, proxyUrl, timeout, certOptions)
+        requestOptions.agent = false
+        requestOptions.createConnection = () => tunnel
+      }
+
+      const req = https.request(requestOptions, (res) => {
+        let data = ''
+        res.setEncoding('utf8')
+        res.on('data', (chunk) => {
+          data += chunk
+        })
+        res.on('end', () => {
+          let json = null
+          try {
+            json = data ? JSON.parse(data) : null
+          } catch (error) {
+            reject(new Error(`Invalid JSON from Betfair: ${data.slice(0, 200)}`))
+            return
+          }
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            const detail = json ? JSON.stringify(json) : data
+            reject(new Error(`Betfair HTTP ${res.statusCode}: ${detail}`))
+            return
+          }
+          resolve(json)
+        })
       })
-      res.on('end', () => {
-        let json = null
-        try {
-          json = data ? JSON.parse(data) : null
-        } catch (error) {
-          reject(new Error(`Invalid JSON from Betfair: ${data.slice(0, 200)}`))
-          return
-        }
-        if (res.statusCode < 200 || res.statusCode >= 300) {
-          const detail = json ? JSON.stringify(json) : data
-          reject(new Error(`Betfair HTTP ${res.statusCode}: ${detail}`))
-          return
-        }
-        resolve(json)
+      req.on('timeout', () => {
+        req.destroy(new Error('Betfair request timeout'))
       })
-    })
-    req.on('timeout', () => {
-      req.destroy(new Error('Betfair request timeout'))
-    })
-    req.on('error', reject)
-    if (body) req.write(body)
-    req.end()
+      req.on('error', reject)
+      if (body) req.write(body)
+      req.end()
+    }
+
+    startRequest().catch(reject)
   })
+}
+
+async function requestJson(url, options = {}) {
+  const proxies = await loadBetfairProxyList()
+  if (!proxies.length) return requestJsonCore(url, options)
+
+  const attempts = Math.max(1, Number(process.env.BETFAIR_PROXY_ATTEMPTS || 5))
+  const tried = new Set()
+  let lastError = null
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const proxyUrl = pickRandomProxy(proxies, tried)
+    if (!proxyUrl) break
+    tried.add(proxyUrl)
+    try {
+      return await requestJsonCore(url, { ...options, proxyUrl })
+    } catch (error) {
+      lastError = error
+      console.warn(`[betfair-proxy] failed via ${proxyUrl}: ${error.message}`)
+    }
+  }
+  throw lastError || new Error('No Betfair proxy available')
 }
 
 function getAuthHeaders(sessionToken = process.env.BETFAIR_SESSION_TOKEN) {

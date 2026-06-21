@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-21 15:25 - 服务器 Betfair 同步支持 HTTP 代理池
+- 环境：公司电脑 Codex + 用户希望尝试免费公共代理池解决云服务器无法直连 Betfair。
+- 目的：在不影响小程序数据库、用户接口和实时比分的前提下，只让 Betfair API 请求可选走 HTTP 代理池，并修正命令行同步脚本不能自动读取 `.env` 的问题。
+- 涉及文件：`server/src/betfairClient.js`、`server/src/proxyPool.js`、`server/src/env.js`、`server/src/index.js`、`server/src/syncOnce.js`、`server/src/dailyRefresh.js`、`server/package.json`、`server/.env.example`、`server/README.md`、`CODEX_CHANGELOG.MD`。
+- 主要改动：新增 Betfair 专用 HTTP `CONNECT` 代理隧道；支持 `BETFAIR_PROXY_URLS` 直接代理列表和 `BETFAIR_PROXY_SOURCES` 公开代理源，按缓存时间拉取并随机尝试代理；代理失败会按 `BETFAIR_PROXY_ATTEMPTS` 换下一个代理重试；新增统一 `.env` 加载模块，`npm run sync` 和 `npm run daily` 现在会自动读取服务器 `.env`。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或数据库快照内容；只影响服务器同步 Betfair 盘口时的网络出口选择。
+- 云函数/服务器：未修改云函数；修改 `server/`，需要云服务器拉取代码并重启 `worldcup-betfair` 服务后生效。
+- 验证：已运行服务器 `npm.cmd run check` 和 `git diff --check`。
+- 后续注意事项：当前只支持 HTTP 代理，不支持 `socks5://`；公共代理池稳定性不可控，建议先用少量代理源测试，确认 `npm run sync` 能成功后再开启 5 分钟定时。
+
 ## 2026-06-21 14:35 - 用预测 Skill 归档 6 月 21 日完赛并补充滚动赛程
 - 环境：公司电脑 Codex + football-match-predictor Skill + Betfair API + 公开赛果核对。
 - 目的：按北京时间 2026-06-21 的最新赛果归档完赛，重算后续未赛预测，并把服务器 Betfair 目标扩展到新增滚动窗口比赛。

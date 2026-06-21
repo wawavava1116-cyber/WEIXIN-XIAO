@@ -1,6 +1,9 @@
+const { loadDotenvFile } = require('./env')
 const { callBettingApi, keepAlive, certLogin } = require('./betfairClient')
 const { loadTargets, scoreEventMatch } = require('./targets')
 const { appendMarketHistory, upsertMarkets } = require('./store')
+
+loadDotenvFile()
 
 function toIsoAfterDays(days) {
   return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString()

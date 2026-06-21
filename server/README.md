@@ -88,6 +88,19 @@ curl "http://127.0.0.1:8787/api/betfair/history?date=2026-06-21&matchIds=spain-s
 
 服务启动后，如果 `BETFAIR_SYNC_ENABLED=1`，会按 `BETFAIR_SYNC_INTERVAL_MS` 自动同步必发盘口；默认 `300000` 毫秒，即每 5 分钟一次。每次同步会覆盖最新缓存 `server/data/betfair-markets.json`，同时把北京时间当日比赛追加到 `server/data/betfair-market-history.json`，记录成交额、胜平负赔率、概率和相对上一条的变化。`BETFAIR_HISTORY_RETENTION_DAYS` 默认保留 14 天。
 
+如果云服务器直连 Betfair 受限，可以只给 Betfair 请求启用 HTTP 代理池；小程序数据库、用户、实时比分等其它接口不会走代理。支持直接填写代理列表，也支持填写返回 `ip:port` 文本的公开代理源：
+
+```bash
+BETFAIR_PROXY_ENABLED=1
+BETFAIR_PROXY_URLS=http://1.2.3.4:8080,http://user:pass@5.6.7.8:3128
+BETFAIR_PROXY_SOURCES=https://example.com/http.txt
+BETFAIR_PROXY_ATTEMPTS=5
+BETFAIR_PROXY_CACHE_MS=600000
+BETFAIR_PROXY_MAX_CANDIDATES=200
+```
+
+当前只支持 HTTP 代理的 `CONNECT` 隧道；`socks5://` 代理需要后续单独扩展。公开代理池稳定性差，建议只作为临时尝试。
+
 读取小程序数据库快照：
 
 ```bash

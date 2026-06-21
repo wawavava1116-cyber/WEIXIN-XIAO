@@ -10,7 +10,7 @@
     "snapshot": "node src/buildDatabaseSnapshot.js",
     "daily": "node src/dailyRefresh.js",
     "live-scores": "node src/liveScoreRefresh.js",
-    "check": "node -c src/index.js && node -c src/betfairClient.js && node -c src/store.js && node -c src/userStore.js && node -c src/predictionStore.js && node -c src/targets.js && node -c src/syncOnce.js && node -c src/buildDatabaseSnapshot.js && node -c src/liveScoresClient.js && node -c src/liveScoreRefresh.js && node -c src/dailyRefresh.js"
+    "check": "node -c src/index.js && node -c src/env.js && node -c src/betfairClient.js && node -c src/proxyPool.js && node -c src/store.js && node -c src/userStore.js && node -c src/predictionStore.js && node -c src/targets.js && node -c src/syncOnce.js && node -c src/buildDatabaseSnapshot.js && node -c src/liveScoresClient.js && node -c src/liveScoreRefresh.js && node -c src/dailyRefresh.js"
   },
   "engines": {
     "node": ">=18"
