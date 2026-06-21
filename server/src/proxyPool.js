@@ -5,6 +5,8 @@ let cachedProxyList = []
 let cachedAt = 0
 
 const DEFAULT_PROXY_SOURCES = [
+  'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/socks5/data.txt',
+  'https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=socks5&proxy_format=protocolipport&format=text&timeout=15000',
   'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/protocols/http/data.txt',
   'https://api.proxyscrape.com/v4/free-proxy-list/get?request=display_proxies&protocol=http&proxy_format=protocolipport&format=text&timeout=15000'
 ]
@@ -12,13 +14,14 @@ const DEFAULT_PROXY_SOURCES = [
 function normalizeProxy(value) {
   const raw = String(value || '').trim()
   if (!raw || raw.startsWith('#')) return ''
-  if (/^https?:\/\//i.test(raw)) return raw
+  if (/^https?:\/\//i.test(raw)) return raw.replace(/^https:\/\//i, 'http://')
+  if (/^socks5:\/\//i.test(raw)) return raw
   if (/^[\w.-]+:\d{2,5}$/.test(raw)) return `http://${raw}`
   return ''
 }
 
 function parseProxyText(text) {
-  const matches = String(text || '').match(/(?:https?:\/\/)?(?:[\w.-]+):\d{2,5}/gi) || []
+  const matches = String(text || '').match(/(?:(?:https?|socks5):\/\/)?(?:[\w.-]+):\d{2,5}/gi) || []
   return matches.map(normalizeProxy).filter(Boolean)
 }
 

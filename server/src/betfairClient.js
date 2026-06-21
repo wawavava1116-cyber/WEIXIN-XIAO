@@ -78,6 +78,147 @@ function createHttpProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions) {
   })
 }
 
+function wrapTlsSocket(socket, parsed, certOptions, resolve, reject, markSettled) {
+  const tlsSocket = tls.connect({
+    socket,
+    servername: parsed.hostname,
+    cert: certOptions && certOptions.cert,
+    key: certOptions && certOptions.key
+  }, () => {
+    if (markSettled()) resolve(tlsSocket)
+  })
+  tlsSocket.on('error', reject)
+}
+
+function createSocks5ProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions) {
+  return new Promise((resolve, reject) => {
+    const proxy = new URL(proxyUrl)
+    const username = proxy.username ? decodeURIComponent(proxy.username) : ''
+    const password = proxy.password ? decodeURIComponent(proxy.password) : ''
+    const socket = net.connect({
+      host: proxy.hostname,
+      port: Number(proxy.port || 1080),
+      timeout: timeoutMs
+    })
+    let settled = false
+    let buffer = Buffer.alloc(0)
+    let stage = 'greeting'
+
+    function markSettled() {
+      if (settled) return false
+      settled = true
+      return true
+    }
+
+    function fail(error) {
+      if (!markSettled()) return
+      socket.destroy()
+      reject(error)
+    }
+
+    function sendConnectRequest() {
+      const host = Buffer.from(parsed.hostname)
+      if (host.length > 255) {
+        fail(new Error('SOCKS5 target hostname too long'))
+        return
+      }
+      const port = Buffer.alloc(2)
+      port.writeUInt16BE(443, 0)
+      socket.write(Buffer.concat([
+        Buffer.from([0x05, 0x01, 0x00, 0x03, host.length]),
+        host,
+        port
+      ]))
+      stage = 'connect'
+    }
+
+    function consumeConnectReply() {
+      if (buffer.length < 5) return false
+      if (buffer[0] !== 0x05) {
+        fail(new Error('SOCKS5 invalid connect response'))
+        return true
+      }
+      const atyp = buffer[3]
+      let replyLength = 0
+      if (atyp === 0x01) replyLength = 10
+      if (atyp === 0x03 && buffer.length >= 5) replyLength = 5 + buffer[4] + 2
+      if (atyp === 0x04) replyLength = 22
+      if (!replyLength) {
+        fail(new Error(`SOCKS5 unsupported address type: ${atyp}`))
+        return true
+      }
+      if (buffer.length < replyLength) return false
+      if (buffer[1] !== 0x00) {
+        fail(new Error(`SOCKS5 connect failed: ${buffer[1]}`))
+        return true
+      }
+      socket.removeAllListeners('data')
+      socket.removeAllListeners('timeout')
+      socket.removeAllListeners('error')
+      buffer = buffer.slice(replyLength)
+      if (buffer.length) socket.unshift(buffer)
+      wrapTlsSocket(socket, parsed, certOptions, resolve, fail, markSettled)
+      return true
+    }
+
+    socket.on('connect', () => {
+      const methods = username ? [0x00, 0x02] : [0x00]
+      socket.write(Buffer.from([0x05, methods.length, ...methods]))
+    })
+    socket.on('timeout', () => fail(new Error('SOCKS5 tunnel timeout')))
+    socket.on('error', fail)
+    socket.on('data', (chunk) => {
+      buffer = Buffer.concat([buffer, chunk])
+      if (stage === 'greeting') {
+        if (buffer.length < 2) return
+        const version = buffer[0]
+        const method = buffer[1]
+        buffer = buffer.slice(2)
+        if (version !== 0x05 || method === 0xff) {
+          fail(new Error('SOCKS5 no acceptable auth method'))
+          return
+        }
+        if (method === 0x02) {
+          const user = Buffer.from(username)
+          const pass = Buffer.from(password)
+          if (user.length > 255 || pass.length > 255) {
+            fail(new Error('SOCKS5 auth is too long'))
+            return
+          }
+          socket.write(Buffer.concat([
+            Buffer.from([0x01, user.length]),
+            user,
+            Buffer.from([pass.length]),
+            pass
+          ]))
+          stage = 'auth'
+          return
+        }
+        sendConnectRequest()
+      }
+      if (stage === 'auth') {
+        if (buffer.length < 2) return
+        const status = buffer[1]
+        buffer = buffer.slice(2)
+        if (status !== 0x00) {
+          fail(new Error('SOCKS5 auth failed'))
+          return
+        }
+        sendConnectRequest()
+      }
+      if (stage === 'connect') consumeConnectReply()
+    })
+  })
+}
+
+function createProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions) {
+  const proxy = new URL(proxyUrl)
+  if (proxy.protocol === 'socks5:') {
+    return createSocks5ProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions)
+  }
+  return createHttpProxyTunnel(parsed, proxyUrl, timeoutMs, certOptions)
+}
+
 function requestJsonCore(url, { method = 'GET', headers = {}, body, certOptions, proxyUrl } = {}) {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url)
@@ -94,7 +235,7 @@ function requestJsonCore(url, { method = 'GET', headers = {}, body, certOptions,
 
     async function startRequest() {
       if (proxyUrl) {
-        const tunnel = await createHttpProxyTunnel(parsed, proxyUrl, timeout, certOptions)
+        const tunnel = await createProxyTunnel(parsed, proxyUrl, timeout, certOptions)
         requestOptions.agent = false
         requestOptions.createConnection = () => tunnel
       }

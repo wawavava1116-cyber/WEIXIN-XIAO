@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-21 16:15 - Betfair 公共代理池增加 SOCKS5 支持
+- 环境：公司电脑 Codex + 用户重启 Chrome 后要求继续同步云服务器。
+- 目的：解决云服务器直连 Betfair 返回 HTML、HTTP 公共代理又大量 `400 Bad Request` 或超时的问题，增加更适合 HTTPS API 隧道的 SOCKS5 代理尝试。
+- 涉及文件：`server/src/proxyPool.js`、`server/src/betfairClient.js`、`server/.env.example`、`server/README.md`、`CODEX_CHANGELOG.MD`。
+- 主要改动：代理池支持解析 `socks5://` 候选，默认源加入 Proxifly 和 ProxyScrape 的 SOCKS5 列表；Betfair 客户端新增 SOCKS5 无认证/账号密码认证握手，按代理协议自动选择 HTTP CONNECT 或 SOCKS5 隧道；文档和示例配置同步说明 HTTP/SOCKS5 两种方式。
+- 数据库/赛程/复盘：未修改比赛、预测、复盘或数据库快照内容，只影响服务器同步 Betfair 盘口时的网络出口。
+- 云函数/服务器：未修改云函数；修改 `server/`，云服务器需要拉取代码、更新 `.env` 后重启 `worldcup-betfair` 服务才会生效。
+- 验证：后续运行 `npm.cmd run check`、代理池检查和 `git diff --check`；云端同步结果以服务器实际代理连通性为准。
+- 后续注意事项：公共免费代理稳定性仍不可控，如果 SOCKS5 公共池仍无法连通 Betfair，最终仍建议使用稳定 VPN、固定代理或境外轻量服务器中转。
+
 ## 2026-06-21 15:40 - 内置公共 HTTP 代理源并增加代理池检查命令
 - 环境：公司电脑 Codex + 用户要求用 GitHub 开源 ProxyPool/公开代理池完成配置。
 - 目的：让云服务器无需额外部署完整 ProxyPool 服务，只开启 `BETFAIR_PROXY_ENABLED=1` 即可自动使用公共 HTTP 代理源尝试 Betfair 同步。
