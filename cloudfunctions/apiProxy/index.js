@@ -82,7 +82,14 @@ exports.main = async (event = {}) => {
   }
 
   try {
-    return await requestServer(path, method, event.data || {}, event.token || '')
+    const data = Object.assign({}, event.data || {})
+    if (method === 'POST' && path === '/api/auth/wechat-login') {
+      const wxContext = cloud.getWXContext ? cloud.getWXContext() : {}
+      if (wxContext.OPENID) data.cloudOpenid = wxContext.OPENID
+      if (wxContext.UNIONID) data.cloudUnionid = wxContext.UNIONID
+      if (wxContext.APPID) data.cloudAppid = wxContext.APPID
+    }
+    return await requestServer(path, method, data, event.token || '')
   } catch (error) {
     return {
       statusCode: 502,

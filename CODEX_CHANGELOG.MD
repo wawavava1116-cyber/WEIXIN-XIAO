@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-22 10:25 - 修正个人信息页微信一键登录 CONFIG MISSING
+
+- 环境：公司电脑 Codex，用户反馈个人信息页点击“微信一键登录”后 toast 显示 `WECHAT_CONFIG_MISSING`。
+- 目的：修复登录链路对轻量服务器 `WECHAT_APP_SECRET` 的硬依赖，避免开发者工具/手机端通过云函数代理登录时仍因服务器缺少 AppSecret 失败。
+- 涉及文件：`cloudfunctions/apiProxy/index.js`、`server/src/index.js`、`utils/remoteApi.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：`apiProxy` 在转发 `/api/auth/wechat-login` 时读取云函数 `WXContext`，把 `OPENID/UNIONID/APPID` 注入请求；服务器登录接口优先使用云函数提供的 openid 建立微信用户档案，只有没有云端 openid 时才回退到 `jscode2session`；前端错误归一化增加微信登录相关错误码的中文提示。
+- 数据库/赛程/复盘：未修改比赛数据库、预测、复盘或 Betfair 数据。
+- 云函数/服务器：需要重新上传部署 `cloudfunctions/apiProxy`；需要轻量云服务器拉取最新代码并重启 `worldcup-betfair` 服务。
+- 验证：已运行 `node -c cloudfunctions/apiProxy/index.js`、`node -c server/src/index.js`、`node -c utils/remoteApi.js`。
+- 后续注意事项：直连服务器且不经过云函数代理时，仍需要服务器 `.env` 配置 `WECHAT_APP_ID/WECHAT_APP_SECRET`；小程序正常路径建议继续走 `apiProxy`。
+
 ## 2026-06-22 10:10 - 手动同步 6 月 23 日 4 场 Betfair 本地数据到云端
 
 - 环境：公司电脑 Codex + 本地 Betfair API 同步 + 腾讯云 OrcaTerm。

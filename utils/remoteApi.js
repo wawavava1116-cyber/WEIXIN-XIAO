@@ -13,6 +13,15 @@ function canUseDomainFallback() {
 
 function normalizeRequestError(message) {
   const text = String(message || '')
+  if (text.indexOf('WECHAT_CONFIG_MISSING') >= 0) {
+    return '微信登录配置缺失'
+  }
+  if (text.indexOf('WECHAT_LOGIN_FAILED') >= 0) {
+    return '微信登录失败'
+  }
+  if (text.indexOf('MISSING_OPENID') >= 0) {
+    return '微信身份获取失败'
+  }
   if (text.indexOf('errcode:-101') >= 0 || text.indexOf('ERR_CONNECTION_RESET') >= 0) {
     return '服务器连接失败(-101)'
   }

@@ -133,7 +133,10 @@ function fetchJson(url) {
   })
 }
 
-async function exchangeWechatCode(code) {
+async function exchangeWechatCode(code, cloudSessionData) {
+  if (cloudSessionData && cloudSessionData.openid) {
+    return cloudSessionData
+  }
   if (!WECHAT_APP_ID || !WECHAT_APP_SECRET) {
     const error = new Error('WECHAT_CONFIG_MISSING')
     error.statusCode = 503
@@ -322,7 +325,13 @@ async function handleRequest(req, res) {
       sendJson(res, 400, { ok: false, error: 'MISSING_CODE' })
       return
     }
-    const sessionData = await exchangeWechatCode(String(parsed.code))
+    const cloudSessionData = parsed.cloudOpenid
+      ? {
+          openid: String(parsed.cloudOpenid),
+          unionid: parsed.cloudUnionid ? String(parsed.cloudUnionid) : ''
+        }
+      : null
+    const sessionData = await exchangeWechatCode(String(parsed.code), cloudSessionData)
     const result = upsertWechatUser(sessionData)
     sendJson(res, 200, { ok: true, ...result })
     return
