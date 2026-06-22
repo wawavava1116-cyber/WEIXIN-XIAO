@@ -4,10 +4,10 @@
 
 - 环境：公司电脑 Codex，本地 Betfair API 手动同步；北京时间 2026-06-22 14:57。
 - 目的：按 football-match-predictor Skill 归档 6 月 22 日上午完赛场次，移除首页过期完赛，补齐 6 月 23 日至 6 月 27 日未赛窗口，并把最新必发成交量/赔率变化写入预测参考。
-- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`server/config/targets.json`、`server/src/buildDatabaseSnapshot.js`、`CODEX_CHANGELOG.MD`。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`server/config/targets.json`、`server/src/buildDatabaseSnapshot.js`、`server/config/betfair-local-sync-20260622-rolling.json`（临时传输文件，导入后删除）、`CODEX_CHANGELOG.MD`。
 - 主要改动：新增西班牙 4-0 沙特阿拉伯、比利时 0-0 伊朗、乌拉圭 2-2 佛得角、新西兰 1-3 埃及 4 场复盘；首页未赛列表滚动到 24 场；更新 6 月 23 日、6 月 24 日重点场次的 Betfair 胜平负概率、成交量和预测说明；把复盘命中率权重统一为胜负 37.5%、比分 37.5%、进球数 25%；服务器 Betfair 目标列表移除旧完赛并补齐当前未赛窗口。
 - 数据库/赛程/复盘：`DATABASE_UPDATED_AT` 更新为 `2026-06-22T14:57:00+08:00`；复盘总数 40 场，当前整体命中率 41.7%；新增复盘命中率分别为新西兰 vs 埃及 37.5%、乌拉圭 vs 佛得角 18.8%、比利时 vs 伊朗 18.8%、西班牙 vs 沙特阿拉伯 37.5%。
-- Betfair 数据：本地 `npm run sync` 成功；6 月 23-27 日 19 场拿到最新缓存并写入静态快照/服务器运行缓存；哥伦比亚 vs 刚果民主共和国、波黑 vs 卡塔尔、南非 vs 韩国、库拉索 vs 科特迪瓦、土耳其 vs 美国暂未匹配到 Betfair 市场。
+- Betfair 数据：本地 `npm run sync` 成功；6 月 23-27 日 19 场拿到最新缓存并写入静态快照/服务器运行缓存；生成 24 场临时传输文件供服务器导入运行缓存，导入后删除；哥伦比亚 vs 刚果民主共和国、波黑 vs 卡塔尔、南非 vs 韩国、库拉索 vs 科特迪瓦、土耳其 vs 美国暂未匹配到 Betfair 市场。
 - 云函数/服务器：未修改云函数；修改了 `server/` 配置和快照复盘权重，轻量云服务器需要拉取最新代码并重建数据库快照。
 - 验证：先行通过 `node -c utils/matches.js`、`node -c server/src/buildDatabaseSnapshot.js`、`server/config/targets.json` JSON 解析；完整 AGENTS 检查和首页排序检查在提交前继续执行。
 - 后续注意事项：服务器 5 分钟自动 Betfair 同步仍保持停用；如 VPN/代理不可用，继续采用本地同步后上传云端缓存的流程，且不得提交 Betfair SSOID、App Key、证书或私钥。
