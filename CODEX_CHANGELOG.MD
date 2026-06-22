@@ -8,7 +8,7 @@
 - 主要改动：`.env` 加载逻辑允许 `BETFAIR_SYNC_ENABLED` 和 `BETFAIR_SYNC_INTERVAL_MS` 覆盖 PM2 已存在环境，避免 PM2 旧环境把服务器 `.env` 中的 `BETFAIR_SYNC_ENABLED=0` 顶回 `1`；不改变 Betfair 密钥、SSOID、证书或私钥读取规则。
 - 数据库/赛程/复盘：未修改比赛数据库、预测、赛程或复盘内容；只影响 Betfair 自动同步任务是否启动。
 - 云函数/服务器：未修改云函数；修改 `server/`，需要轻量云服务器拉取代码并重启 `worldcup-betfair` 服务后生效。
-- 验证：本地运行服务端语法检查；服务器部署后需确认 `/api/betfair/sync` 返回 `BETFAIR_SYNC_DISABLED`，`/health` 仍返回 `ok: true`。
+- 验证：本地运行 `node -c server/src/env.js`、`server` 目录 `npm.cmd run check` 和 `git diff --check`；服务器拉取并重启后，`/api/betfair/sync` 返回 503 `BETFAIR_SYNC_DISABLED`，`/health` 返回 200 `ok: true`。
 - 后续注意事项：VPN/固定代理恢复后，如果要重新开启五分钟同步，把服务器 `.env` 的 `BETFAIR_SYNC_ENABLED` 改回 `1` 并重启 `worldcup-betfair`。
 
 ## 2026-06-22 09:24 - 历史复盘云端覆盖与 Betfair 按场次聚合
