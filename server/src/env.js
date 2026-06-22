@@ -1,6 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 
+const DOTENV_OVERRIDE_KEYS = new Set([
+  'BETFAIR_SYNC_ENABLED',
+  'BETFAIR_SYNC_INTERVAL_MS'
+])
+
 function loadDotenvFile() {
   const envPath = path.resolve(__dirname, '..', '.env')
   if (!fs.existsSync(envPath)) return
@@ -12,7 +17,7 @@ function loadDotenvFile() {
     if (eqIndex === -1) return
     const key = trimmed.slice(0, eqIndex).trim()
     let value = trimmed.slice(eqIndex + 1).trim()
-    if (!key || process.env[key]) return
+    if (!key || (process.env[key] && !DOTENV_OVERRIDE_KEYS.has(key))) return
     value = value.replace(/^"|"$/g, '').replace(/^'|'$/g, '')
     process.env[key] = value
   })
