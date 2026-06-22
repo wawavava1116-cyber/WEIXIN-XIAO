@@ -3,7 +3,7 @@ const https = require('https')
 const fs = require('fs')
 const path = require('path')
 const { loadDotenvFile } = require('./env')
-const { appendMarketHistory, getMarketHistory, readStore, readDatabaseSnapshot, upsertMarkets } = require('./store')
+const { getMarketHistory, readStore, readDatabaseSnapshot } = require('./store')
 const { syncBetfairMarkets } = require('./syncOnce')
 const { keepAlive, certLogin } = require('./betfairClient')
 const { buildDatabaseSnapshot } = require('./buildDatabaseSnapshot')
@@ -39,7 +39,6 @@ const CORS_ALLOW_ORIGIN = process.env.CORS_ALLOW_ORIGIN || '*'
 const SYNC_INTERVAL_MS = Number(process.env.BETFAIR_SYNC_INTERVAL_MS || 300000)
 const LIVE_SCORE_INTERVAL_MS = Number(process.env.LIVE_SCORE_SYNC_INTERVAL_MS || 60000)
 const BETFAIR_SYNC_ENABLED = process.env.BETFAIR_SYNC_ENABLED === '1'
-const BETFAIR_UPLOAD_TOKEN = process.env.BETFAIR_UPLOAD_TOKEN || ''
 const WECHAT_APP_ID = process.env.WECHAT_APP_ID || process.env.WX_APP_ID || ''
 const WECHAT_APP_SECRET = process.env.WECHAT_APP_SECRET || process.env.WX_APP_SECRET || ''
 const WECHAT_API_TIMEOUT_MS = Number(process.env.WECHAT_API_TIMEOUT_MS || 10000)
@@ -239,21 +238,6 @@ function filterMarkets(store, matchIds) {
     if (store.markets && store.markets[id]) result[id] = store.markets[id]
     return result
   }, {})
-}
-
-function getBetfairUploadToken(req) {
-  const authorization = req.headers.authorization || ''
-  const bearerMatch = authorization.match(/^Bearer\s+(.+)$/i)
-  return req.headers['x-betfair-upload-token'] || (bearerMatch ? bearerMatch[1].trim() : '')
-}
-
-function normalizeUploadedMarkets(payload) {
-  const rawMarkets = Array.isArray(payload.markets)
-    ? payload.markets
-    : Object.values(payload.markets || {})
-  return rawMarkets
-    .filter((market) => market && typeof market === 'object' && typeof market.matchId === 'string')
-    .slice(0, 500)
 }
 
 async function handleRequest(req, res) {
@@ -582,45 +566,6 @@ async function handleRequest(req, res) {
     await getRequestBody(req)
     const result = await syncBetfairMarkets()
     sendJson(res, 200, { ok: true, ...result })
-    return
-  }
-
-  if (req.method === 'POST' && url.pathname === '/api/betfair/markets/import') {
-    if (!BETFAIR_UPLOAD_TOKEN) {
-      sendJson(res, 503, { ok: false, error: 'BETFAIR_UPLOAD_DISABLED' })
-      return
-    }
-    if (getBetfairUploadToken(req) !== BETFAIR_UPLOAD_TOKEN) {
-      sendJson(res, 401, { ok: false, error: 'UNAUTHORIZED' })
-      return
-    }
-    const body = await getRequestBody(req)
-    let parsed = {}
-    try {
-      parsed = body ? JSON.parse(body) : {}
-    } catch (error) {
-      sendJson(res, 400, { ok: false, error: 'INVALID_JSON' })
-      return
-    }
-    const markets = normalizeUploadedMarkets(parsed)
-    if (!markets.length) {
-      sendJson(res, 400, { ok: false, error: 'NO_MARKETS' })
-      return
-    }
-    const store = upsertMarkets(markets)
-    const history = appendMarketHistory(markets, { dateKey: parsed.dateKey || '' })
-    const snapshot = parsed.rebuildDatabase === false ? null : buildDatabaseSnapshot()
-    sendJson(res, 200, {
-      ok: true,
-      updatedAt: store.updatedAt,
-      imported: markets.length,
-      history: {
-        updatedAt: history.updatedAt || '',
-        dateKey: history.dateKey || '',
-        appended: history.appended || 0
-      },
-      databaseUpdatedAt: snapshot ? snapshot.databaseUpdatedAt : ''
-    })
     return
   }
 

@@ -72,28 +72,6 @@ curl -X POST http://127.0.0.1:8787/api/betfair/keepalive
 curl -X POST http://127.0.0.1:8787/api/betfair/sync
 ```
 
-本地拉取 Betfair 后上传到云服务器：
-
-```bash
-# 云服务器 .env：只需要设置接收上传的 token，继续保持 BETFAIR_SYNC_ENABLED=0。
-BETFAIR_UPLOAD_TOKEN=一段随机长密钥
-INCLUDE_BETFAIR_CACHE=1
-
-# 本地 .env：使用本地可联网环境和当次有效 SSOID 拉取 Betfair，再上传到云。
-BETFAIR_APP_KEY=你的 App Key
-BETFAIR_SESSION_TOKEN=当前有效 SSOID
-BETFAIR_UPLOAD_TOKEN=与云服务器一致的随机长密钥
-BETFAIR_UPLOAD_URL=https://你的服务器域名/api/betfair/markets/import
-```
-
-执行：
-
-```bash
-npm run sync:upload
-```
-
-流程是本地执行 Betfair `listMarketCatalogue/listMarketBook`，把生成的盘口缓存上传到云端 `/api/betfair/markets/import`；云端只校验 `BETFAIR_UPLOAD_TOKEN`、写入 `server/data/betfair-markets.json`、追加 `server/data/betfair-market-history.json`，并重建 `/api/database/latest` 使用的数据库快照。不要把 `BETFAIR_UPLOAD_TOKEN`、SSOID、App Key、证书或私钥写入仓库。如果临时使用服务器 IP 或自签证书，本地可设置 `BETFAIR_UPLOAD_INSECURE=1`；正式域名证书下应保持 `0`。
-
 读取缓存：
 
 ```bash
