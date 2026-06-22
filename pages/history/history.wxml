@@ -21,7 +21,13 @@
     </picker>
   </view>
 
-  <block wx:if="{{filteredHistoryMatches.length}}">
+  <view class="empty-history glass" wx:if="{{isLoadingHistory}}">
+    <text>正在读取云端历史复盘...</text>
+  </view>
+  <view class="empty-history glass" wx:elif="{{historyLoadFailed}}">
+    <text>云端历史读取失败，请下拉或稍后重试</text>
+  </view>
+  <block wx:elif="{{filteredHistoryMatches.length}}">
     <block wx:for="{{filteredHistoryMatches}}" wx:key="id">
       <navigator class="history-card glass" url="/pages/detail/detail?id={{item.id}}&amp;source=history" hover-class="history-card-hover">
         <view class="history-top">

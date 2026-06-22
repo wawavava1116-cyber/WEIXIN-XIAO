@@ -73,6 +73,7 @@ function refreshBetfairHistory(matchId, onReady, onComplete) {
     complete()
     return
   }
+
   requestServerApi({
     path: `/api/betfair/history?matchIds=${encodeURIComponent(matchId)}&limit=2`,
     method: 'GET'

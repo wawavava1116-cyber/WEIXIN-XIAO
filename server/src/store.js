@@ -143,7 +143,6 @@ function appendMarketHistory(marketList, options = {}) {
   const todayKey = options.dateKey || toBeijingDateKey(options.now || new Date())
   const current = readMarketHistory()
   const days = { ...(current.days || {}) }
-  const day = { ...(days[todayKey] || {}) }
   const nextMarkets = Array.isArray(marketList) ? marketList : []
   let appended = 0
 
@@ -151,11 +150,13 @@ function appendMarketHistory(marketList, options = {}) {
     if (!market || !market.matchId) return
     if (!market.marketId || !market.marketStartTime) return
     const marketDayKey = toBeijingDateKey(market.marketStartTime)
-    if (marketDayKey !== todayKey) return
+    const historyDateKey = options.dateKey || marketDayKey || todayKey
+    const day = { ...(days[historyDateKey] || {}) }
     const samples = Array.isArray(day[market.matchId]) ? day[market.matchId] : []
     const previousSample = samples[samples.length - 1] || null
     const sample = summarizeMarketSample(market, previousSample)
     day[market.matchId] = samples.concat(sample)
+    days[historyDateKey] = day
     appended += 1
   })
 
@@ -168,7 +169,6 @@ function appendMarketHistory(marketList, options = {}) {
     }
   }
 
-  days[todayKey] = day
   if (MARKET_HISTORY_RETENTION_DAYS > 0) {
     const keepAfter = Date.now() - MARKET_HISTORY_RETENTION_DAYS * 24 * 60 * 60 * 1000
     Object.keys(days).forEach((dateKey) => {
@@ -187,17 +187,26 @@ function appendMarketHistory(marketList, options = {}) {
 
 function getMarketHistory({ dateKey, matchIds, limit } = {}) {
   const history = readMarketHistory()
-  const selectedDateKey = dateKey || toBeijingDateKey()
+  const selectedDateKey = dateKey || ''
   const day = history.days[selectedDateKey] || {}
-  const ids = Array.isArray(matchIds) && matchIds.length ? matchIds : Object.keys(day)
+  const ids = Array.isArray(matchIds) && matchIds.length
+    ? matchIds
+    : Object.keys(day)
   const markets = ids.reduce((result, matchId) => {
-    const samples = Array.isArray(day[matchId]) ? day[matchId] : []
+    const samples = selectedDateKey
+      ? (Array.isArray(day[matchId]) ? day[matchId] : [])
+      : Object.keys(history.days || {}).reduce((items, key) => {
+        const daySamples = history.days[key] && Array.isArray(history.days[key][matchId])
+          ? history.days[key][matchId]
+          : []
+        return items.concat(daySamples)
+      }, []).sort((a, b) => new Date(a.recordedAt || 0).getTime() - new Date(b.recordedAt || 0).getTime())
     result[matchId] = limit > 0 ? samples.slice(-limit) : samples
     return result
   }, {})
   return {
     updatedAt: history.updatedAt || '',
-    dateKey: selectedDateKey,
+    dateKey: selectedDateKey || 'all',
     markets
   }
 }

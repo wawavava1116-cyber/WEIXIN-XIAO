@@ -1,7 +1,7 @@
-const { getRemoteDatabaseSync, getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
+const { getRemoteDatabaseBadge, refreshRemoteDatabase } = require('../../utils/remoteMatchDatabase')
 const { createBackSwipeHandlers } = require('../../utils/swipeNavigation')
 
-const ALL_DATE_LABEL = '全部'
+const ALL_DATE_LABEL = '\u5168\u90e8'
 
 function buildHistoryMatch(review, remoteDatabase) {
   if (!review || !review.matchId) return null
@@ -60,37 +60,45 @@ function filterHistoryMatches(items, selectedDate) {
     : items.filter((item) => item.dateText === selectedDate)
 }
 
-const initialRemoteDatabase = getRemoteDatabaseSync()
-const initialHistoryMatches = buildHistoryMatches(initialRemoteDatabase)
-const initialFilteredHistoryMatches = filterHistoryMatches(initialHistoryMatches, ALL_DATE_LABEL)
-
 Page(Object.assign({}, createBackSwipeHandlers(), {
   data: {
-    historyMatches: initialHistoryMatches,
-    filteredHistoryMatches: initialFilteredHistoryMatches,
-    historyDates: buildHistoryDates(initialHistoryMatches),
+    historyMatches: [],
+    filteredHistoryMatches: [],
+    historyDates: [ALL_DATE_LABEL],
     historyDateIndex: 0,
-    databaseBadge: getRemoteDatabaseBadge(),
-    selectedHistoryDate: ALL_DATE_LABEL
+    databaseBadge: '\u6b63\u5728\u8bfb\u53d6\u4e91\u7aef\u6570\u636e\u5e93',
+    selectedHistoryDate: ALL_DATE_LABEL,
+    isLoadingHistory: true,
+    historyLoadFailed: false
   },
 
   onShow() {
-    const cachedDatabase = getRemoteDatabaseSync()
-    if (cachedDatabase && !this.data.historyMatches.length) {
-      this.refreshHistoryMatches(cachedDatabase)
-    }
+    this.setData({
+      historyMatches: [],
+      filteredHistoryMatches: [],
+      historyDates: [ALL_DATE_LABEL],
+      historyDateIndex: 0,
+      selectedHistoryDate: ALL_DATE_LABEL,
+      databaseBadge: '\u6b63\u5728\u8bfb\u53d6\u4e91\u7aef\u6570\u636e\u5e93',
+      isLoadingHistory: true,
+      historyLoadFailed: false
+    })
     refreshRemoteDatabase((remoteDatabase) => {
       this.refreshHistoryMatches(remoteDatabase)
     }, null, () => {
-      if (!this.data.historyMatches.length) {
-        wx.showToast({ title: '云端历史读取失败', icon: 'none' })
-      }
+      this.setData({
+        isLoadingHistory: false,
+        historyLoadFailed: true,
+        databaseBadge: '\u4e91\u7aef\u5386\u53f2\u8bfb\u53d6\u5931\u8d25'
+      })
+      wx.showToast({ title: '\u4e91\u7aef\u5386\u53f2\u8bfb\u53d6\u5931\u8d25', icon: 'none' })
     })
   },
 
   refreshHistoryMatches(remoteDatabase) {
-    const nextDatabase = remoteDatabase || getRemoteDatabaseSync()
+    const nextDatabase = remoteDatabase
     if (!nextDatabase) {
+      this.setData({ isLoadingHistory: false, historyLoadFailed: true })
       return
     }
     const historyMatches = buildHistoryMatches(nextDatabase)
@@ -107,7 +115,9 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
       historyDates,
       historyDateIndex,
       selectedHistoryDate,
-      databaseBadge: getRemoteDatabaseBadge()
+      databaseBadge: getRemoteDatabaseBadge(),
+      isLoadingHistory: false,
+      historyLoadFailed: false
     })
   },
 

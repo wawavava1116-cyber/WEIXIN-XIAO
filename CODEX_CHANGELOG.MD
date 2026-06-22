@@ -1,5 +1,17 @@
 # Codex 项目变更日志
 
+## 2026-06-22 09:24 - 历史复盘云端覆盖与 Betfair 按场次聚合
+
+- 环境：公司电脑 Codex + Chrome 腾讯云 OrcaTerm 同步准备。
+- 目的：修正历史复盘页先显示旧本地缓存的问题，并把详情页 Betfair 五分钟成交/赔率历史改为按 `matchId` 聚合，避免跨北京时间 0 点导致历史样本查空。
+- 涉及文件：`pages/history/history.js`、`pages/history/history.wxml`、`utils/remoteBetfairMarkets.js`、`server/src/store.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：历史复盘页进入时清空旧显示并等待本次云端数据库返回，成功后才渲染历史复盘；云端读取失败时显示失败状态，不再展示旧 storage 内容；Betfair 历史接口不带 `date` 时由服务端按场次 ID 跨全部历史分区聚合最近样本；历史样本写入改为按比赛开赛日期归档，不再要求开赛日期等于同步当天。
+- 数据库/赛程/复盘：未修改比赛预测、赛程或复盘内容；只调整历史复盘页数据读取策略和 Betfair 历史样本查询策略。
+- 云函数：未修改云函数代码，不需要重新部署云函数。
+- 服务器：修改了 `server/src/store.js`，轻量云服务器需要拉取代码并重启 `worldcup-betfair` 服务后，`/api/betfair/history` 才会按场次跨日期返回样本。
+- 验证：已运行 `node -c pages/history/history.js`、`node -c pages/detail/detail.js`、`node -c utils/remoteBetfairMarkets.js`、`node -c server/src/store.js`、`node -c server/src/index.js` 和 `server` 目录 `npm.cmd run check`；本地临时样本验证按 `matchId` 可跨日期聚合最近两条历史样本。
+- 后续注意事项：服务器部署后检查开发者工具详情页是否出现“最大变化 / 赔率胜平负”实时分析；若仍无样本，继续检查服务器 Betfair 5 分钟同步任务是否持续运行。
+
 ## 2026-06-21 16:15 - Betfair 公共代理池增加 SOCKS5 支持
 - 环境：公司电脑 Codex + 用户重启 Chrome 后要求继续同步云服务器。
 - 目的：解决云服务器直连 Betfair 返回 HTML、HTTP 公共代理又大量 `400 Bad Request` 或超时的问题，增加更适合 HTTPS API 隧道的 SOCKS5 代理尝试。
