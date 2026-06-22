@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-22 09:48 - 本地 Betfair 拉取后上传云端缓存
+
+- 环境：公司电脑 Codex，按 football-match-predictor Skill 中“本地使用当次 SSOID 获取 Betfair，云端不长期维护 SSOID”的策略调整。
+- 目的：解决云服务器因 VPN/代理问题无法稳定连接 Betfair 时，仍可在本地可联网环境获取必发盘口并同步到云端数据库快照。
+- 涉及文件：`server/src/index.js`、`server/src/uploadLocalBetfair.js`、`server/package.json`、`server/.env.example`、`server/README.md`、`CODEX_CHANGELOG.MD`。
+- 主要改动：新增受 `BETFAIR_UPLOAD_TOKEN` 保护的 `POST /api/betfair/markets/import` 接口，接收本地上传的 Betfair markets，写入云端盘口缓存、追加盘口历史，并重建 `/api/database/latest` 使用的数据库快照；新增 `npm run sync:upload`，用于本地拉取 Betfair 后上传云端；文档补充云端和本地 `.env` 配置方式。
+- 数据库/赛程/复盘：未修改比赛预测、赛程或复盘内容；上传新 Betfair 数据时会更新云端运行时缓存和数据库快照的 `betfairUpdatedAt`/`remoteBetfair`。
+- 云函数/服务器：未修改云函数；修改 `server/`，轻量云服务器需要拉取代码、设置 `BETFAIR_UPLOAD_TOKEN` 和 `INCLUDE_BETFAIR_CACHE=1`，并重启 `worldcup-betfair` 后生效。
+- 验证：运行服务端语法检查和 `git diff --check`；未在仓库中写入 Betfair App Key、SSOID、证书、私钥或上传 token。
+- 后续注意事项：本地执行 `npm run sync:upload` 前需要本地 `.env` 有当次有效 `BETFAIR_SESSION_TOKEN`、`BETFAIR_APP_KEY`、`BETFAIR_UPLOAD_URL` 和与云端一致的 `BETFAIR_UPLOAD_TOKEN`。
+
 ## 2026-06-22 09:37 - 停用 Betfair 五分钟自动同步
 
 - 环境：公司电脑 Codex + Chrome 腾讯云 OrcaTerm。
