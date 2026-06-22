@@ -1,5 +1,13 @@
 # Codex 项目变更日志
 
+## 2026-06-22 21:35 - 双电脑 Codex 接力规则
+
+- 目的：减少办公室电脑和家里电脑交替使用时的 Git 冲突、重复排查和 changelog 膨胀。
+- 涉及：`CODEX_SYNC.MD`、`CODEX_HANDOFF_CURRENT.MD`、`AGENTS.MD`、`CODEX_CHANGELOG.MD`。
+- 影响：新增开工先拉取、收工尽量提交推送、未完成工作写当前交接文件的规则；changelog 改为只记录功能、数据、云端流程和部署影响。
+- 验证：文档规则更新，无运行时代码变化。
+- 部署：不需要部署云函数或服务器。
+
 ## 2026-06-22 14:57 - Skill 滚动更新赛前数据库与 Betfair 快照
 
 - 环境：公司电脑 Codex，本地 Betfair API 手动同步；北京时间 2026-06-22 14:57。
@@ -67,6 +75,26 @@
 - 服务器：修改了 `server/src/store.js`，轻量云服务器需要拉取代码并重启 `worldcup-betfair` 服务后，`/api/betfair/history` 才会按场次跨日期返回样本。
 - 验证：已运行 `node -c pages/history/history.js`、`node -c pages/detail/detail.js`、`node -c utils/remoteBetfairMarkets.js`、`node -c server/src/store.js`、`node -c server/src/index.js` 和 `server` 目录 `npm.cmd run check`；本地临时样本验证按 `matchId` 可跨日期聚合最近两条历史样本。
 - 后续注意事项：服务器部署后检查开发者工具详情页是否出现“最大变化 / 赔率胜平负”实时分析；若仍无样本，继续检查服务器 Betfair 5 分钟同步任务是否持续运行。
+
+## 2026-06-21 23:58 - 新增必发数据独立刷新 Skill 并上传最新对比样本
+- 环境：公司电脑 Codex + Betfair 本地可访问网络 + 腾讯云 OrcaTerm 服务器终端。
+- 目的：把“单独跑必发、追加历史对比、上传云端、验证详情页成交额/赔率变化”的临时操作固化成独立 Skill，并立即更新一轮云端必发对比数据。
+- 涉及文件：`.codex-skills/betfair-data-refresh/SKILL.md`、`.codex-skills/betfair-data-refresh/scripts/append-current-history.js`、`.codex-skills/betfair-data-refresh/agents/openai.yaml`、`AGENTS.MD`、`CODEX_CHANGELOG.MD`。
+- 主要改动：新增 `betfair-data-refresh` Skill，记录本地同步、强制追加当前时间历史样本、打包上传 `server/data/betfair-markets.json` 和 `server/data/betfair-market-history.json`、云端接口验证的完整流程；新增脚本用于把最新盘口快照追加到今日历史样本；`AGENTS.MD` 增加该 Skill 的触发规则。
+- 数据/复盘影响：未修改比赛预测、赛程或复盘；本地运行并上传了最新 Betfair 运行数据，云端 `/api/betfair/history` 已可读最新对比样本。
+- 云函数/服务器：未修改云函数；已通过 OrcaTerm 上传运行数据到 `/opt/worldcup-mini/server/data`，并执行 `pm2 reload worldcup-betfair --update-env` 与 `pm2 save`；云端自动 Betfair 同步仍保持关闭。
+- 验证：`server` 执行 `npm run check` 通过；`node .codex-skills/betfair-data-refresh/scripts/append-current-history.js` 追加 22 场样本；云端接口抽查西班牙、比利时、乌拉圭、新西兰 vs 埃及均返回 `samples=2` 且最新样本包含成交额变化。
+- 后续注意：`quick_validate.py` 依赖本机 Python 的 `yaml` 包，当前 bundled Python 缺少该依赖，未能运行官方校验脚本；已用文件存在性和 Node 语法检查替代基础校验。
+
+## 2026-06-21 21:03 - 修正详情页必发五分钟变化展示
+- 环境：公司电脑 Codex + 用户反馈开发者工具预览看不到必发成交变化和赔率变化。
+- 目的：让详情页在云端已有两条 Betfair 历史样本时，稳定显示成交额变化、胜/平/负赔率方向箭头和预期修正文案。
+- 涉及文件：`pages/detail/detail.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：详情页不再只依赖 runner 级成交差值，因为 Betfair 返回的数据常把成交变化记录在整场 market 的 `totalMatchedDelta` 上；改为使用整场成交额变化作为展示差值，同时逐项对比胜/平/负赔率变化；箭头和中文文案改用 Unicode 转义，避免编码损坏导致动态块不显示。
+- 数据/复盘影响：未修改比赛、预测、复盘或云端数据库内容；只影响详情页必发展示。
+- 云函数/服务器：不需要重新部署轻量服务器；如开发者工具仍读不到 `/api/betfair/history`，需要确认 `apiProxy` 云函数已上传部署到包含 history 白名单的版本。
+- 验证：已运行 `node -c pages/detail/detail.js`；用本地两条 Betfair 历史样本模拟，比利时 vs 伊朗可得到 `80K（69%）` 和主胜赔率下跌箭头。
+- 后续注意：开发者工具需要重新编译预览；若仍只显示静态文案，优先查看云函数 `apiProxy` 是否为最新部署版本。
 
 ## 2026-06-21 16:15 - Betfair 公共代理池增加 SOCKS5 支持
 - 环境：公司电脑 Codex + 用户重启 Chrome 后要求继续同步云服务器。

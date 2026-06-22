@@ -1,0 +1,7 @@
+interface:
+  display_name: "Betfair Data Refresh"
+  short_description: "Refresh Betfair comparison data"
+  default_prompt: "Use $betfair-data-refresh to update Betfair comparison samples and upload them to the cloud server."
+
+policy:
+  allow_implicit_invocation: true

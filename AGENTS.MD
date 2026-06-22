@@ -7,8 +7,11 @@
 1. `README.MD`：项目功能、导入方式、云函数部署方式。
 2. `TODO.MD`：当前待办和风险。
 3. `.codex-skills/football-match-predictor/SKILL.md`：比赛预测和复盘数据更新规则。
-4. `CODEX_HANDOFF_2026-06-14.MD`：2026-06-14 在家里电脑完成的调整和后续交接记录。
-5. `CODEX_CHANGELOG.MD`：所有 Codex/协作者修改小程序并提交或上传 Git 前必须追加的变更日志。
+4. `.codex-skills/betfair-data-refresh/SKILL.md`：单独更新、上传和核查必发成交量/赔率对比数据的流程。
+5. `CODEX_SYNC.MD`：办公室电脑和家里电脑之间的 Codex 接力、Git 同步和精简 changelog 规则。
+6. `CODEX_HANDOFF_CURRENT.MD`：只在有未完成、未提交工作时使用的当前交接记录。
+7. `CODEX_HANDOFF_2026-06-14.MD`：2026-06-14 在家里电脑完成的调整和后续交接记录。
+8. `CODEX_CHANGELOG.MD`：只记录功能、数据、云端流程和部署影响；小样式、小文案、小 bug 修复可以不记。
 
 ## Skill 加载规则
 
@@ -25,6 +28,18 @@
 - 调整胜平负、比分、亚盘、大小球、风险点。
 - 根据红牌、停赛、伤病、阵容消息重做比赛分析。
 - 用户要求“用预测 skill 更新数据库”或类似表述。
+
+当任务涉及以下内容时，必须先读取并遵守：
+
+```text
+.codex-skills/betfair-data-refresh/SKILL.md
+```
+
+触发场景：
+
+- 用户要求“单独更新必发数据”“更新必发数据对比”“单独跑必发”“上传必发历史数据”或类似表述。
+- 只更新 `server/data/betfair-markets.json`、`server/data/betfair-market-history.json` 并上传云端。
+- 检查详情页“必发成交量实时分析”是否显示成交额变化、赔率箭头或 5/10 分钟对比。
 
 ## 项目关键文件
 
@@ -78,7 +93,7 @@
 ## 开发规则
 
 - 尽量保持微信小程序原生写法，不引入大型框架。
-- 任何人或任何 Codex 对小程序做出修改，并准备提交或上传到 Git 前，必须在 `CODEX_CHANGELOG.MD` 顶部追加一条变更日志，写清楚时间、目的、涉及文件、主要改动、数据/复盘影响、云函数是否要重新部署、验证结果和后续注意事项。
+- changelog 按 `CODEX_SYNC.MD` 的精简规则执行：功能、数据、云端流程、部署影响需要记录；小样式、小文案、小 bug 修复可以不写。
 - 修改 `cloudfunctions/liveScores` 后，需要提醒用户重新上传并部署云函数。
 - 修改 `server/` 后，需要提醒用户重新部署轻量云服务器服务。
 - 修改远程数据库结构后，需要同步检查首页、详情页、历史页是否仍能读取服务器快照。

@@ -139,6 +139,19 @@ function summarizeMarketSample(market, previousSample) {
   }
 }
 
+function findLatestMarketHistorySample(days, matchId, excludeDateKey) {
+  return Object.keys(days || {})
+    .filter((dateKey) => dateKey && dateKey !== excludeDateKey)
+    .reduce((samples, dateKey) => {
+      const daySamples = days[dateKey] && Array.isArray(days[dateKey][matchId])
+        ? days[dateKey][matchId]
+        : []
+      return samples.concat(daySamples)
+    }, [])
+    .sort((a, b) => new Date(a.recordedAt || 0).getTime() - new Date(b.recordedAt || 0).getTime())
+    .slice(-1)[0] || null
+}
+
 function appendMarketHistory(marketList, options = {}) {
   const todayKey = options.dateKey || toBeijingDateKey(options.now || new Date())
   const current = readMarketHistory()
@@ -153,7 +166,8 @@ function appendMarketHistory(marketList, options = {}) {
     const historyDateKey = options.dateKey || marketDayKey || todayKey
     const day = { ...(days[historyDateKey] || {}) }
     const samples = Array.isArray(day[market.matchId]) ? day[market.matchId] : []
-    const previousSample = samples[samples.length - 1] || null
+    const previousSample = samples[samples.length - 1] ||
+      findLatestMarketHistorySample(days, market.matchId, historyDateKey)
     const sample = summarizeMarketSample(market, previousSample)
     day[market.matchId] = samples.concat(sample)
     days[historyDateKey] = day

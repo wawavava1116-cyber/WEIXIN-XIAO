@@ -21,9 +21,9 @@ function formatOdds(value) {
 
 function getDirection(delta) {
   const value = Number(delta) || 0
-  if (value > 0) return { type: 'up', icon: '↑' }
-  if (value < 0) return { type: 'down', icon: '↓' }
-  return { type: 'flat', icon: '－' }
+  if (value > 0) return { type: 'up', icon: '\u2191' }
+  if (value < 0) return { type: 'down', icon: '\u2193' }
+  return { type: 'flat', icon: '-' }
 }
 
 function runnerMatchesText(runner, values) {
@@ -34,21 +34,43 @@ function runnerMatchesText(runner, values) {
   })
 }
 
-function buildOutcomeEntries(sample, match) {
-  const runners = Array.isArray(sample && sample.runners) ? sample.runners : []
+function getRunnerChange(sample, runner, previousSample) {
+  if (!runner) return {}
   const changes = sample && sample.changes && sample.changes.runners ? sample.changes.runners : {}
+  const directChange = changes[runner.selectionId]
+  if (directChange) return directChange
+  const previousRunners = Array.isArray(previousSample && previousSample.runners) ? previousSample.runners : []
+  const previousRunner = previousRunners.find((item) => {
+    if (!item) return false
+    if (runner.selectionId && item.selectionId === runner.selectionId) return true
+    return item.name && runner.name && item.name === runner.name
+  }) || {}
+  const latestOdds = Number(runner.lastPriceTraded || 0)
+  const previousOdds = Number(previousRunner.lastPriceTraded || 0)
+  return {
+    priceDelta: latestOdds && previousOdds ? Number((latestOdds - previousOdds).toFixed(3)) : 0,
+    probabilityDelta: Number(((runner.probability || 0) - (previousRunner.probability || 0)).toFixed(1)),
+    totalMatchedDelta: Number(((runner.totalMatched || 0) - (previousRunner.totalMatched || 0)).toFixed(2)),
+    tradedVolumeDelta: Number(((runner.tradedVolume || 0) - (previousRunner.tradedVolume || 0)).toFixed(2))
+  }
+}
+
+function buildOutcomeEntries(sample, previousSample, match) {
+  const runners = Array.isArray(sample && sample.runners) ? sample.runners : []
+  const marketDelta = Number(sample && sample.changes && sample.changes.totalMatchedDelta || 0)
   const homeRunner = runners.find((runner) => runnerMatchesText(runner, [match.home.cn, match.home.en])) || runners[0]
-  const drawRunner = runners.find((runner) => runnerMatchesText(runner, ['draw', 'tie', '平']))
+  const drawRunner = runners.find((runner) => runnerMatchesText(runner, ['draw', 'tie', '\u5e73']))
   const awayRunner = runners.find((runner) => runnerMatchesText(runner, [match.away.cn, match.away.en])) ||
     runners.find((runner) => runner !== homeRunner && runner !== drawRunner)
   return [
-    { key: 'home', label: '胜', runner: homeRunner },
-    { key: 'draw', label: '平', runner: drawRunner },
-    { key: 'away', label: '负', runner: awayRunner }
+    { key: 'home', label: '\u80dc', runner: homeRunner },
+    { key: 'draw', label: '\u5e73', runner: drawRunner },
+    { key: 'away', label: '\u8d1f', runner: awayRunner }
   ].map((entry, index) => {
     const runner = entry.runner || {}
-    const runnerChange = changes[runner.selectionId] || {}
+    const runnerChange = getRunnerChange(sample, runner, previousSample)
     const volumeDelta = Number(runnerChange.totalMatchedDelta || runnerChange.tradedVolumeDelta || 0)
+    const displayDelta = volumeDelta || marketDelta
     const oddsDelta = Number(runnerChange.priceDelta || 0)
     return {
       key: entry.key,
@@ -58,10 +80,14 @@ function buildOutcomeEntries(sample, match) {
       odds: formatOdds(runner.lastPriceTraded),
       separator: index < 2 ? '/' : '',
       probability: runner.probability || 0,
+      probabilityDelta: Number(runnerChange.probabilityDelta || 0),
       volumeDelta,
-      volumeText: `${formatAmountK(volumeDelta)}（${Math.round(runner.probability || 0)}%）`,
-      volumeDirection: getDirection(volumeDelta),
-      oddsDirection: getDirection(oddsDelta)
+      marketDelta,
+      displayDelta,
+      volumeText: `${formatAmountK(displayDelta)}\uFF08${Math.round(runner.probability || 0)}%\uFF09`,
+      volumeDirection: getDirection(displayDelta),
+      oddsDirection: getDirection(oddsDelta),
+      oddsDelta
     }
   })
 }
@@ -70,23 +96,28 @@ function buildBetfairRealtimeAnalysis(match, samples) {
   if (!Array.isArray(samples) || !samples.length) {
     return null
   }
+  const previous = samples.length >= 2 ? samples[samples.length - 2] : null
   const latest = samples[samples.length - 1]
-  const entries = buildOutcomeEntries(latest, match)
+  const entries = buildOutcomeEntries(latest, previous, match)
   const maxEntry = entries
     .slice()
-    .sort((a, b) => Math.abs(b.volumeDelta) - Math.abs(a.volumeDelta))[0]
+    .sort((a, b) => {
+      const bScore = Math.abs(b.volumeDelta) || Math.abs(b.probabilityDelta) || Math.abs(b.oddsDelta) || Math.abs(b.displayDelta)
+      const aScore = Math.abs(a.volumeDelta) || Math.abs(a.probabilityDelta) || Math.abs(a.oddsDelta) || Math.abs(a.displayDelta)
+      return bScore - aScore
+    })[0]
   if (!maxEntry || !maxEntry.selectionId) {
     return null
   }
   const hasEnoughHistory = samples.length >= 2
-  const isVolumeUp = maxEntry.volumeDelta > 0
-  let adjustmentText = hasEnoughHistory ? '变化仍偏中性，暂不明显调整打出预期和进球预期。' : ''
+  const isVolumeUp = maxEntry.displayDelta > 0
+  let adjustmentText = hasEnoughHistory ? '\u53D8\u5316\u4ECD\u504F\u4E2D\u6027\uFF0C\u6682\u4E0D\u660E\u663E\u8C03\u6574\u6253\u51FA\u9884\u671F\u548C\u8FDB\u7403\u9884\u671F\u3002' : ''
   let adjustmentLevel = 'neutral'
   if (hasEnoughHistory && isVolumeUp && maxEntry.oddsDirection.type === 'up') {
-    adjustmentText = `${maxEntry.label}成交放大但赔率走高，降低该方向打出预期和进球数量预期。`
+    adjustmentText = `${maxEntry.label}\u6210\u4EA4\u653E\u5927\u4F46\u8D54\u7387\u8D70\u9AD8\uFF0C\u964D\u4F4E\u8BE5\u65B9\u5411\u6253\u51FA\u9884\u671F\u548C\u8FDB\u7403\u6570\u91CF\u9884\u671F\u3002`
     adjustmentLevel = 'negative'
   } else if (hasEnoughHistory && isVolumeUp && maxEntry.oddsDirection.type === 'down') {
-    adjustmentText = `${maxEntry.label}成交放大且赔率走低，提高该方向打出预期和进球数量预期。`
+    adjustmentText = `${maxEntry.label}\u6210\u4EA4\u653E\u5927\u4E14\u8D54\u7387\u8D70\u4F4E\uFF0C\u63D0\u9AD8\u8BE5\u65B9\u5411\u6253\u51FA\u9884\u671F\u548C\u8FDB\u7403\u6570\u91CF\u9884\u671F\u3002`
     adjustmentLevel = 'positive'
   }
   return {
@@ -99,7 +130,6 @@ function buildBetfairRealtimeAnalysis(match, samples) {
     adjustmentLevel
   }
 }
-
 function buildDynamicHistoryMatch(review) {
   if (!review || !review.matchId) return null
   const remoteDatabase = getRemoteDatabaseSync()
@@ -205,7 +235,7 @@ Page(Object.assign({}, createBackSwipeHandlers(), {
   onLoad(options) {
     this.loadOptions = options || {}
     refreshRemoteDatabase(null, () => this.loadMatch(this.loadOptions, true), () => {
-      wx.showToast({ title: '云端详情读取失败', icon: 'none' })
+      wx.showToast({ title: '\u4e91\u7aef\u8be6\u60c5\u8bfb\u53d6\u5931\u8d25', icon: 'none' })
     })
     this.scoreTimer = setInterval(() => {
       this.refreshScore()

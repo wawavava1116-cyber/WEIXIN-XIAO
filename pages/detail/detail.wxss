@@ -398,30 +398,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22rpx;
-  height: 22rpx;
-  border-radius: 999rpx;
-  font-size: 18rpx;
+  width: auto;
+  min-width: 22rpx;
+  height: 28rpx;
+  font-size: 28rpx;
   line-height: 1;
-  font-weight: 1000;
+  font-weight: 1200;
+  text-shadow: 0 0 6rpx currentColor;
+  background: transparent;
 }
 
 .trend-volume-up,
 .trend-odds-down {
-  color: #06180d;
-  background: #35e06d;
+  color: #35e06d;
 }
 
 .trend-volume-down,
 .trend-odds-up {
-  color: #fff;
-  background: #ef4444;
+  color: #ef4444;
 }
 
 .trend-volume-flat,
 .trend-odds-flat {
-  color: #111;
-  background: #d6aa4c;
+  color: #d6aa4c;
 }
 
 .betfair-adjustment {
