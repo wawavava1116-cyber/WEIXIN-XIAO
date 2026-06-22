@@ -1,124 +1,5 @@
 [
   {
-    "matchId": "uzbekistan-colombia-20260617",
-    "eventName": "Uzbekistan v Colombia",
-    "home": "Uzbekistan",
-    "away": "Colombia",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "mexico-korea-20260618",
-    "eventName": "Mexico v South Korea",
-    "home": "Mexico",
-    "away": "Korea Republic",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "switzerland-bosnia-20260618",
-    "eventName": "Switzerland v Bosnia",
-    "home": "Switzerland",
-    "away": "Bosnia and Herzegovina",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "canada-qatar-20260618",
-    "eventName": "Canada v Qatar",
-    "home": "Canada",
-    "away": "Qatar",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "czechia-southafrica-20260618",
-    "eventName": "Czechia v South Africa",
-    "home": "Czechia",
-    "away": "South Africa",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "usa-australia-20260619",
-    "eventName": "USA v Australia",
-    "home": "USA",
-    "away": "Australia",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "brazil-haiti-20260619",
-    "eventName": "Brazil v Haiti",
-    "home": "Brazil",
-    "away": "Haiti",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "turkey-paraguay-20260619",
-    "eventName": "Türkiye v Paraguay",
-    "home": "Türkiye",
-    "away": "Paraguay",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "scotland-morocco-20260619",
-    "eventName": "Scotland v Morocco",
-    "home": "Scotland",
-    "away": "Morocco",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "netherlands-sweden-20260620",
-    "eventName": "Netherlands v Sweden",
-    "home": "Netherlands",
-    "away": "Sweden",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "germany-ivorycoast-20260620",
-    "eventName": "Germany v Cote d'Ivoire",
-    "home": "Germany",
-    "away": "Cote d'Ivoire",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "ecuador-curacao-20260620",
-    "eventName": "Ecuador v Curacao",
-    "home": "Ecuador",
-    "away": "Curacao",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "tunisia-japan-20260620",
-    "eventName": "Tunisia v Japan",
-    "home": "Tunisia",
-    "away": "Japan",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "spain-saudi-20260621",
-    "eventName": "Spain v Saudi Arabia",
-    "home": "Spain",
-    "away": "Saudi Arabia",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "belgium-iran-20260621",
-    "eventName": "Belgium v Iran",
-    "home": "Belgium",
-    "away": "Iran",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "uruguay-caboverde-20260621",
-    "eventName": "Uruguay v Cape Verde",
-    "home": "Uruguay",
-    "away": "Cape Verde",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "newzealand-egypt-20260621",
-    "eventName": "New Zealand v Egypt",
-    "home": "New Zealand",
-    "away": "Egypt",
-    "marketType": "MATCH_ODDS"
-  },
-  {
     "matchId": "argentina-austria-20260622",
     "eventName": "Argentina v Austria",
     "home": "Argentina",
@@ -172,6 +53,90 @@
     "eventName": "Colombia v Congo DR",
     "home": "Colombia",
     "away": "Congo DR",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "switzerland-canada-20260624",
+    "eventName": "Switzerland v Canada",
+    "home": "Switzerland",
+    "away": "Canada",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "bosnia-qatar-20260624",
+    "eventName": "Bosnia and Herzegovina v Qatar",
+    "home": "Bosnia and Herzegovina",
+    "away": "Qatar",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "scotland-brazil-20260624",
+    "eventName": "Scotland v Brazil",
+    "home": "Scotland",
+    "away": "Brazil",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "morocco-haiti-20260624",
+    "eventName": "Morocco v Haiti",
+    "home": "Morocco",
+    "away": "Haiti",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "czechia-mexico-20260624",
+    "eventName": "Czechia v Mexico",
+    "home": "Czechia",
+    "away": "Mexico",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "southafrica-korea-20260624",
+    "eventName": "South Africa v Korea Republic",
+    "home": "South Africa",
+    "away": "Korea Republic",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "ecuador-germany-20260625",
+    "eventName": "Ecuador v Germany",
+    "home": "Ecuador",
+    "away": "Germany",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "curacao-ivorycoast-20260625",
+    "eventName": "Curacao v Cote d'Ivoire",
+    "home": "Curacao",
+    "away": "Cote d'Ivoire",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "japan-sweden-20260625",
+    "eventName": "Japan v Sweden",
+    "home": "Japan",
+    "away": "Sweden",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "tunisia-netherlands-20260625",
+    "eventName": "Tunisia v Netherlands",
+    "home": "Tunisia",
+    "away": "Netherlands",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "turkey-usa-20260625",
+    "eventName": "Turkey v USA",
+    "home": "Turkey",
+    "away": "USA",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "paraguay-australia-20260625",
+    "eventName": "Paraguay v Australia",
+    "home": "Paraguay",
+    "away": "Australia",
     "marketType": "MATCH_ODDS"
   },
   {
