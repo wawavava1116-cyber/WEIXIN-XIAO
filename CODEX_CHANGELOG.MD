@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-22 10:10 - 手动同步 6 月 23 日 4 场 Betfair 本地数据到云端
+
+- 环境：公司电脑 Codex + 本地 Betfair API 同步 + 腾讯云 OrcaTerm。
+- 目的：在服务器 5 分钟自动同步已停用的情况下，用本地最新 Betfair 快照覆盖云端 Betfair 缓存，并让详情页/数据库快照继续使用最新成交量和赔率变动。
+- 涉及文件：`server/config/betfair-local-sync-20260623-four.json`（临时传输文件，已在后续提交删除）、`CODEX_CHANGELOG.MD`。
+- 主要改动：本地执行 `server` 目录 `npm run sync` 获取最新 Betfair 缓存；临时通过 Git 传输 4 场 Match Odds 数据到服务器；服务器调用现有 `upsertMarkets`、`appendMarketHistory` 和 `buildDatabaseSnapshot` 写入 `server/data/` 运行缓存；未新增上传接口，未写入 Betfair App Key、SSOID、证书或私钥。
+- 数据库/赛程/复盘：未修改赛程、预测或复盘；云端 Betfair 缓存更新 4 场：阿根廷 vs 奥地利、法国 vs 伊拉克、挪威 vs 塞内加尔、约旦 vs 阿尔及利亚；`/api/database/latest` 的 `databaseUpdatedAt` 和 `betfairUpdatedAt` 已同步刷新。
+- 云函数/服务器：未修改云函数；服务器自动同步仍保持停用，本次是一次性手动导入运行缓存，无需因代码变更重启服务。
+- 验证：本地 `npm run sync` 成功；服务器 `/api/betfair/markets` 返回 4 场最新 totalMatched；`/api/betfair/history?matchIds=...&limit=2` 返回新旧两条样本；`/api/database/latest` 返回 `betfairUpdatedAt=2026-06-22T02:06:33.030Z`。
+- 后续注意事项：若继续保持服务器 VPN/代理不可用，需要定期从本地执行 Betfair 同步并手动导入云端缓存；临时传输文件不得长期留在仓库。
+
 ## 2026-06-22 09:55 - 撤回复杂 Betfair 上传接口
 
 - 环境：公司电脑 Codex，用户指出只需要延续既有“本地读取最新必发数据后同步云端对比”的简单流程。
