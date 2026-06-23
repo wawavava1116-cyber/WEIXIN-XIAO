@@ -186,7 +186,9 @@ function mergeFinishedReviews(staticReviews, finishedFromLive) {
   })
   finishedFromLive.forEach((match) => {
     if (!match.liveScore) return
-    byMatchId.set(match.id, buildReviewFromFinishedMatch(match))
+    if (!byMatchId.has(match.id)) {
+      byMatchId.set(match.id, buildReviewFromFinishedMatch(match))
+    }
   })
   return Array.from(byMatchId.values())
     .sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
