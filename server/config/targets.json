@@ -1,33 +1,5 @@
 [
   {
-    "matchId": "argentina-austria-20260622",
-    "eventName": "Argentina v Austria",
-    "home": "Argentina",
-    "away": "Austria",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "france-iraq-20260622",
-    "eventName": "France v Iraq",
-    "home": "France",
-    "away": "Iraq",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "norway-senegal-20260622",
-    "eventName": "Norway v Senegal",
-    "home": "Norway",
-    "away": "Senegal",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "jordan-algeria-20260622",
-    "eventName": "Jordan v Algeria",
-    "home": "Jordan",
-    "away": "Algeria",
-    "marketType": "MATCH_ODDS"
-  },
-  {
     "matchId": "portugal-uzbekistan-20260623",
     "eventName": "Portugal v Uzbekistan",
     "home": "Portugal",
@@ -140,6 +112,20 @@
     "marketType": "MATCH_ODDS"
   },
   {
+    "matchId": "norway-france-20260626",
+    "eventName": "Norway v France",
+    "home": "Norway",
+    "away": "France",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "senegal-iraq-20260626",
+    "eventName": "Senegal v Iraq",
+    "home": "Senegal",
+    "away": "Iraq",
+    "marketType": "MATCH_ODDS"
+  },
+  {
     "matchId": "caboverde-saudi-20260626",
     "eventName": "Cape Verde v Saudi Arabia",
     "home": "Cape Verde",
@@ -165,6 +151,48 @@
     "eventName": "Egypt v Iran",
     "home": "Egypt",
     "away": "Iran",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "panama-england-20260627",
+    "eventName": "Panama v England",
+    "home": "Panama",
+    "away": "England",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "croatia-ghana-20260627",
+    "eventName": "Croatia v Ghana",
+    "home": "Croatia",
+    "away": "Ghana",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "colombia-portugal-20260627",
+    "eventName": "Colombia v Portugal",
+    "home": "Colombia",
+    "away": "Portugal",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "congodr-uzbekistan-20260627",
+    "eventName": "Congo DR v Uzbekistan",
+    "home": "Congo DR",
+    "away": "Uzbekistan",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "algeria-austria-20260627",
+    "eventName": "Algeria v Austria",
+    "home": "Algeria",
+    "away": "Austria",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "jordan-argentina-20260627",
+    "eventName": "Jordan v Argentina",
+    "home": "Jordan",
+    "away": "Argentina",
     "marketType": "MATCH_ODDS"
   }
 ]
