@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-23 22:37 - Skill 更新滚动预测与 Betfair 变动对比
+
+- 环境：家里电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 与 `.codex-skills/betfair-data-refresh/SKILL.md` 执行。
+- 目的：刷新当前滚动窗口预测，并把本地 Betfair 成交量/赔率对比写回前端静态快照，供详情页“必发成交量实时分析”继续展示。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：本地 Betfair `sync` 成功，历史追加 22 条记录；更新 `betfairMarketSnapshot` 中 6 月 23 日至 6 月 28 日重点比赛的成交量、胜平负赔率和赔率方向；按成交量上涨与赔率方向重算葡萄牙、英格兰、克罗地亚、瑞士、墨西哥、德国、日本、巴拉圭、法国、塞内加尔等重点场次预测权重。
+- 数据库/赛程/复盘：实时比分同步结果仍为未赛 28 场、已归档 44 场；本次没有新增完赛归档。
+- Betfair 数据：使用用户本次提供的临时 SSOID 本地同步，未写入仓库；`server/data/` 运行缓存已更新但不提交 Git。
+- 云函数/服务器：未修改云函数；若要线上 `/api/database/latest` 立即使用本次预测和 Betfair 快照，需要轻量云服务器拉取最新代码并重建数据库快照。
+- 验证：提交前运行小程序关键文件语法检查、服务器 `npm run check`、首页排序检查和服务器快照检查。
+
 ## 2026-06-23 14:05 - 修复云端历史复盘闪烁与实时比分映射
 
 - 环境：公司电脑 Codex；用户反馈历史复盘中今天阿根廷、法国比赛频繁消失又出现，并要求同步云端。
