@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-23 13:38 - 修正复盘命中率权重为 50/30/20
+
+- 环境：公司电脑 Codex；用户确认赛果预测准确率应使用胜平负 50%、比分 30%、进球数 20%。
+- 目的：撤回上一轮数据更新沿用的旧 37.5/37.5/25 复盘权重，统一静态数据库和服务器快照复盘计算。
+- 涉及文件：`utils/matches.js`、`server/src/buildDatabaseSnapshot.js`、`utils/buildInfo.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：`finishedMatches` 静态复盘和服务器动态归档 `percentValue` 都改为胜平负 50%、比分 30%、进球数 20%；`DATABASE_UPDATED_AT` 更新为 `2026-06-23T13:38:00+08:00`。
+- 数据库/赛程/复盘：未新增或删除比赛；已有复盘百分比会按新权重重新计算。
+- 云函数/服务器：未修改云函数；修改了 `server/src/buildDatabaseSnapshot.js`，轻量云服务器需要拉取代码并重新构建数据库快照后，云端动态复盘才会使用新权重。
+- 验证：提交前运行相关语法检查、复盘样例检查和首页排序检查。
+
 ## 2026-06-23 13:32 - Skill 更新 6 月 23 日完赛归档与未来窗口预测
 
 - 环境：公司电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 更新滚动赛程；北京时间 2026-06-23 13:32。

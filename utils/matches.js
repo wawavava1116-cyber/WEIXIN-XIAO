@@ -2588,7 +2588,7 @@ const finishedMatches = finishedReviewSource.map((item) => {
   const resultWeight = getPredictionWeight(item.resultMainCorrect, item.resultBackupCorrect)
   const scoreWeight = getPredictionWeight(item.scoreMainCorrect, item.scoreBackupCorrect)
   const totalCorrect = typeof item.totalCorrect === 'boolean' ? item.totalCorrect : isTotalCorrect(item.score, totalPick)
-  const percentValue = resultWeight * 0.375 + scoreWeight * 0.375 + (totalCorrect ? 100 : 0) * 0.25
+  const percentValue = resultWeight * 0.5 + scoreWeight * 0.3 + (totalCorrect ? 100 : 0) * 0.2
   return Object.assign({}, item, {
     totalPick,
     totalCorrect,
