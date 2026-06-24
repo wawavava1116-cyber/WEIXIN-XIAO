@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-24 14:14 - Skill 重算 6 月 25 日凌晨 6 场小组赛
+
+- 环境：公司电脑 Codex；已先拉取 `origin/master` 到 `f58f299`，按 `.codex-skills/football-match-predictor/SKILL.md` 执行。
+- 目的：重新分析北京时间 6 月 25 日凌晨开始的 B/C/A 组 6 场小组赛，把小组前二和最佳小组第三竞争纳入预测。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：重算瑞士 vs 加拿大、波黑 vs 卡塔尔、苏格兰 vs 巴西、摩洛哥 vs 海地、捷克 vs 墨西哥、南非 vs 韩国的胜平负主选/备选、比分、总进球、亚盘观点和风险点；新增 6 场小组形势说明，强调 4 分第三名较稳、3 分净胜球边缘、2 分大概率不够的判断。
+- 数据库/赛程/复盘：未新增完赛归档；未改比赛时间；`DATABASE_UPDATED_AT` 更新为 `2026-06-24T14:14:00+08:00`。
+- Betfair 数据：沿用仓库内 6 月 23 日晚本地 Betfair 快照；瑞士、巴西、摩洛哥、墨西哥 4 场有必发校准，波黑 vs 卡塔尔、南非 vs 韩国暂未匹配到有效 Betfair 市场。
+- 云函数/服务器：未修改云函数或 `server/`；若要线上 `/api/database/latest` 立即使用本次预测，需要轻量云服务器拉取最新代码并重建数据库快照。
+- 验证：提交前运行小程序关键文件语法检查、首页排序检查和 6 场预测抽查。
+
 ## 2026-06-23 22:37 - Skill 更新滚动预测与 Betfair 变动对比
 
 - 环境：家里电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 与 `.codex-skills/betfair-data-refresh/SKILL.md` 执行。
