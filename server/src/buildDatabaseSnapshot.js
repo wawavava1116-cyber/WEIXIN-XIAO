@@ -1,5 +1,11 @@
 const path = require('path')
-const { readStore, readLiveScores, writeDatabaseSnapshot } = require('./store')
+const {
+  readStore,
+  readLiveScores,
+  writeDatabaseSnapshot,
+  readFinishedReviews,
+  upsertFinishedReviews
+} = require('./store')
 
 const miniProgramData = require(path.resolve(__dirname, '..', '..', 'utils', 'matches.js'))
 const buildInfo = require(path.resolve(__dirname, '..', '..', 'utils', 'buildInfo.js'))
@@ -159,8 +165,14 @@ function buildReviewFromFinishedMatch(match) {
   return {
     id: `${match.id}-server-review`,
     matchId: match.id,
+    homeTeam: match.home && (match.home.key || match.home.id || match.home.en || ''),
+    awayTeam: match.away && (match.away.key || match.away.id || match.away.en || ''),
     home: match.home && match.home.cn,
     away: match.away && match.away.cn,
+    dateText: match.dateText || '',
+    kickoff: match.kickoff || '',
+    group: match.group || '',
+    venue: match.venue || '',
     score: match.liveScore,
     resultMain: pick.result || '',
     resultBackup: pick.resultBackup || '',
@@ -175,14 +187,21 @@ function buildReviewFromFinishedMatch(match) {
     percentValue,
     percent: formatPercentValue(percentValue),
     endedAtSort: getFinishDetectedAt(match),
+    endedAtMs: getFinishDetectedAt(match),
     source: 'server-live-score'
   }
 }
 
-function mergeFinishedReviews(staticReviews, finishedFromLive) {
+function mergeFinishedReviews(staticReviews, archivedReviews, finishedFromLive) {
   const byMatchId = new Map()
   staticReviews.forEach((review) => {
     byMatchId.set(review.matchId || review.id, review)
+  })
+  archivedReviews.forEach((review) => {
+    const matchId = review.matchId || review.id
+    if (matchId && !byMatchId.has(matchId)) {
+      byMatchId.set(matchId, review)
+    }
   })
   finishedFromLive.forEach((match) => {
     if (!match.liveScore) return
@@ -206,16 +225,27 @@ function buildDatabaseSnapshot(options = {}) {
   const finishedFromLive = baseUpcoming
     .concat(baseRecentFinished)
     .filter((match) => match.matchStatus === 'finished')
+  const liveFinishedReviews = finishedFromLive
+    .filter((match) => match.liveScore)
+    .map((match) => buildReviewFromFinishedMatch(match))
+  const archivedReviewStore = liveFinishedReviews.length
+    ? upsertFinishedReviews(liveFinishedReviews)
+    : readFinishedReviews()
   const upcomingMatches = baseUpcoming.filter((match) => match.matchStatus !== 'finished')
   const recentFinishedHomeMatches = baseUpcoming
     .concat(baseRecentFinished)
     .filter((match) => match.matchStatus === 'finished' && keepVisibleFinished(match))
-  const finishedMatches = mergeFinishedReviews(clone(miniProgramData.finishedMatches || []), finishedFromLive)
+  const finishedMatches = mergeFinishedReviews(
+    clone(miniProgramData.finishedMatches || []),
+    clone(archivedReviewStore.reviews || []),
+    finishedFromLive
+  )
 
   return writeDatabaseSnapshot({
     version: buildInfo.DATABASE_VERSION,
     databaseUpdatedAt: new Date().toISOString(),
     source: 'server-snapshot',
+    serverFinishedReviewUpdatedAt: archivedReviewStore.updatedAt || '',
     betfairUpdatedAt: betfairStore.updatedAt || '',
     liveScoreUpdatedAt: liveScoreStore.updatedAt || '',
     matches,

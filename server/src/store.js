@@ -6,6 +6,7 @@ const DATA_FILE = path.join(DATA_DIR, 'betfair-markets.json')
 const HISTORY_FILE = path.join(DATA_DIR, 'betfair-market-history.json')
 const DATABASE_FILE = path.join(DATA_DIR, 'match-database.json')
 const LIVE_SCORES_FILE = path.join(DATA_DIR, 'live-scores.json')
+const FINISHED_REVIEWS_FILE = path.join(DATA_DIR, 'finished-reviews.json')
 const MARKET_HISTORY_RETENTION_DAYS = Number(process.env.BETFAIR_HISTORY_RETENTION_DAYS || 14)
 
 function ensureDataDir() {
@@ -260,11 +261,58 @@ module.exports = {
   },
   writeLiveScores(scores) {
     ensureDataDir()
+    const current = module.exports.readLiveScores()
+    const previousScores = current.scores || {}
+    const nextScores = { ...(scores || {}) }
+    Object.keys(previousScores).forEach((matchId) => {
+      const previous = previousScores[matchId]
+      if (previous && previous.matchStatus === 'finished' && (!nextScores[matchId] || nextScores[matchId].matchStatus !== 'finished')) {
+        nextScores[matchId] = previous
+      }
+    })
     const payload = {
       updatedAt: new Date().toISOString(),
-      scores: scores || {}
+      scores: nextScores
     }
     fs.writeFileSync(LIVE_SCORES_FILE, JSON.stringify(payload, null, 2))
+    return payload
+  },
+  readFinishedReviews() {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(FINISHED_REVIEWS_FILE, 'utf8'))
+      return {
+        updatedAt: parsed.updatedAt || '',
+        reviews: Array.isArray(parsed.reviews) ? parsed.reviews : []
+      }
+    } catch (error) {
+      return {
+        updatedAt: '',
+        reviews: []
+      }
+    }
+  },
+  upsertFinishedReviews(reviews) {
+    const nextReviews = Array.isArray(reviews) ? reviews.filter((review) => review && (review.matchId || review.id)) : []
+    const current = module.exports.readFinishedReviews()
+    const byMatchId = new Map()
+    current.reviews.forEach((review) => {
+      byMatchId.set(review.matchId || review.id, review)
+    })
+    nextReviews.forEach((review) => {
+      const matchId = review.matchId || review.id
+      byMatchId.set(matchId, {
+        ...(byMatchId.get(matchId) || {}),
+        ...review,
+        archivedAt: (byMatchId.get(matchId) && byMatchId.get(matchId).archivedAt) || new Date().toISOString()
+      })
+    })
+    ensureDataDir()
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      reviews: Array.from(byMatchId.values())
+        .sort((a, b) => (b.endedAtSort || 0) - (a.endedAtSort || 0))
+    }
+    fs.writeFileSync(FINISHED_REVIEWS_FILE, JSON.stringify(payload, null, 2))
     return payload
   }
 }

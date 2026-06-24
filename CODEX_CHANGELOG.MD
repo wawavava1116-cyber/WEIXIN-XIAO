@@ -1,5 +1,15 @@
 # Codex 项目变更日志
 
+## 2026-06-24 14:35 - 云端完赛复盘持久归档
+
+- 环境：公司电脑 Codex；用户反馈历史复盘无法稳定实时收录完赛，结束比赛在用户端时好时坏、进进出出。
+- 目的：让云端只要首次确认比赛完赛并拿到比分，就自动写入服务器运行时归档，后续不再受实时比分源短暂缺失或状态回退影响。
+- 涉及文件：`server/src/store.js`、`server/src/buildDatabaseSnapshot.js`、`CODEX_CHANGELOG.MD`。
+- 主要改动：新增服务器运行时 `server/data/finished-reviews.json` 持久归档；`buildDatabaseSnapshot` 会把当前实时完赛生成的复盘写入归档，并始终合并静态复盘、服务器归档复盘和当前实时完赛；`writeLiveScores` 对已确认完赛状态做只升不降保护，避免下一轮比分源缺失或误报未开始时把完赛比分清掉。
+- 数据库/赛程/复盘：未改静态赛程或预测；云端运行后新增完赛会自动进入 `finishedMatches` 并稳定保留，静态 `finishedReviewSource` 仍优先于服务器动态归档。
+- 云函数/服务器：未修改微信云函数；修改了 `server/`，需要轻量云服务器拉取最新代码并重启 `worldcup-betfair`，之后 `/api/database/latest` 才会使用持久归档。
+- 验证：提交前运行服务端语法检查、`server npm run check`，并用模拟完赛/比分源缺失/状态回退验证复盘仍保留。
+
 ## 2026-06-24 14:20 - 调整 6 场小组赛进球区间区分度
 
 - 环境：公司电脑 Codex；用户反馈 6 场预测过度集中在 `2-3球`。
