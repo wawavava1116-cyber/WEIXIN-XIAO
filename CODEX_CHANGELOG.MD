@@ -1,5 +1,14 @@
 # Codex 项目变更日志
 
+## 2026-06-26 15:17 - 必发成交量更新并修正 4 场预测
+
+- 环境：办公室电脑 Codex；按 `.codex-skills/betfair-data-refresh/SKILL.md` 本地使用用户提供的 Betfair SSOID 执行一次 `server npm run sync`，云端自动同步仍保持停用策略。
+- 目的：刷新未来小组第三轮比赛的必发成交量、赔率概率和历史对比，并把明显偏离必发市场的预测改回更稳的主方向。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`CODEX_CHANGELOG.MD`；`server/data/betfair-markets.json` 和 `server/data/betfair-market-history.json` 仅为本地运行时数据，未提交 Git。
+- 必发结果：本次同步成功，历史样本追加 6 条；刚果民主共和国 vs 乌兹别克斯坦未匹配到可用 Betfair 市场。
+- 预测调整：挪威 vs 法国从挪威胜改为法国胜（平局保护）；埃及 vs 伊朗从伊朗胜改为平局（伊朗胜备选）；哥伦比亚 vs 葡萄牙从哥伦比亚胜改为葡萄牙胜（平局保护）；阿尔及利亚 vs 奥地利从奥地利胜改为平局（奥地利胜备选）。
+- 数据库：`DATABASE_UPDATED_AT` 更新为 `2026-06-26T15:17:00+08:00`；详情页必发快照更新到本次成交量和概率。
+
 ## 2026-06-26 15:13 - 归档 6 场完赛并重算 12 场第三轮预测
 
 - 环境：办公室电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 执行，并先用本地服务实时比分源同步完赛状态。

@@ -1736,17 +1736,17 @@ const betfairMarketSnapshot = {
   'japan-sweden-20260625': { marketId: '1.258426921', totalMatched: 174927, delayed: true, odds: { home: 1.94, draw: 3.7, away: 4.6 }, probability: { home: 51, draw: 27, away: 22 }, oddsMovement: { home: 'steam', draw: 'drift' } },
   'tunisia-netherlands-20260625': { marketId: '1.258423448', totalMatched: 39856, delayed: true, odds: { home: 28, draw: 10.5, away: 1.15 }, probability: { home: 4, draw: 10, away: 87 } },
   'paraguay-australia-20260625': { marketId: '1.258369633', totalMatched: 329967, delayed: true, odds: { home: 3, draw: 2.3, away: 4.2 }, probability: { home: 33, draw: 43, away: 24 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'drift' } },
-  'norway-france-20260626': { marketId: '1.258423587', totalMatched: 47596, delayed: true, odds: { home: 5.5, draw: 4.6, away: 1.66 }, probability: { home: 18, draw: 22, away: 60 } },
-  'senegal-iraq-20260626': { marketId: '1.258432503', totalMatched: 17381, delayed: true, odds: { home: 1.28, draw: 7, away: 15 }, probability: { home: 79, draw: 14, away: 7 } },
-  'caboverde-saudi-20260626': { marketId: '1.258424121', totalMatched: 125007, delayed: true, odds: { home: 2.5, draw: 3.6, away: 3.15 }, probability: { home: 40, draw: 28, away: 32 }, oddsMovement: { away: 'drift' } },
-  'uruguay-spain-20260626': { marketId: '1.258423940', totalMatched: 40276, delayed: true, odds: { home: 7.8, draw: 4.4, away: 1.54 }, probability: { home: 13, draw: 23, away: 65 }, oddsMovement: { home: 'steam', draw: 'drift', away: 'drift' } },
-  'newzealand-belgium-20260626': { marketId: '1.258421820', totalMatched: 15725, delayed: true, odds: { home: 16.5, draw: 7.8, away: 1.23 }, probability: { home: 6, draw: 13, away: 81 }, oddsMovement: { draw: 'drift', away: 'steam' } },
-  'egypt-iran-20260626': { marketId: '1.258433587', totalMatched: 57589, delayed: true, odds: { home: 2.56, draw: 2.74, away: 4.1 }, probability: { home: 39, draw: 37, away: 24 }, oddsMovement: { home: 'drift', draw: 'steam' } },
-  'panama-england-20260627': { marketId: '1.258421971', totalMatched: 23780, delayed: true, odds: { home: 16, draw: 8.4, away: 1.23 }, probability: { home: 6, draw: 12, away: 82 } },
-  'croatia-ghana-20260627': { marketId: '1.258424479', totalMatched: 47556, delayed: true, odds: { home: 1.77, draw: 3.5, away: 6.6 }, probability: { home: 56, draw: 29, away: 15 } },
-  'colombia-portugal-20260627': { marketId: '1.258369909', totalMatched: 9445, delayed: true, odds: { home: 3.9, draw: 3.8, away: 2.1 }, probability: { home: 26, draw: 26, away: 48 } },
-  'algeria-austria-20260627': { marketId: '1.258424618', totalMatched: 175742, delayed: true, odds: { home: 4.1, draw: 2.4, away: 2.92 }, probability: { home: 24, draw: 42, away: 34 } },
-  'jordan-argentina-20260627': { marketId: '1.258424757', totalMatched: 56112, delayed: true, odds: { home: 18.5, draw: 7.6, away: 1.23 }, probability: { home: 5, draw: 13, away: 81 } }
+  'norway-france-20260626': { marketId: '1.258423587', totalMatched: 990261, delayed: true, odds: { home: 5.1, draw: 5, away: 1.66 }, probability: { home: 20, draw: 20, away: 60 }, oddsMovement: { home: 'drift', draw: 'drift', away: 'steam' } },
+  'senegal-iraq-20260626': { marketId: '1.258432503', totalMatched: 156405, delayed: true, odds: { home: 1.27, draw: 7.2, away: 14.5 }, probability: { home: 79, draw: 14, away: 7 } },
+  'caboverde-saudi-20260626': { marketId: '1.258424121', totalMatched: 433794, delayed: true, odds: { home: 2.76, draw: 3.4, away: 2.86 }, probability: { home: 36, draw: 29, away: 35 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'steam' } },
+  'uruguay-spain-20260626': { marketId: '1.258423940', totalMatched: 566350, delayed: true, odds: { home: 7.2, draw: 4, away: 1.65 }, probability: { home: 14, draw: 25, away: 61 }, oddsMovement: { home: 'steam', draw: 'steam', away: 'drift' } },
+  'newzealand-belgium-20260626': { marketId: '1.258421820', totalMatched: 272770, delayed: true, odds: { home: 17, draw: 8.6, away: 1.21 }, probability: { home: 6, draw: 12, away: 83 }, oddsMovement: { draw: 'drift', away: 'steam' } },
+  'egypt-iran-20260626': { marketId: '1.258433587', totalMatched: 223115, delayed: true, odds: { home: 2.6, draw: 2.74, away: 4 }, probability: { home: 39, draw: 37, away: 25 }, oddsMovement: { home: 'drift', draw: 'flat', away: 'steam' } },
+  'panama-england-20260627': { marketId: '1.258421971', totalMatched: 37895, delayed: true, odds: { home: 19.5, draw: 9, away: 1.19 }, probability: { home: 5, draw: 11, away: 84 }, oddsMovement: { home: 'drift', draw: 'drift', away: 'steam' } },
+  'croatia-ghana-20260627': { marketId: '1.258424479', totalMatched: 110518, delayed: true, odds: { home: 1.82, draw: 3.5, away: 6 }, probability: { home: 55, draw: 29, away: 17 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'steam' } },
+  'colombia-portugal-20260627': { marketId: '1.258369909', totalMatched: 25238, delayed: true, odds: { home: 4.2, draw: 4, away: 1.93 }, probability: { home: 24, draw: 25, away: 52 }, oddsMovement: { home: 'drift', draw: 'drift', away: 'steam' } },
+  'algeria-austria-20260627': { marketId: '1.258424618', totalMatched: 225804, delayed: true, odds: { home: 4.2, draw: 2.38, away: 2.94 }, probability: { home: 24, draw: 42, away: 34 }, oddsMovement: { home: 'drift', draw: 'steam', away: 'drift' } },
+  'jordan-argentina-20260627': { marketId: '1.258424757', totalMatched: 81109, delayed: true, odds: { home: 19, draw: 8.2, away: 1.22 }, probability: { home: 5, draw: 12, away: 82 }, oddsMovement: { home: 'drift', draw: 'drift', away: 'steam' } }
 }
 
 const predictionDiscipline = {
@@ -1818,17 +1818,17 @@ const predictionDiscipline = {
 }
 
 const finalRoundPredictionOverrides = {
-  'norway-france-20260626': { result: '挪威胜', resultBackup: '平局', score: '3-2', backup: '2-2', total: '4-5球', oneXtwo: '法国已掌握出线主动且存在轮换空间，挪威必须争胜，主胜优先，平局作为保护', handicap: '挪威受让方向更有拉力，若临场法国轮换确认，挪威受让与主胜同时升权', order: '挪威胜 > 平局保护 > 大3.0/3.25' },
+  'norway-france-20260626': { result: '法国胜', resultBackup: '平局', score: '1-3', backup: '2-2', total: '3-4球', oneXtwo: '法国胜主选，平局作为挪威搏命后的保护；必发成交接近990K且法国约60%，成交放大后法国赔率小幅压低，市场不支持把挪威主胜放在第一位', handicap: '法国-0.75方向更顺，若临场确认大轮换再降到法国不败/平局保护', order: '法国胜 > 平局保护 > 大2.75/3.0' },
   'senegal-iraq-20260626': { result: '塞内加尔胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '塞内加尔争前二和净胜球，主胜方向明确', handicap: '塞内加尔-1附近仍可支持，但深到-1.5后需防赢球不穿', order: '塞内加尔胜 > 塞内加尔-1谨慎 > 大2.5/2.75' },
   'caboverde-saudi-20260626': { result: '佛得角胜', resultBackup: '平局', score: '2-0', backup: '2-1', total: '2-3球', oneXtwo: '沙特必须抢分但防线压上风险高，佛得角主胜优先，平局保护降权', handicap: '佛得角平手/让0.25方向，若临场升到-0.5需防热度偏高', order: '佛得角胜 > 佛得角0/-0.25 > 2-3球' },
   'uruguay-spain-20260626': { result: '乌拉圭胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '西班牙出线主动更足，乌拉圭争胜动力更强，主胜作为大胆主选', handicap: '乌拉圭受让方向优先，若西班牙轮换加深，乌拉圭不败价值继续上升', order: '乌拉圭胜 > 平局保护 > 乌拉圭受让' },
   'newzealand-belgium-20260626': { result: '比利时胜', resultBackup: '', score: '1-4', backup: '0-3', total: '4-5球', oneXtwo: '比利时需要用胜利和净胜球压住小组排名，客胜方向强，不设胜平负备选', handicap: '比利时-1.5可支持，升到-2后只保留比分大胜倾向，不盲目追深盘', order: '比利时胜 > 比利时-1.5 > 大3.0' },
-  'egypt-iran-20260626': { result: '伊朗胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '0-1球', oneXtwo: '两队都在小组第三线附近，埃及保守控节奏，伊朗定位球和反击更适合偷到结果', handicap: '伊朗受让方向优先，平手盘可看伊朗不败', order: '伊朗胜 > 平局保护 > 小2.0/2.25' },
+  'egypt-iran-20260626': { result: '平局', resultBackup: '伊朗胜', score: '1-1', backup: '0-1', total: '1-2球', oneXtwo: '平局主选，伊朗胜作低权重备选；必发成交约223K，埃及39%、平局37%、伊朗25%，伊朗虽小幅升温但仍不足以压过平局保护', handicap: '伊朗受让方向可以保留，但胜平负主选改为平局更贴合市场', order: '平局 > 伊朗胜 > 小2.25' },
   'panama-england-20260627': { result: '英格兰胜', resultBackup: '', score: '1-4', backup: '0-3', total: '4-5球', oneXtwo: '巴拿马必须压出来，英格兰即使轮换仍有前场深度，客胜和大比分优先', handicap: '英格兰-1.5/-1.75仍有穿盘空间，深到-2后降低盘口信心', order: '英格兰胜 > 英格兰-1.5 > 大3.0' },
   'croatia-ghana-20260627': { result: '克罗地亚胜', resultBackup: '', score: '3-1', backup: '2-1', total: '3-4球', oneXtwo: '克罗地亚需要稳定前二， Ghana 追分会给出反击空间，主胜优先', handicap: '克罗地亚-0.75方向，若临场升到-1需防一球小胜', order: '克罗地亚胜 > 克罗地亚-0.75 > 3-4球' },
-  'colombia-portugal-20260627': { result: '哥伦比亚胜', resultBackup: '平局', score: '2-1', backup: '2-2', total: '3-4球', oneXtwo: '葡萄牙前两轮优势较大后轮换概率上升，哥伦比亚争小组位次和最好第三，主胜作冷门主选', handicap: '哥伦比亚受让方向优先，若葡萄牙大幅轮换，哥伦比亚平手盘可升权', order: '哥伦比亚胜 > 平局保护 > 大2.5' },
+  'colombia-portugal-20260627': { result: '葡萄牙胜', resultBackup: '平局', score: '1-2', backup: '2-2', total: '3-4球', oneXtwo: '葡萄牙胜主选，平局保护；必发成交虽只有约25K但葡萄牙概率升到52%，哥伦比亚从26%降到24%，冷门主胜需要下调', handicap: '葡萄牙-0.5谨慎，若临场大轮换确认再把平局权重上调', order: '葡萄牙胜 > 平局保护 > 3-4球' },
   'congodr-uzbekistan-20260627': { result: '刚果民主共和国胜', resultBackup: '', score: '3-1', backup: '2-1', total: '3-4球', oneXtwo: '乌兹别克斯坦净胜球压力下必须冒险，刚果民主共和国身体和反击优势更明显', handicap: '刚果民主共和国-0.5方向，若退到平手说明市场仍顾虑把握机会效率', order: '刚果民主共和国胜 > 刚果民主共和国-0.5 > 大2.5' },
-  'algeria-austria-20260627': { result: '奥地利胜', resultBackup: '平局', score: '1-2', backup: '2-2', total: '3-4球', oneXtwo: '阿尔及利亚需要抢分但后场空间会变大，奥地利压迫和转换更适合拿到客胜', handicap: '奥地利平手/让0.25方向，若升到-0.5需防平局回落', order: '奥地利胜 > 平局保护 > 大2.5' },
+  'algeria-austria-20260627': { result: '平局', resultBackup: '奥地利胜', score: '1-1', backup: '1-2', total: '2-3球', oneXtwo: '平局主选，奥地利胜备选；必发成交约226K，平局42%且继续升温，奥地利34%但赔率小幅走高，客胜不宜放第一', handicap: '奥地利平手方向谨慎保留，但胜平负以平局优先', order: '平局 > 奥地利胜 > 2-3球' },
   'jordan-argentina-20260627': { result: '阿根廷胜', resultBackup: '', score: '0-4', backup: '1-4', total: '4-5球', oneXtwo: '约旦必须主动抢分，阿根廷前场质量和替补深度足以放大空间，客胜强主选', handicap: '阿根廷-2可支持，若临场深到-2.5则改为比分大胜但盘口谨慎', order: '阿根廷胜 > 阿根廷-2 > 大3.0/3.25' }
 }
 
@@ -1924,17 +1924,17 @@ const groupSituationNotes = {
 }
 
 const finalRoundGroupSituationNotes = {
-  'norway-france-20260626': '小组形势：法国前两轮积分和净胜球占优，第三轮有管理体能和轮换空间；挪威若想争前二或确保最好小组第三，不能只守平，哈兰德冲击和后段压上会把比赛拉向高比分。',
+  'norway-france-20260626': '小组形势：法国前两轮积分和净胜球占优，第三轮有管理体能空间但市场仍给出明显客胜支持；挪威若想争前二或确保最好小组第三，不能只守平，哈兰德冲击和后段压上会把比赛拉向高比分。',
   'senegal-iraq-20260626': '小组形势：塞内加尔需要用胜利和净胜球压住前二/最好第三位置，伊拉克若落后也必须压出来，比赛后段更容易出现第二、第三个进球。',
   'caboverde-saudi-20260626': '小组形势：佛得角仍有直接争小组第三甚至前二的窗口，沙特必须抢分但防线身后风险大；如果沙特先丢球，比赛会转向佛得角反击和定位球优势。',
   'uruguay-spain-20260626': '小组形势：西班牙出线主动更足，第三轮可能优先控消耗；乌拉圭需要争胜提升排名，不能满足于低风险平局，因此乌拉圭受让和小冷主胜更有解释力。',
   'newzealand-belgium-20260626': '小组形势：比利时需要用净胜球修正前两轮的被动位置，新西兰只有冒险抢分才有第三名希望，空间拉开后更利于比利时连续制造机会。',
-  'egypt-iran-20260626': '小组形势：埃及和伊朗都在最好小组第三比较线附近，先丢球的一方风险极大；伊朗更可能接受低节奏偷一个结果，平局保护保留。',
+  'egypt-iran-20260626': '小组形势：埃及和伊朗都在最好小组第三比较线附近，先丢球的一方风险极大；必发平局定价接近埃及主胜，伊朗反击升温但仍更适合作为平局后的备选。',
   'panama-england-20260627': '小组形势：巴拿马必须抢分，不能长期低位保守；英格兰即使已经掌握出线主动，也有用轮换前场争表现和净胜球的动力。',
   'croatia-ghana-20260627': '小组形势：克罗地亚要避免落入第三名比较，仍需要主动争胜；加纳若开局守不住，后段压上会给克罗地亚中前场更多转换空间。',
-  'colombia-portugal-20260627': '小组形势：葡萄牙前两轮优势较大后，第三轮轮换和控消耗概率上升；哥伦比亚需要抢小组位次和最好第三，主胜冷门来自动力差和身体对抗。',
+  'colombia-portugal-20260627': '小组形势：葡萄牙前两轮优势较大后，第三轮轮换和控消耗概率上升；哥伦比亚需要抢小组位次和最好第三，身体对抗能制造波动，但必发资金仍把葡萄牙放在第一顺位。',
   'congodr-uzbekistan-20260627': '小组形势：刚果民主共和国需要争胜把第三名比较主动权拿回来，乌兹别克斯坦净胜球压力更重，若比赛开放，刚果民主共和国反击更直接。',
-  'algeria-austria-20260627': '小组形势：阿尔及利亚必须抢分会降低后场保护，奥地利若打出高位压迫和二次进攻，客胜机会会随比赛推进上升。',
+  'algeria-austria-20260627': '小组形势：阿尔及利亚必须抢分会降低后场保护，奥地利若打出高位压迫和二次进攻，客胜机会会随比赛推进上升；但必发平局成交和概率最高，主线改为谨慎拉锯。',
   'jordan-argentina-20260627': '小组形势：约旦只有抢分才有理论窗口，不能全场死守；阿根廷前场深度和定位球优势足以在约旦压出后继续扩大比分。'
 }
 
