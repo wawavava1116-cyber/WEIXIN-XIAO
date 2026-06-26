@@ -1817,6 +1817,23 @@ const predictionDiscipline = {
   'southafrica-korea-20260624': { result: '韩国胜', resultBackup: '平局', score: '1-2', backup: '2-2', total: '3-4球', oneXtwo: '韩国胜主选，平局低权重保护；韩国3分净胜0，赢球即可锁住前二；南非1分净胜-2必须赢球，后程压上会让比赛比普通浅盘更开放', handicap: '参考韩国-0.25到-0.5；韩国转换速度和前场个人能力更稳定，但南非必须争胜，最后30分钟可能出现连续转换和双方进球', order: '韩国胜 > 平局保护 > 3-4球' },
 }
 
+const finalRoundPredictionOverrides = {
+  'norway-france-20260626': { result: '挪威胜', resultBackup: '平局', score: '3-2', backup: '2-2', total: '4-5球', oneXtwo: '法国已掌握出线主动且存在轮换空间，挪威必须争胜，主胜优先，平局作为保护', handicap: '挪威受让方向更有拉力，若临场法国轮换确认，挪威受让与主胜同时升权', order: '挪威胜 > 平局保护 > 大3.0/3.25' },
+  'senegal-iraq-20260626': { result: '塞内加尔胜', resultBackup: '', score: '3-1', backup: '2-0', total: '3-4球', oneXtwo: '塞内加尔争前二和净胜球，主胜方向明确', handicap: '塞内加尔-1附近仍可支持，但深到-1.5后需防赢球不穿', order: '塞内加尔胜 > 塞内加尔-1谨慎 > 大2.5/2.75' },
+  'caboverde-saudi-20260626': { result: '佛得角胜', resultBackup: '平局', score: '2-0', backup: '2-1', total: '2-3球', oneXtwo: '沙特必须抢分但防线压上风险高，佛得角主胜优先，平局保护降权', handicap: '佛得角平手/让0.25方向，若临场升到-0.5需防热度偏高', order: '佛得角胜 > 佛得角0/-0.25 > 2-3球' },
+  'uruguay-spain-20260626': { result: '乌拉圭胜', resultBackup: '平局', score: '2-1', backup: '1-1', total: '2-3球', oneXtwo: '西班牙出线主动更足，乌拉圭争胜动力更强，主胜作为大胆主选', handicap: '乌拉圭受让方向优先，若西班牙轮换加深，乌拉圭不败价值继续上升', order: '乌拉圭胜 > 平局保护 > 乌拉圭受让' },
+  'newzealand-belgium-20260626': { result: '比利时胜', resultBackup: '', score: '1-4', backup: '0-3', total: '4-5球', oneXtwo: '比利时需要用胜利和净胜球压住小组排名，客胜方向强，不设胜平负备选', handicap: '比利时-1.5可支持，升到-2后只保留比分大胜倾向，不盲目追深盘', order: '比利时胜 > 比利时-1.5 > 大3.0' },
+  'egypt-iran-20260626': { result: '伊朗胜', resultBackup: '平局', score: '0-1', backup: '1-1', total: '0-1球', oneXtwo: '两队都在小组第三线附近，埃及保守控节奏，伊朗定位球和反击更适合偷到结果', handicap: '伊朗受让方向优先，平手盘可看伊朗不败', order: '伊朗胜 > 平局保护 > 小2.0/2.25' },
+  'panama-england-20260627': { result: '英格兰胜', resultBackup: '', score: '1-4', backup: '0-3', total: '4-5球', oneXtwo: '巴拿马必须压出来，英格兰即使轮换仍有前场深度，客胜和大比分优先', handicap: '英格兰-1.5/-1.75仍有穿盘空间，深到-2后降低盘口信心', order: '英格兰胜 > 英格兰-1.5 > 大3.0' },
+  'croatia-ghana-20260627': { result: '克罗地亚胜', resultBackup: '', score: '3-1', backup: '2-1', total: '3-4球', oneXtwo: '克罗地亚需要稳定前二， Ghana 追分会给出反击空间，主胜优先', handicap: '克罗地亚-0.75方向，若临场升到-1需防一球小胜', order: '克罗地亚胜 > 克罗地亚-0.75 > 3-4球' },
+  'colombia-portugal-20260627': { result: '哥伦比亚胜', resultBackup: '平局', score: '2-1', backup: '2-2', total: '3-4球', oneXtwo: '葡萄牙前两轮优势较大后轮换概率上升，哥伦比亚争小组位次和最好第三，主胜作冷门主选', handicap: '哥伦比亚受让方向优先，若葡萄牙大幅轮换，哥伦比亚平手盘可升权', order: '哥伦比亚胜 > 平局保护 > 大2.5' },
+  'congodr-uzbekistan-20260627': { result: '刚果民主共和国胜', resultBackup: '', score: '3-1', backup: '2-1', total: '3-4球', oneXtwo: '乌兹别克斯坦净胜球压力下必须冒险，刚果民主共和国身体和反击优势更明显', handicap: '刚果民主共和国-0.5方向，若退到平手说明市场仍顾虑把握机会效率', order: '刚果民主共和国胜 > 刚果民主共和国-0.5 > 大2.5' },
+  'algeria-austria-20260627': { result: '奥地利胜', resultBackup: '平局', score: '1-2', backup: '2-2', total: '3-4球', oneXtwo: '阿尔及利亚需要抢分但后场空间会变大，奥地利压迫和转换更适合拿到客胜', handicap: '奥地利平手/让0.25方向，若升到-0.5需防平局回落', order: '奥地利胜 > 平局保护 > 大2.5' },
+  'jordan-argentina-20260627': { result: '阿根廷胜', resultBackup: '', score: '0-4', backup: '1-4', total: '4-5球', oneXtwo: '约旦必须主动抢分，阿根廷前场质量和替补深度足以放大空间，客胜强主选', handicap: '阿根廷-2可支持，若临场深到-2.5则改为比分大胜但盘口谨慎', order: '阿根廷胜 > 阿根廷-2 > 大3.0/3.25' }
+}
+
+Object.assign(predictionDiscipline, finalRoundPredictionOverrides)
+
 const coachStyleNotes = {
   'spain-caboverde-20260615': '教练打法与攻防端：西班牙更强调控球、压迫和边路传中，进攻稳定但领先后会控制风险；佛得角若深守，西班牙主胜清晰但大比分上限不宜机械放大。',
   'belgium-egypt-20260615': '教练打法与攻防端：比利时前场个人能力和肋部推进更强，埃及反击速度与定位球能制造一球空间，因此主胜倾向保留但穿盘不宜过深。',
@@ -1905,6 +1922,23 @@ const groupSituationNotes = {
   'turkey-usa-20260625': '小组形势：美国两连胜积6分，澳大利亚或巴拉圭最多追到6分，但美国已分别击败澳大利亚和巴拉圭，按本届同分先看相互战绩的规则已经锁定D组第一；末轮有轮换空间。土耳其两连败后主动权基本丢失，比赛心态更容易被先丢球放大。',
   'paraguay-australia-20260625': '小组形势：巴拉圭击败土耳其后追到3分，澳大利亚同样3分，这场是第三轮直接卡位战，巴拉圭保平价值上升，澳大利亚必须避免输球。'
 }
+
+const finalRoundGroupSituationNotes = {
+  'norway-france-20260626': '小组形势：法国前两轮积分和净胜球占优，第三轮有管理体能和轮换空间；挪威若想争前二或确保最好小组第三，不能只守平，哈兰德冲击和后段压上会把比赛拉向高比分。',
+  'senegal-iraq-20260626': '小组形势：塞内加尔需要用胜利和净胜球压住前二/最好第三位置，伊拉克若落后也必须压出来，比赛后段更容易出现第二、第三个进球。',
+  'caboverde-saudi-20260626': '小组形势：佛得角仍有直接争小组第三甚至前二的窗口，沙特必须抢分但防线身后风险大；如果沙特先丢球，比赛会转向佛得角反击和定位球优势。',
+  'uruguay-spain-20260626': '小组形势：西班牙出线主动更足，第三轮可能优先控消耗；乌拉圭需要争胜提升排名，不能满足于低风险平局，因此乌拉圭受让和小冷主胜更有解释力。',
+  'newzealand-belgium-20260626': '小组形势：比利时需要用净胜球修正前两轮的被动位置，新西兰只有冒险抢分才有第三名希望，空间拉开后更利于比利时连续制造机会。',
+  'egypt-iran-20260626': '小组形势：埃及和伊朗都在最好小组第三比较线附近，先丢球的一方风险极大；伊朗更可能接受低节奏偷一个结果，平局保护保留。',
+  'panama-england-20260627': '小组形势：巴拿马必须抢分，不能长期低位保守；英格兰即使已经掌握出线主动，也有用轮换前场争表现和净胜球的动力。',
+  'croatia-ghana-20260627': '小组形势：克罗地亚要避免落入第三名比较，仍需要主动争胜；加纳若开局守不住，后段压上会给克罗地亚中前场更多转换空间。',
+  'colombia-portugal-20260627': '小组形势：葡萄牙前两轮优势较大后，第三轮轮换和控消耗概率上升；哥伦比亚需要抢小组位次和最好第三，主胜冷门来自动力差和身体对抗。',
+  'congodr-uzbekistan-20260627': '小组形势：刚果民主共和国需要争胜把第三名比较主动权拿回来，乌兹别克斯坦净胜球压力更重，若比赛开放，刚果民主共和国反击更直接。',
+  'algeria-austria-20260627': '小组形势：阿尔及利亚必须抢分会降低后场保护，奥地利若打出高位压迫和二次进攻，客胜机会会随比赛推进上升。',
+  'jordan-argentina-20260627': '小组形势：约旦只有抢分才有理论窗口，不能全场死守；阿根廷前场深度和定位球优势足以在约旦压出后继续扩大比分。'
+}
+
+Object.assign(groupSituationNotes, finalRoundGroupSituationNotes)
 
 function getDefaultInjuryImpact(match) {
   return {
@@ -2242,6 +2276,12 @@ matches.forEach((match) => {
 })
 
 const finishedReviewSource = [
+  { id: "paraguay-australia-20260625-server-review", matchId: "paraguay-australia-20260625", homeTeam: "paraguay", awayTeam: "australia", home: "巴拉圭", away: "澳大利亚", dateText: "6月26日 周五", kickoff: "10:00", group: "D组", venue: "Kansas City Stadium", endedAtSort: 202606261200, score: "0-0", resultMain: "平局", resultBackup: "巴拉圭胜", scoreMain: "1-1", scoreBackup: "1-0", totalPick: "1-2球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: false },
+  { id: "turkey-usa-20260625-server-review", matchId: "turkey-usa-20260625", homeTeam: "turkey", awayTeam: "usa", home: "土耳其", away: "美国", dateText: "6月26日 周五", kickoff: "10:00", group: "D组", venue: "Los Angeles Stadium", endedAtSort: 202606261200, score: "3-2", resultMain: "土耳其胜", resultBackup: "平局", scoreMain: "2-1", scoreBackup: "1-1", totalPick: "2-3球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: false },
+  { id: "tunisia-netherlands-20260625-server-review", matchId: "tunisia-netherlands-20260625", homeTeam: "tunisia", awayTeam: "netherlands", home: "突尼斯", away: "荷兰", dateText: "6月26日 周五", kickoff: "07:00", group: "F组", venue: "Mexico City Stadium", endedAtSort: 202606260900, score: "1-3", resultMain: "荷兰胜", resultBackup: "", scoreMain: "0-2", scoreBackup: "1-2", totalPick: "2-3球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: false },
+  { id: "japan-sweden-20260625-server-review", matchId: "japan-sweden-20260625", homeTeam: "japan", awayTeam: "sweden", home: "日本", away: "瑞典", dateText: "6月26日 周五", kickoff: "07:00", group: "F组", venue: "Dallas Stadium", endedAtSort: 202606260900, score: "1-1", resultMain: "瑞典胜", resultBackup: "平局", scoreMain: "1-2", scoreBackup: "1-1", totalPick: "2-3球", resultMainCorrect: false, resultBackupCorrect: true, scoreMainCorrect: false, scoreBackupCorrect: true, totalCorrect: true },
+  { id: "curacao-ivorycoast-20260625-server-review", matchId: "curacao-ivorycoast-20260625", homeTeam: "curacao", awayTeam: "ivoryCoast", home: "库拉索", away: "科特迪瓦", dateText: "6月26日 周五", kickoff: "04:00", group: "E组", venue: "Seattle Stadium", endedAtSort: 202606260600, score: "0-2", resultMain: "科特迪瓦胜", resultBackup: "平局", scoreMain: "1-2", scoreBackup: "1-1", totalPick: "2-3球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: true },
+  { id: "ecuador-germany-20260625-server-review", matchId: "ecuador-germany-20260625", homeTeam: "ecuador", awayTeam: "germany", home: "厄瓜多尔", away: "德国", dateText: "6月26日 周五", kickoff: "04:00", group: "E组", venue: "New York New Jersey Stadium", endedAtSort: 202606260600, score: "2-1", resultMain: "德国胜", resultBackup: "", scoreMain: "1-2", scoreBackup: "0-2", totalPick: "2-3球", resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: true },
   { id: "czechia-mexico-20260624-server-review", matchId: "czechia-mexico-20260624", homeTeam: "czechia", awayTeam: "mexico", home: "捷克", away: "墨西哥", dateText: "6月25日 周四", kickoff: "09:00", group: "A组", venue: "Mexico City Stadium", endedAtSort: 202606251100, score: "0-3", resultMain: "墨西哥胜", resultBackup: "平局", scoreMain: "0-1", scoreBackup: "1-1", totalPick: "1-2球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: false },
   { id: "southafrica-korea-20260624-server-review", matchId: "southafrica-korea-20260624", homeTeam: "southAfrica", awayTeam: "korea", home: "南非", away: "韩国", dateText: "6月25日 周四", kickoff: "09:00", group: "A组", venue: "Estadio Guadalajara", endedAtSort: 202606251100, score: "1-0", resultMain: "韩国胜", resultBackup: "平局", scoreMain: "1-2", scoreBackup: "2-2", totalPick: "3-4球", resultMainCorrect: false, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: false },
   { id: "scotland-brazil-20260624-server-review", matchId: "scotland-brazil-20260624", homeTeam: "scotland", awayTeam: "brazil", home: "苏格兰", away: "巴西", dateText: "6月25日 周四", kickoff: "06:00", group: "C组", venue: "Miami Stadium", endedAtSort: 202606250800, score: "0-3", resultMain: "巴西胜", resultBackup: "平局", scoreMain: "1-3", scoreBackup: "1-2", totalPick: "3-4球", resultMainCorrect: true, resultBackupCorrect: false, scoreMainCorrect: false, scoreBackupCorrect: false, totalCorrect: true },
