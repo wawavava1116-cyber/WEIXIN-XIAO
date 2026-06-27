@@ -1,5 +1,5 @@
 const DATABASE_VERSION = '1.1.0'
-const DATABASE_UPDATED_AT = new Date('2026-06-26T15:17:00+08:00')
+const DATABASE_UPDATED_AT = new Date('2026-06-27T14:08:00+08:00')
 
 function pad(value) {
   return String(value).padStart(2, '0')

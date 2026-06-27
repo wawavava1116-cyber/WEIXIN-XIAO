@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-27 14:08 - 归档 6 场完赛并刷新必发对比
+
+- 环境：家里电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 和 `.codex-skills/betfair-data-refresh/SKILL.md` 执行。
+- 目的：把 6 月 27 日凌晨/上午已经结束的 G/H/I 组 6 场比赛写入复盘和历史场次，并刷新 6 月 28 日 6 场未赛比赛的 Betfair 成交量/赔率对比。
+- 涉及文件：`utils/matches.js`、`utils/buildInfo.js`、`CODEX_CHANGELOG.MD`；`server/data/betfair-markets.json`、`server/data/betfair-market-history.json`、`server/data/match-database.json` 仅为运行时数据，不提交 Git。
+- 主要改动：新增挪威 1-4 法国、塞内加尔 5-0 伊拉克、佛得角 0-0 沙特、乌拉圭 0-1 西班牙、新西兰 1-5 比利时、埃及 1-1 伊朗 6 场复盘；首页未赛列表降为 6 场。
+- Betfair 数据：本地同步成功，历史样本追加 2 条；巴拿马 vs 英格兰、克罗地亚 vs 加纳拿到 2026-06-27 14:04 北京时间的新样本，其余未赛保留最近可用样本或未匹配状态。
+- 数据库：`DATABASE_UPDATED_AT` 更新为 `2026-06-27T14:08:00+08:00`；本地服务器快照生成为 60 场总数据、6 场未赛、66 场复盘。
+- 云端：需要把本次 Git 和运行时 `server/data` 快照同步到轻量云服务器，并保持云端自动 Betfair 同步关闭。
+- 验证：已运行小程序关键 JS 语法检查、首页排序检查、复盘命中率检查、`server npm run check`、`server npm run snapshot`。
+
 ## 2026-06-26 15:17 - 必发成交量更新并修正 4 场预测
 
 - 环境：办公室电脑 Codex；按 `.codex-skills/betfair-data-refresh/SKILL.md` 本地使用用户提供的 Betfair SSOID 执行一次 `server npm run sync`，云端自动同步仍保持停用策略。
