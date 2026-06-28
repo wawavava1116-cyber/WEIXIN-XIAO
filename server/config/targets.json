@@ -1,9 +1,9 @@
 [
   {
-    "matchId": "southafrica-bosnia-20260629",
-    "eventName": "South Africa v Bosnia and Herzegovina",
+    "matchId": "southafrica-canada-20260629",
+    "eventName": "South Africa v Canada",
     "home": "South Africa",
-    "away": "Bosnia and Herzegovina",
+    "away": "Canada",
     "marketType": "MATCH_ODDS"
   },
   {
@@ -14,10 +14,10 @@
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "germany-seed3abcdf-20260630",
-    "eventName": "Germany v 3ABCDF",
+    "matchId": "germany-paraguay-20260630",
+    "eventName": "Germany v Paraguay",
     "home": "Germany",
-    "away": "3ABCDF",
+    "away": "Paraguay",
     "marketType": "MATCH_ODDS"
   },
   {
@@ -35,45 +35,38 @@
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "france-seed3cdfgh-20260701",
-    "eventName": "France v 3CDFGH",
+    "matchId": "france-sweden-20260701",
+    "eventName": "France v Sweden",
     "home": "France",
-    "away": "3CDFGH",
+    "away": "Sweden",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "mexico-seed3cefhi-20260701",
-    "eventName": "Mexico v 3CEFHI",
+    "matchId": "mexico-ecuador-20260701",
+    "eventName": "Mexico v Ecuador",
     "home": "Mexico",
-    "away": "3CEFHI",
+    "away": "Ecuador",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "england-seed3ehijk-20260702",
-    "eventName": "England v 3EHIJK",
+    "matchId": "england-congodr-20260702",
+    "eventName": "England v Congo DR",
     "home": "England",
-    "away": "3EHIJK",
+    "away": "Congo DR",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "belgium-seed3aehij-20260702",
-    "eventName": "Belgium v 3AEHIJ",
+    "matchId": "belgium-senegal-20260702",
+    "eventName": "Belgium v Senegal",
     "home": "Belgium",
-    "away": "3AEHIJ",
+    "away": "Senegal",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "usa-seed3befij-20260702",
-    "eventName": "United States v 3BEFIJ",
+    "matchId": "usa-bosnia-20260702",
+    "eventName": "United States v Bosnia and Herzegovina",
     "home": "United States",
-    "away": "3BEFIJ",
-    "marketType": "MATCH_ODDS"
-  },
-  {
-    "matchId": "switzerland-seed3efgij-20260703",
-    "eventName": "Switzerland v 3EFGIJ",
-    "home": "Switzerland",
-    "away": "3EFGIJ",
+    "away": "Bosnia and Herzegovina",
     "marketType": "MATCH_ODDS"
   },
   {
@@ -91,6 +84,13 @@
     "marketType": "MATCH_ODDS"
   },
   {
+    "matchId": "switzerland-algeria-20260703",
+    "eventName": "Switzerland v Algeria",
+    "home": "Switzerland",
+    "away": "Algeria",
+    "marketType": "MATCH_ODDS"
+  },
+  {
     "matchId": "australia-egypt-20260704",
     "eventName": "Australia v Egypt",
     "home": "Australia",
@@ -105,10 +105,10 @@
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "colombia-seed3deijl-20260704",
-    "eventName": "Colombia v 3DEIJL",
+    "matchId": "colombia-ghana-20260704",
+    "eventName": "Colombia v Ghana",
     "home": "Colombia",
-    "away": "3DEIJL",
+    "away": "Ghana",
     "marketType": "MATCH_ODDS"
   }
 ]

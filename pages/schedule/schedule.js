@@ -61,7 +61,7 @@ const CONFIRMED_GROUP_PLACEMENTS = [
   { group: 'A', rank: 1, teamKey: 'mexico' },
   { group: 'A', rank: 2, teamKey: 'southAfrica' },
   { group: 'B', rank: 1, teamKey: 'switzerland' },
-  { group: 'B', rank: 2, teamKey: 'bosnia' },
+  { group: 'B', rank: 2, teamKey: 'canada' },
   { group: 'C', rank: 1, teamKey: 'brazil' },
   { group: 'C', rank: 2, teamKey: 'morocco' },
   { group: 'D', rank: 1, teamKey: 'usa' },

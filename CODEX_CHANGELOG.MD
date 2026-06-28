@@ -1,5 +1,12 @@
 # Codex 项目变更日志
 
+## 2026-06-28 14:20 - Correct official Round of 32 fixtures
+- Purpose: replace placeholder third-place seeds and wrong knockout pairings with confirmed Round of 32 fixtures.
+- Files: `utils/matches.js`, `pages/schedule/schedule.js`, `server/config/targets.json`, `utils/buildInfo.js`.
+- Data: updated South Africa vs Canada, Germany vs Paraguay, France vs Sweden, Mexico vs Ecuador, England vs Congo DR, Belgium vs Senegal, United States vs Bosnia and Herzegovina, Switzerland vs Algeria, Colombia vs Ghana; Switzerland vs Algeria is now 2026-07-03 11:00 Beijing time.
+- Bracket: group B runner-up is Canada; Bosnia is treated as a best third-place qualifier in the United States pairing.
+- Deploy: cloud server must pull Git and rebuild `/api/database/latest` to publish this data.
+
 ## 2026-06-28 13:30 - 切换到淘汰赛 32 强赛程
 
 - 目的：小组赛已经结束，首页和赛程页从最后一轮小组赛窗口切换到 32 强淘汰赛窗口。

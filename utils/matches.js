@@ -2081,6 +2081,46 @@ const matchMeta = {
   'colombia-seed3deijl-20260704': { dateText: '7月4日 周六', kickoff: '09:30', scheduleAt: '2026-07-04T09:30:00+08:00', weatherIcon: '☀️', weather: '24℃' }
 }
 
+
+const officialRound32Corrections = [
+  { from: 'southafrica-bosnia-20260629', id: 'southafrica-canada-20260629', home: 'southAfrica', away: 'canada', result: '\u5e73\u5c40', resultBackup: '\u52a0\u62ff\u5927\u80dc', score: '1-1', backup: '1-2', total: '2-3\u7403', oneXtwo: '\u5e73\u5c40\u4e3b\u9009\uff0c\u52a0\u62ff\u5927\u80dc\u4f5c\u5907\u9009', handicap: '\u52a0\u62ff\u5927\u5e73\u624b\u5230-0.25\u8c28\u614e\uff0c\u5e38\u89c4\u65f6\u95f4\u9632\u5e73', order: '\u5e73\u5c40 > \u52a0\u62ff\u5927\u80dc\u4fdd\u62a4 > 2-3\u7403', dateText: '6\u670829\u65e5 \u5468\u4e00', kickoff: '03:00', scheduleAt: '2026-06-29T03:00:00+08:00' },
+  { from: 'germany-seed3abcdf-20260630', id: 'germany-paraguay-20260630', home: 'germany', away: 'paraguay', result: '\u5fb7\u56fd\u80dc', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3\u7403', oneXtwo: '\u5fb7\u56fd\u80dc\u65b9\u5411\u6e05\u6670\uff0c\u4e0d\u8bbe\u7f6e\u80dc\u5e73\u8d1f\u5907\u9009', handicap: '\u5fb7\u56fd-1\u9644\u8fd1\uff0c\u8d62\u7403\u4f18\u5148\uff0c\u7a7f\u76d8\u8c28\u614e', order: '\u5fb7\u56fd\u80dc > \u5fb7\u56fd-1\u8c28\u614e > 2-3\u7403', dateText: '6\u670830\u65e5 \u5468\u4e8c', kickoff: '04:30', scheduleAt: '2026-06-30T04:30:00+08:00' },
+  { from: 'france-seed3cdfgh-20260701', id: 'france-sweden-20260701', home: 'france', away: 'sweden', result: '\u6cd5\u56fd\u80dc', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3\u7403', oneXtwo: '\u6cd5\u56fd\u80dc\u65b9\u5411\u6e05\u6670\uff0c\u4e0d\u8bbe\u7f6e\u80dc\u5e73\u8d1f\u5907\u9009', handicap: '\u6cd5\u56fd-0.75\u5230-1\uff0c\u8d62\u7403\u4f18\u5148', order: '\u6cd5\u56fd\u80dc > \u6cd5\u56fd-0.75\u8c28\u614e > 2-3\u7403', dateText: '7\u67081\u65e5 \u5468\u4e09', kickoff: '05:00', scheduleAt: '2026-07-01T05:00:00+08:00' },
+  { from: 'mexico-seed3cefhi-20260701', id: 'mexico-ecuador-20260701', home: 'mexico', away: 'ecuador', result: '\u58a8\u897f\u54e5\u80dc', resultBackup: '\u5e73\u5c40', score: '2-1', backup: '1-1', total: '2-3\u7403', oneXtwo: '\u58a8\u897f\u54e5\u80dc\u4e3b\u9009\uff0c\u5e73\u5c40\u4f5c\u4f4e\u6743\u91cd\u4fdd\u62a4', handicap: '\u58a8\u897f\u54e5-0.25\u5230-0.5\uff0c\u4e3b\u573a\u4f18\u52bf\u4f46\u4e0d\u8ffd\u6df1', order: '\u58a8\u897f\u54e5\u80dc > \u5e73\u5c40\u4fdd\u62a4 > 2-3\u7403', dateText: '7\u67081\u65e5 \u5468\u4e09', kickoff: '09:00', scheduleAt: '2026-07-01T09:00:00+08:00' },
+  { from: 'england-seed3ehijk-20260702', id: 'england-congodr-20260702', home: 'england', away: 'congoDr', result: '\u82f1\u683c\u5170\u80dc', resultBackup: '', score: '2-0', backup: '2-1', total: '2-3\u7403', oneXtwo: '\u82f1\u683c\u5170\u80dc\u65b9\u5411\u6e05\u6670\uff0c\u4e0d\u8bbe\u7f6e\u80dc\u5e73\u8d1f\u5907\u9009', handicap: '\u82f1\u683c\u5170-1\u9644\u8fd1\uff0c\u8d62\u7403\u4f18\u5148\uff0c\u7a7f\u76d8\u770b\u9996\u53d1\u5f3a\u5ea6', order: '\u82f1\u683c\u5170\u80dc > \u82f1\u683c\u5170-1\u8c28\u614e > 2-3\u7403', dateText: '7\u67082\u65e5 \u5468\u56db', kickoff: '00:00', scheduleAt: '2026-07-02T00:00:00+08:00' },
+  { from: 'belgium-seed3aehij-20260702', id: 'belgium-senegal-20260702', home: 'belgium', away: 'senegal', result: '\u6bd4\u5229\u65f6\u80dc', resultBackup: '\u5e73\u5c40', score: '2-1', backup: '1-1', total: '2-3\u7403', oneXtwo: '\u6bd4\u5229\u65f6\u80dc\u4e3b\u9009\uff0c\u5e73\u5c40\u4f5c\u4f4e\u6743\u91cd\u4fdd\u62a4', handicap: '\u6bd4\u5229\u65f6-0.25\u5230-0.5\uff0c\u8d62\u7403\u4f18\u5148\uff0c\u4e0d\u8ffd\u6df1', order: '\u6bd4\u5229\u65f6\u80dc > \u5e73\u5c40\u4fdd\u62a4 > 2-3\u7403', dateText: '7\u67082\u65e5 \u5468\u56db', kickoff: '04:00', scheduleAt: '2026-07-02T04:00:00+08:00' },
+  { from: 'usa-seed3befij-20260702', id: 'usa-bosnia-20260702', home: 'usa', away: 'bosnia', result: '\u7f8e\u56fd\u80dc', resultBackup: '\u5e73\u5c40', score: '2-1', backup: '1-1', total: '2-3\u7403', oneXtwo: '\u7f8e\u56fd\u80dc\u4e3b\u9009\uff0c\u5e73\u5c40\u4f5c\u4f4e\u6743\u91cd\u4fdd\u62a4', handicap: '\u7f8e\u56fd-0.25\u5230-0.5\uff0c\u4e3b\u573a\u4f18\u52bf\u4f46\u9632\u4e00\u7403\u5dee', order: '\u7f8e\u56fd\u80dc > \u5e73\u5c40\u4fdd\u62a4 > 2-3\u7403', dateText: '7\u67082\u65e5 \u5468\u56db', kickoff: '08:00', scheduleAt: '2026-07-02T08:00:00+08:00' },
+  { from: 'switzerland-seed3efgij-20260703', id: 'switzerland-algeria-20260703', home: 'switzerland', away: 'algeria', result: '\u745e\u58eb\u80dc', resultBackup: '\u5e73\u5c40', score: '2-1', backup: '1-1', total: '2-3\u7403', oneXtwo: '\u745e\u58eb\u80dc\u4e3b\u9009\uff0c\u5e73\u5c40\u4f5c\u4f4e\u6743\u91cd\u4fdd\u62a4', handicap: '\u745e\u58eb-0.25\u5230-0.5\uff0c\u4e0d\u8ffd\u6df1', order: '\u745e\u58eb\u80dc > \u5e73\u5c40\u4fdd\u62a4 > 2-3\u7403', dateText: '7\u67083\u65e5 \u5468\u4e94', kickoff: '11:00', scheduleAt: '2026-07-03T11:00:00+08:00' },
+  { from: 'colombia-seed3deijl-20260704', id: 'colombia-ghana-20260704', home: 'colombia', away: 'ghana', result: '\u54e5\u4f26\u6bd4\u4e9a\u80dc', resultBackup: '\u5e73\u5c40', score: '2-1', backup: '1-1', total: '2-3\u7403', oneXtwo: '\u54e5\u4f26\u6bd4\u4e9a\u80dc\u4e3b\u9009\uff0c\u5e73\u5c40\u4f5c\u4f4e\u6743\u91cd\u4fdd\u62a4', handicap: '\u54e5\u4f26\u6bd4\u4e9a-0.25\u5230-0.5\uff0c\u4e0d\u8ffd\u6df1', order: '\u54e5\u4f26\u6bd4\u4e9a\u80dc > \u5e73\u5c40\u4fdd\u62a4 > 2-3\u7403', dateText: '7\u67084\u65e5 \u5468\u516d', kickoff: '09:30', scheduleAt: '2026-07-04T09:30:00+08:00' }
+]
+
+officialRound32Corrections.forEach((fixture) => {
+  const match = matches.find((item) => item.id === fixture.from || item.id === fixture.id)
+  if (!match || !team[fixture.home] || !team[fixture.away]) return
+  match.id = fixture.id
+  match.home = team[fixture.home]
+  match.away = team[fixture.away]
+  match.pick.result = fixture.result
+  match.pick.resultBackup = fixture.resultBackup
+  match.pick.resultBackupText = fixture.resultBackup ? '\u80dc\u5e73\u8d1f\u5907\u9009\uff1a' + fixture.resultBackup : '\u80dc\u5e73\u8d1f\u5907\u9009\uff1a\u65e0'
+  match.pick.score = fixture.score
+  match.pick.backup = fixture.backup
+  match.pick.total = fixture.total
+  match.analysis.conclusion = fixture.result + '\uff0c\u4e3b\u6bd4\u5206\u503e\u5411 ' + fixture.score + '\uff0c\u5907\u7528\u6bd4\u5206 ' + fixture.backup + '\u3002\u603b\u8fdb\u7403\u533a\u95f4 ' + fixture.total + '\uff0c\u6dd8\u6c70\u8d5b\u4ee5\u5e38\u89c4\u65f6\u95f4\u5224\u65ad\u4e3a\u4e3b\u3002'
+  match.analysis.market.oneXtwo = fixture.oneXtwo
+  match.analysis.market.handicap = fixture.handicap
+  match.analysis.market.total = fixture.total
+  match.analysis.order = fixture.order
+  match.analysis.risk = match.analysis.risk + ' \u5df2\u6309\u5b98\u65b932\u5f3a\u5bf9\u9635\u4fee\u6b63\uff0c\u4e34\u573a\u4ecd\u9700\u590d\u6838\u9996\u53d1\u3001\u505c\u8d5b\u548c\u4f24\u75c5\u3002'
+  matchMeta[fixture.id] = {
+    dateText: fixture.dateText,
+    kickoff: fixture.kickoff,
+    scheduleAt: fixture.scheduleAt,
+    weatherIcon: matchMeta[fixture.from] ? matchMeta[fixture.from].weatherIcon : '\u23f1\ufe0f',
+    weather: matchMeta[fixture.from] ? matchMeta[fixture.from].weather : '\u8d5b\u524d\u66f4\u65b0'
+  }
+})
+
 const venueAltitudes = {
   'Toronto Stadium': '76m',
   'Los Angeles Stadium': '38m',
