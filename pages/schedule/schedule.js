@@ -59,8 +59,29 @@ const BRACKET_SEEDS = [
 
 const CONFIRMED_GROUP_PLACEMENTS = [
   { group: 'A', rank: 1, teamKey: 'mexico' },
+  { group: 'A', rank: 2, teamKey: 'southAfrica' },
+  { group: 'B', rank: 1, teamKey: 'switzerland' },
+  { group: 'B', rank: 2, teamKey: 'bosnia' },
+  { group: 'C', rank: 1, teamKey: 'brazil' },
+  { group: 'C', rank: 2, teamKey: 'morocco' },
   { group: 'D', rank: 1, teamKey: 'usa' },
-  { group: 'E', rank: 1, teamKey: 'germany' }
+  { group: 'D', rank: 2, teamKey: 'australia' },
+  { group: 'E', rank: 1, teamKey: 'germany' },
+  { group: 'E', rank: 2, teamKey: 'ivoryCoast' },
+  { group: 'F', rank: 1, teamKey: 'netherlands' },
+  { group: 'F', rank: 2, teamKey: 'japan' },
+  { group: 'G', rank: 1, teamKey: 'belgium' },
+  { group: 'G', rank: 2, teamKey: 'egypt' },
+  { group: 'H', rank: 1, teamKey: 'spain' },
+  { group: 'H', rank: 2, teamKey: 'caboVerde' },
+  { group: 'I', rank: 1, teamKey: 'france' },
+  { group: 'I', rank: 2, teamKey: 'norway' },
+  { group: 'J', rank: 1, teamKey: 'argentina' },
+  { group: 'J', rank: 2, teamKey: 'austria' },
+  { group: 'K', rank: 1, teamKey: 'colombia' },
+  { group: 'K', rank: 2, teamKey: 'portugal' },
+  { group: 'L', rank: 1, teamKey: 'england' },
+  { group: 'L', rank: 2, teamKey: 'croatia' }
 ]
 
 function cloneMatch(match) {

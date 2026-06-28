@@ -1,86 +1,114 @@
 [
   {
-    "matchId": "norway-france-20260626",
-    "eventName": "Norway v France",
-    "home": "Norway",
-    "away": "France",
+    "matchId": "southafrica-bosnia-20260629",
+    "eventName": "South Africa v Bosnia and Herzegovina",
+    "home": "South Africa",
+    "away": "Bosnia and Herzegovina",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "senegal-iraq-20260626",
-    "eventName": "Senegal v Iraq",
-    "home": "Senegal",
-    "away": "Iraq",
+    "matchId": "brazil-japan-20260630",
+    "eventName": "Brazil v Japan",
+    "home": "Brazil",
+    "away": "Japan",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "caboverde-saudi-20260626",
-    "eventName": "Cape Verde v Saudi Arabia",
-    "home": "Cape Verde",
-    "away": "Saudi Arabia",
+    "matchId": "germany-seed3abcdf-20260630",
+    "eventName": "Germany v 3ABCDF",
+    "home": "Germany",
+    "away": "3ABCDF",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "uruguay-spain-20260626",
-    "eventName": "Uruguay v Spain",
-    "home": "Uruguay",
-    "away": "Spain",
+    "matchId": "netherlands-morocco-20260630",
+    "eventName": "Netherlands v Morocco",
+    "home": "Netherlands",
+    "away": "Morocco",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "newzealand-belgium-20260626",
-    "eventName": "New Zealand v Belgium",
-    "home": "New Zealand",
-    "away": "Belgium",
+    "matchId": "ivorycoast-norway-20260701",
+    "eventName": "Cote d'Ivoire v Norway",
+    "home": "Cote d'Ivoire",
+    "away": "Norway",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "egypt-iran-20260626",
-    "eventName": "Egypt v Iran",
-    "home": "Egypt",
-    "away": "Iran",
+    "matchId": "france-seed3cdfgh-20260701",
+    "eventName": "France v 3CDFGH",
+    "home": "France",
+    "away": "3CDFGH",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "panama-england-20260627",
-    "eventName": "Panama v England",
-    "home": "Panama",
-    "away": "England",
+    "matchId": "mexico-seed3cefhi-20260701",
+    "eventName": "Mexico v 3CEFHI",
+    "home": "Mexico",
+    "away": "3CEFHI",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "croatia-ghana-20260627",
-    "eventName": "Croatia v Ghana",
-    "home": "Croatia",
-    "away": "Ghana",
+    "matchId": "england-seed3ehijk-20260702",
+    "eventName": "England v 3EHIJK",
+    "home": "England",
+    "away": "3EHIJK",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "colombia-portugal-20260627",
-    "eventName": "Colombia v Portugal",
-    "home": "Colombia",
-    "away": "Portugal",
+    "matchId": "belgium-seed3aehij-20260702",
+    "eventName": "Belgium v 3AEHIJ",
+    "home": "Belgium",
+    "away": "3AEHIJ",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "congodr-uzbekistan-20260627",
-    "eventName": "Congo DR v Uzbekistan",
-    "home": "Congo DR",
-    "away": "Uzbekistan",
+    "matchId": "usa-seed3befij-20260702",
+    "eventName": "United States v 3BEFIJ",
+    "home": "United States",
+    "away": "3BEFIJ",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "algeria-austria-20260627",
-    "eventName": "Algeria v Austria",
-    "home": "Algeria",
+    "matchId": "switzerland-seed3efgij-20260703",
+    "eventName": "Switzerland v 3EFGIJ",
+    "home": "Switzerland",
+    "away": "3EFGIJ",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "spain-austria-20260703",
+    "eventName": "Spain v Austria",
+    "home": "Spain",
     "away": "Austria",
     "marketType": "MATCH_ODDS"
   },
   {
-    "matchId": "jordan-argentina-20260627",
-    "eventName": "Jordan v Argentina",
-    "home": "Jordan",
-    "away": "Argentina",
+    "matchId": "portugal-croatia-20260703",
+    "eventName": "Portugal v Croatia",
+    "home": "Portugal",
+    "away": "Croatia",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "australia-egypt-20260704",
+    "eventName": "Australia v Egypt",
+    "home": "Australia",
+    "away": "Egypt",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "argentina-caboverde-20260704",
+    "eventName": "Argentina v Cabo Verde",
+    "home": "Argentina",
+    "away": "Cabo Verde",
+    "marketType": "MATCH_ODDS"
+  },
+  {
+    "matchId": "colombia-seed3deijl-20260704",
+    "eventName": "Colombia v 3DEIJL",
+    "home": "Colombia",
+    "away": "3DEIJL",
     "marketType": "MATCH_ODDS"
   }
 ]

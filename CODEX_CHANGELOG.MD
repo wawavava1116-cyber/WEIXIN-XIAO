@@ -1,5 +1,16 @@
 # Codex 项目变更日志
 
+## 2026-06-28 13:30 - 切换到淘汰赛 32 强赛程
+
+- 目的：小组赛已经结束，首页和赛程页从最后一轮小组赛窗口切换到 32 强淘汰赛窗口。
+- 涉及：`utils/matches.js`、`pages/schedule/schedule.js`、`server/config/targets.json`、`utils/buildInfo.js`；`server/data/` 仅为运行时数据，不提交 Git。
+- 数据：归档 6 月 28 日最后 6 场小组赛，新增 16 场 32 强赛程和预测；首页待赛列表现在为 6 月 29 日至 7 月 4 日 16 场淘汰赛。
+- 赛程树：补齐 A-L 组已确定前二名的淘汰赛树席位；第三名规则池暂保留 `3ABCDF` 等占位，等实际映射确定后继续替换为球队。
+- Betfair：`server/config/targets.json` 切到 16 场淘汰赛；本地同步成功，新增 5 条有效历史样本，未开盘或第三名占位场次保持未匹配状态。
+- 数据库：`DATABASE_UPDATED_AT` 更新为 `2026-06-28T13:30:00+08:00`；本地服务器快照生成结果为 76 场总数据、16 场未赛、72 场复盘。
+- 部署：线上要立即生效需轻量云服务器拉取 Git 并重新生成 `/api/database/latest` 快照；云端自动 Betfair 同步仍建议保持关闭。
+- 验证：已运行小程序关键 JS 语法检查、首页排序检查、`server npm run check`、`server npm run sync`、`server npm run snapshot`。
+
 ## 2026-06-27 14:08 - 归档 6 场完赛并刷新必发对比
 
 - 环境：家里电脑 Codex；按 `.codex-skills/football-match-predictor/SKILL.md` 和 `.codex-skills/betfair-data-refresh/SKILL.md` 执行。
