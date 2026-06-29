@@ -71,7 +71,23 @@ const KNOWN_MATCHES = [
   { id: 'colombia-portugal-20260627', home: ['colombia'], away: ['portugal'] },
   { id: 'congodr-uzbekistan-20260627', home: ['congo dr', 'dr congo', 'congo democratic republic'], away: ['uzbekistan'] },
   { id: 'algeria-austria-20260627', home: ['algeria'], away: ['austria'] },
-  { id: 'jordan-argentina-20260627', home: ['jordan'], away: ['argentina'] }
+  { id: 'jordan-argentina-20260627', home: ['jordan'], away: ['argentina'] },
+  { id: 'southafrica-canada-20260629', home: ['south africa'], away: ['canada'] },
+  { id: 'brazil-japan-20260630', home: ['brazil'], away: ['japan'] },
+  { id: 'germany-paraguay-20260630', home: ['germany'], away: ['paraguay'] },
+  { id: 'netherlands-morocco-20260630', home: ['netherlands'], away: ['morocco'] },
+  { id: 'ivorycoast-norway-20260701', home: ['cote divoire', "cote d'ivoire", 'ivory coast'], away: ['norway'] },
+  { id: 'france-sweden-20260701', home: ['france'], away: ['sweden'] },
+  { id: 'mexico-ecuador-20260701', home: ['mexico'], away: ['ecuador'] },
+  { id: 'england-congodr-20260702', home: ['england'], away: ['congo dr', 'dr congo', 'congo democratic republic'] },
+  { id: 'belgium-senegal-20260702', home: ['belgium'], away: ['senegal'] },
+  { id: 'usa-bosnia-20260702', home: ['usa', 'united states', 'united states of america'], away: ['bosnia', 'bosnia herzegovina', 'bosnia and herzegovina'] },
+  { id: 'spain-austria-20260703', home: ['spain'], away: ['austria'] },
+  { id: 'portugal-croatia-20260703', home: ['portugal'], away: ['croatia'] },
+  { id: 'switzerland-algeria-20260703', home: ['switzerland'], away: ['algeria'] },
+  { id: 'australia-egypt-20260704', home: ['australia'], away: ['egypt'] },
+  { id: 'argentina-caboverde-20260704', home: ['argentina'], away: ['cabo verde', 'cape verde'] },
+  { id: 'colombia-ghana-20260704', home: ['colombia'], away: ['ghana'] }
 ]
 
 function requestJson(url) {
@@ -200,12 +216,13 @@ function getDateWindow(matchIds = []) {
   if (datesFromMatches.length) {
     const dates = []
     datesFromMatches.forEach((dateText) => {
-      dates.push(dateText)
       const year = Number(dateText.slice(0, 4))
       const month = Number(dateText.slice(4, 6))
       const day = Number(dateText.slice(6, 8))
-      const nextDate = new Date(Date.UTC(year, month - 1, day + 1))
-      dates.push(`${nextDate.getUTCFullYear()}${String(nextDate.getUTCMonth() + 1).padStart(2, '0')}${String(nextDate.getUTCDate()).padStart(2, '0')}`)
+      ;[-1, 0, 1].forEach((offset) => {
+        const nextDate = new Date(Date.UTC(year, month - 1, day + offset))
+        dates.push(`${nextDate.getUTCFullYear()}${String(nextDate.getUTCMonth() + 1).padStart(2, '0')}${String(nextDate.getUTCDate()).padStart(2, '0')}`)
+      })
     })
     return Array.from(new Set(dates))
   }

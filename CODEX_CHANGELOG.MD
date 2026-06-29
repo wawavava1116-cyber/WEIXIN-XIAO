@@ -1,5 +1,14 @@
 # Codex 项目变更日志
 
+## 2026-06-29 13:30 - Fix knockout live-score archive mapping
+
+- Purpose: fix user-side history review missing knockout results after the Round of 32 switch.
+- Cause: the cloud live-score mapper still only knew group-stage match IDs, and the ESPN query window used Beijing-date match IDs without also checking the previous UTC date, so early-morning Beijing knockout matches such as South Africa vs Canada could not be archived.
+- Files: `server/src/liveScoresClient.js`.
+- Data flow: added the 16 Round of 32 fixtures to the live-score match mapper and changed match-id date lookup to query previous/current/next UTC dates.
+- Verification: local live-score refresh now maps South Africa vs Canada as finished `0-1`, removes it from `upcomingMatches`, and raises `finishedMatches` to 73 in the generated server snapshot.
+- Deploy: cloud server must pull Git and restart/rebuild `/api/database/latest`; no `server/data/` runtime cache is committed.
+
 ## 2026-06-28 14:20 - Correct official Round of 32 fixtures
 - Purpose: replace placeholder third-place seeds and wrong knockout pairings with confirmed Round of 32 fixtures.
 - Files: `utils/matches.js`, `pages/schedule/schedule.js`, `server/config/targets.json`, `utils/buildInfo.js`.
